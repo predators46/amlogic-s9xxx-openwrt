@@ -184,10 +184,9 @@ rebuild_firmware() {
 	\
         bash perl perl-http-date perlbase-file perlbase-getopt perlbase-time perlbase-unicode perlbase-utf8 \
 	\
-	coreutils coreutils-base64 coreutils-nohup curl ip-full libuci-lua lua luci-compat luci-lib-jsonc resolveip tcping xray-core v2ray-geoip v2ray-geosite unzip \
-	luci-app-passwall2 dnsmasq-full nftables kmod-nft-socket kmod-nft-tproxy kmod-nft-nat \
-	\
-        luci-app-homeproxy ip-full \
+	dnsmasq-full \
+        \
+	luci-app-v2raya \
 	\
         -dnsmasq \
         \
