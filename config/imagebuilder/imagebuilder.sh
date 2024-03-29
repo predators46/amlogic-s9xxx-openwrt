@@ -188,7 +188,7 @@ rebuild_firmware() {
         \
 	luci-app-ssr-plus luci-lib-ipkg luci-compat \
 	\
-        -dnsmasq \
+        -dnsmasq -libustream-wolfssl \
         \
         ${config_list} \
         "
