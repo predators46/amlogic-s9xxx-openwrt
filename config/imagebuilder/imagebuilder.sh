@@ -186,7 +186,7 @@ rebuild_firmware() {
 	\
 	dnsmasq-full \
         \
-	luci-app-ssr-plus luci-lib-ipkg luci-compat \
+	luci-app-ssr-plus luci-lib-ipkg luci-compat xray-core \
 	\
         -dnsmasq -libustream-wolfssl \
         \
