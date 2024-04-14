@@ -186,9 +186,9 @@ rebuild_firmware() {
 	\
 	dnsmasq-full \
         \
-	luci-app-ssr-plus luci-lib-ipkg luci-compat xray-core \
+	dnsmasq-full nftables kmod-nft-socket kmod-nft-tproxy kmod-nft-nat luci-app-passwall2 xray-core \
 	\
-        -dnsmasq -libustream-wolfssl \
+        -dnsmasq \
         \
         ${config_list} \
         "
