@@ -186,7 +186,7 @@ rebuild_firmware() {
 	\
 	dnsmasq-full \
         \
-	dnsmasq-full nftables kmod-nft-socket kmod-nft-tproxy kmod-nft-nat luci-app-passwall2 xray-core \
+	dnsmasq-full ipset iptables iptables-mod-conntrack-extra iptables-mod-iprange iptables-mod-socket iptables-mod-tproxy kmod-ipt-nat luci-app-passwall2 xray-core tailscale \
 	\
         -dnsmasq \
         \
