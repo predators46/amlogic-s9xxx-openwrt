@@ -120,7 +120,7 @@ custom_packages() {
     echo -e "${STEPS} Start adding custom packages..."
 
     # Clone [ packages ] directory
-    rm -rf packages && git clone "https://github.com/esaaprillia/packages"
+    rm -rf packages && git clone "https://github.com/predators46/packages"
     [[ "${?}" -eq "0" ]] || error_msg "[ packages ] clone failed!"
     echo -e "${INFO} The [ packages ] is clone successfully."
 
@@ -186,7 +186,7 @@ rebuild_firmware() {
 	\
 	dnsmasq-full \
         \
-	dnsmasq-full ipset iptables iptables-mod-conntrack-extra iptables-mod-iprange iptables-mod-socket iptables-mod-tproxy kmod-ipt-nat luci-app-passwall xray-core sing-box \
+	dnsmasq-full nftables kmod-nft-socket kmod-nft-tproxy kmod-nft-nat luci-app-passwall2 xray-core sing-box \
 	\
         -dnsmasq \
         \
