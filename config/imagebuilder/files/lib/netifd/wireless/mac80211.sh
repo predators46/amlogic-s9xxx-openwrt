@@ -1,7 +1,7 @@
 #!/bin/sh
 . /lib/netifd/netifd-wireless.sh
 . /lib/netifd/hostapd.sh
-. /lib/functions/system.sh
+. /lib/netifd/mac80211.sh
 
 init_wireless_driver "$@"
 
