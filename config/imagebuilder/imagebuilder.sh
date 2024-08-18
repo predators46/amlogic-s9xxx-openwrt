@@ -184,7 +184,9 @@ rebuild_firmware() {
 	\
         bash perl perl-http-date perlbase-file perlbase-getopt perlbase-time perlbase-unicode perlbase-utf8 \
 	\
-	dnsmasq-full kmod-mac80211 wpad-basic-mbedtls \
+	dnsmasq-full kmod-mac80211 wpad-basic-wolfssl \
+        \
+	dnsmasq-full ipset iptables iptables-mod-conntrack-extra iptables-mod-iprange iptables-mod-tproxy kmod-ipt-nat luci-app-passwall2 xray-core \
 	\
         -dnsmasq \
         \
