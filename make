@@ -273,7 +273,7 @@ check_data() {
     cat ${model_conf} |
         sed -e 's/NULL/NA/g' -e 's/[ ][ ]*//g' |
         grep -E "^[^#ar].*" |
-        awk -F':' '{if ($6 != "NA") $6 = "/lib/u-boot/"$6; if ($7 != "NA") $7 = "/lib/u-boot/"$7; NF = 8; print}' OFS=':' \
+        awk -F':' '{if ($6 != "NA") $6 = "/lib/u-boot/"$6; if ($7 != "NA") $7 = "/lib/u-boot/"$7; NF = 12; print}' OFS=':' \
             >${model_txt}
 
     # Get a list of build devices
@@ -1108,13 +1108,15 @@ EOF
     echo "CONTRIBUTORS='${CONTRIBUTORS}'" >>${op_release}
     echo "PACKAGED_DATE='$(date +%Y-%m-%d)'" >>${op_release}
     # Creating an Alias
-    ln -sf /${op_release} ${ophub_release_file}
+    ln -sf ${op_release#*/} ${ophub_release_file}
 
-    cd ${current_path}
+    # Remove the menus that are not applicable in the model
+    install_menu=$(echo "${model_txt}" | awk -F'/' '{print $(NF-1)"/"$NF}')
+    grep -E ":${FAMILY}:" ${install_menu} | cut -d':' -f1-8 >temp.txt && mv -f temp.txt ${install_menu}
 
     # Create snapshot
-    mkdir -p ${tag_rootfs}/.snapshots
-    btrfs subvolume snapshot -r ${tag_rootfs}/etc ${tag_rootfs}/.snapshots/etc-000 >/dev/null 2>&1
+    mkdir -p .snapshots
+    btrfs subvolume snapshot -r etc .snapshots/etc-000 >/dev/null 2>&1
 
     sync && sleep 3
 }
