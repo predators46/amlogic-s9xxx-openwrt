@@ -182,7 +182,7 @@ rebuild_firmware() {
 	\
 	zoneinfo-asia zoneinfo-core \
 	\
-        bash perl perl-http-date perlbase-file perlbase-getopt perlbase-time perlbase-unicode perlbase-utf8 \
+        #bash perl perl-http-date perlbase-file perlbase-getopt perlbase-time perlbase-unicode perlbase-utf8 \
 	\
 	dnsmasq-full \
         \
