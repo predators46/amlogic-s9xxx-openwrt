@@ -178,7 +178,9 @@ rebuild_firmware() {
         \
         kmod-fs-vfat lsblk btrfs-progs uuidgen dosfstools tar fdisk \
         \
-        openssh-sftp-server \
+	e2fsprogs fstools mkf2fs partx-utils uboot-envtools \
+        \
+	openssh-sftp-server \
 	\
 	zoneinfo-asia zoneinfo-core \
 	\
