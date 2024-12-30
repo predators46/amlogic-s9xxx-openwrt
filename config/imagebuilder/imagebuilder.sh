@@ -186,9 +186,11 @@ rebuild_firmware() {
 	\
         bash perl perl-http-date perlbase-file perlbase-getopt perlbase-time perlbase-unicode perlbase-utf8 \
 	\
-	dnsmasq-full python3-homeassistant \
+	wifi-scripts wpad-basic-mbedtls \
+	\
+	dnsmasq-full \
         \
-	dnsmasq-full nftables kmod-nft-socket kmod-nft-tproxy kmod-nft-nat luci-app-passwall2 xray-core \
+	dnsmasq-full nftables kmod-nft-socket kmod-nft-tproxy kmod-nft-nat \
 	\
 	dnsmasq-full ipset iptables iptables-nft iptables-zz-legacy iptables-mod-conntrack-extra iptables-mod-iprange iptables-mod-socket iptables-mod-tproxy kmod-ipt-nat \
 	\
