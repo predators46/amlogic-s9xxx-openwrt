@@ -186,7 +186,7 @@ rebuild_firmware() {
 	\
         bash perl perl-http-date perlbase-file perlbase-getopt perlbase-time perlbase-unicode perlbase-utf8 \
 	\
-	wifi-scripts wpa-supplicant \
+	wifi-scripts iwinfo wpa-supplicant \
 	\
 	dnsmasq-full \
         \
