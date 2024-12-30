@@ -186,7 +186,7 @@ rebuild_firmware() {
 	\
         bash perl perl-http-date perlbase-file perlbase-getopt perlbase-time perlbase-unicode perlbase-utf8 \
 	\
-	wifi-scripts kmod-mac80211 wpad-basic-mbedtls \
+	wifi-scripts kmod-mac80211 wpad-basic-mbedtls wpa-supplicant \
 	\
 	dnsmasq-full \
         \
