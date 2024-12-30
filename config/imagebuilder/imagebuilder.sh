@@ -120,7 +120,7 @@ custom_packages() {
     echo -e "${STEPS} Start adding custom packages..."
 
     # Clone [ packages ] directory
-    rm -rf packages && git clone "https://github.com/predators46/packages"
+    #rm -rf packages && git clone "https://github.com/predators46/packages"
     [[ "${?}" -eq "0" ]] || error_msg "[ packages ] clone failed!"
     echo -e "${INFO} The [ packages ] is clone successfully."
 
@@ -186,7 +186,7 @@ rebuild_firmware() {
 	\
         bash perl perl-http-date perlbase-file perlbase-getopt perlbase-time perlbase-unicode perlbase-utf8 \
 	\
-	wifi-scripts kmod-mac80211 wpad-basic-mbedtls wpa-supplicant \
+	wifi-scripts wpa-supplicant \
 	\
 	dnsmasq-full \
         \
