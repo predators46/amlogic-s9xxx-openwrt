@@ -186,7 +186,7 @@ rebuild_firmware() {
 	\
         bash perl perl-http-date perlbase-file perlbase-getopt perlbase-time perlbase-unicode perlbase-utf8 \
 	\
-	wifi-scripts hostapd iw iwinfo kmod-mac80211 wpa-supplicant \
+	wifi-scripts hostapd iw iwinfo kmod-mac80211 kmod-cfg80211 wpa-supplicant \
 	\
 	dnsmasq-full \
         \
