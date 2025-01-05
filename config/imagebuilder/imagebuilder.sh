@@ -189,8 +189,6 @@ rebuild_firmware() {
 	kmod-mac80211 kmod-cfg80211 wpad-basic-wolfssl \
 	\
 	dnsmasq-full \
-        \
-	dnsmasq-full nftables kmod-nft-socket kmod-nft-tproxy kmod-nft-nat \
 	\
 	dnsmasq-full ipset iptables iptables-mod-conntrack-extra iptables-mod-iprange iptables-mod-tproxy kmod-ipt-nat \
 	\
