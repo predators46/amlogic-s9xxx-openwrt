@@ -186,13 +186,13 @@ rebuild_firmware() {
 	\
         bash perl perl-http-date perlbase-file perlbase-getopt perlbase-time perlbase-unicode perlbase-utf8 \
 	\
-	kmod-mac80211 kmod-cfg80211 wifi-scripts wpad-basic-mbedtls \
+	kmod-mac80211 kmod-cfg80211 wpad-basic-wolfssl \
 	\
 	dnsmasq-full \
         \
 	dnsmasq-full nftables kmod-nft-socket kmod-nft-tproxy kmod-nft-nat \
 	\
-	dnsmasq-full ipset iptables iptables-nft iptables-zz-legacy iptables-mod-conntrack-extra iptables-mod-iprange iptables-mod-socket iptables-mod-tproxy kmod-ipt-nat \
+	dnsmasq-full ipset iptables iptables-mod-conntrack-extra iptables-mod-iprange iptables-mod-tproxy kmod-ipt-nat \
 	\
         -dnsmasq \
         \
