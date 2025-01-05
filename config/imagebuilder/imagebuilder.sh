@@ -80,7 +80,7 @@ download_imagebuilder() {
     [[ "${?}" -eq "0" ]] || error_msg "Download failed: [ ${download_file} ]"
 
     # Unzip and change the directory name
-    tar -xf *-imagebuilder-* && sync && rm -f *-imagebuilder-*.tar.zst
+    tar -xf *-imagebuilder-* && sync && rm -f *-imagebuilder-*.tar.xz
     mv -f *-imagebuilder-* ${openwrt_dir}
 
     sync && sleep 3
