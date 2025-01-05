@@ -1044,9 +1044,9 @@ EOF
 #    }
 
     # Get random macaddr
-    mac_hexchars="0123456789ABCDEF"
-    mac_end=$(for i in {1..6}; do echo -n ${mac_hexchars:$((${RANDOM} % 16)):1}; done | sed -e 's/\(..\)/:\1/g')
-    random_macaddr="9E:62${mac_end}"
+#    mac_hexchars="0123456789ABCDEF"
+#    mac_end=$(for i in {1..6}; do echo -n ${mac_hexchars:$((${RANDOM} % 16)):1}; done | sed -e 's/\(..\)/:\1/g')
+#    random_macaddr="9E:62${mac_end}"
 
     # Optimize wifi/bluetooth module
     [[ -d "lib/firmware/brcm" ]] && (
