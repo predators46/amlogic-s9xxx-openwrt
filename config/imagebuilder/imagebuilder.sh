@@ -186,7 +186,7 @@ rebuild_firmware() {
 	\
         bash perl perl-http-date perlbase-file perlbase-getopt perlbase-time perlbase-unicode perlbase-utf8 \
 	\
-	dnsmasq-full luci-app-passwall2 hostapd wpad \
+	dnsmasq-full luci-app-passwall2 hostapd wpa-supplicant \
 	\
 	dnsmasq-full ipset iptables iptables-mod-conntrack-extra iptables-mod-iprange iptables-mod-tproxy kmod-ipt-nat \
 	\
