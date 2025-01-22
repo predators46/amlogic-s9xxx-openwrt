@@ -69,10 +69,6 @@ download_imagebuilder() {
         target_name="armsr-armv8"
         target_profile=""
     else
-        target_system="armvirt/64"
-        target_name="armvirt-64"
-        target_profile="Default"
-     else
         target_system="armvirt/generic"
         target_name="armvirt"
         target_profile="Default"
