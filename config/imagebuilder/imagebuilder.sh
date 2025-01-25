@@ -69,18 +69,18 @@ download_imagebuilder() {
         target_name="armsr-armv8"
         target_profile=""
     else
-        target_system="armvirt/generic"
-        target_name="armvirt"
+        target_system="armvirt/64"
+        target_name="armvirt-64"
         target_profile="Default"
     fi
 
     # Downloading imagebuilder files
-    download_file="https://downloads.${op_sourse}.org/releases/${op_branch}/targets/${target_system}/${op_sourse}-imagebuilder-${op_branch}-${target_name}.Linux-x86_64.tar.xz"
+    download_file="https://downloads.${op_sourse}.org/releases/${op_branch}/targets/${target_system}/${op_sourse}-imagebuilder-${op_branch}-${target_name}.Linux-x86_64.tar.zst"
     curl -fsSOL ${download_file}
     [[ "${?}" -eq "0" ]] || error_msg "Download failed: [ ${download_file} ]"
 
     # Unzip and change the directory name
-    tar -xf *-imagebuilder-* && sync && rm -f *-imagebuilder-*.tar.xz
+    tar -xf *-imagebuilder-* && sync && rm -f *-imagebuilder-*.tar.zst
     mv -f *-imagebuilder-* ${openwrt_dir}
 
     sync && sleep 3
@@ -120,7 +120,7 @@ custom_packages() {
     echo -e "${STEPS} Start adding custom packages..."
 
     # Clone [ packages ] directory
-    #rm -rf packages && git clone "https://github.com/predators46/packages"
+    rm -rf packages && git clone "https://github.com/predators46/packages"
     [[ "${?}" -eq "0" ]] || error_msg "[ packages ] clone failed!"
     echo -e "${INFO} The [ packages ] is clone successfully."
 
@@ -186,9 +186,11 @@ rebuild_firmware() {
 	\
         bash perl perl-http-date perlbase-file perlbase-getopt perlbase-time perlbase-unicode perlbase-utf8 \
 	\
-	dnsmasq-full \
+	dnsmasq-full python3-homeassistant \
+        \
+	dnsmasq-full nftables kmod-nft-socket kmod-nft-tproxy kmod-nft-nat \
 	\
-	dnsmasq-full ipset iptables iptables-mod-conntrack-extra iptables-mod-iprange iptables-mod-tproxy kmod-ipt-nat \
+	dnsmasq-full ipset iptables iptables-nft iptables-zz-legacy iptables-mod-conntrack-extra iptables-mod-iprange iptables-mod-socket iptables-mod-tproxy kmod-ipt-nat \
 	\
         -dnsmasq \
         \
