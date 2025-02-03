@@ -178,20 +178,24 @@ rebuild_firmware() {
         \
         kmod-fs-vfat lsblk btrfs-progs uuidgen dosfstools tar fdisk \
         \
-	e2fsprogs fstools mkf2fs partx-utils uboot-envtools \
+        e2fsprogs fstools mkf2fs partx-utils uboot-envtools \
         \
-	openssh-sftp-server \
-	\
-	zoneinfo-asia zoneinfo-core \
-	\
+        openssh-sftp-server \
+        \
+        zoneinfo-asia zoneinfo-core \
+        \
         bash perl perl-http-date perlbase-file perlbase-getopt perlbase-time perlbase-unicode perlbase-utf8 \
-	\
-	dnsmasq-full python3-base python3-light python3-asyncio python3-cgi python3-codecs python3-ctypes python3-dbm python3-decimal python3-distutils python3-email python3-lib2to3 python3-logging python3-lzma python3-multiprocessing python3-ncurses python3-openssl python3-pydoc python3-readline python3-sqlite3 python3-unittest python3-urllib python3-uuid python3-venv python3-xml \
         \
-	dnsmasq-full nftables kmod-nft-socket kmod-nft-tproxy kmod-nft-nat \
-	\
-	dnsmasq-full ipset iptables iptables-nft iptables-zz-legacy iptables-mod-conntrack-extra iptables-mod-iprange iptables-mod-socket iptables-mod-tproxy kmod-ipt-nat \
-	\
+        dnsmasq-full \
+        \
+        python3 python3-base python3-light python3-asyncio python3-codecs python3-ctypes python3-dbm python3-decimal python3-email python3-logging python3-lzma python3-multiprocessing python3-ncurses python3-openssl python3-pydoc python3-readline python3-sqlite3 python3-unittest python3-urllib python3-uuid python3-venv python3-webbrowser python3-xml \
+        \
+        python3-tables \
+        \
+        dnsmasq-full nftables kmod-nft-socket kmod-nft-tproxy kmod-nft-nat \
+        \
+        dnsmasq-full ipset iptables iptables-nft iptables-zz-legacy iptables-mod-conntrack-extra iptables-mod-iprange iptables-mod-socket iptables-mod-tproxy kmod-ipt-nat \
+        \
         -dnsmasq \
         \
         ${config_list} \
