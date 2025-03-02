@@ -176,6 +176,8 @@ rebuild_firmware() {
         \
         bash perl perl-http-date perlbase-file perlbase-getopt perlbase-time perlbase-unicode perlbase-utf8 \
         \
+        luci-app-passwall2 xray-core tailscale \
+        \
         dnsmasq-full \
         \
         dnsmasq-full nftables kmod-nft-socket kmod-nft-tproxy kmod-nft-nat \
