@@ -180,7 +180,7 @@ rebuild_firmware() {
         \
         php8-pecl-dio php8-pecl-http php8-pecl-raphf php8-pecl-redis php8-pecl-mcrypt php8-pecl-xdebug php8-pecl-imagick \
         \
-        nginx-full \
+        icu-full-data \
         \
         libmariadb mariadb-client-extra mariadb-server-extra \
         \
