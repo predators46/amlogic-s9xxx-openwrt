@@ -183,7 +183,7 @@ rebuild_firmware() {
         \
         openssh-sftp-server \
         \
-        zoneinfo-asia zoneinfo-core \
+        zoneinfo-all zoneinfo-core \
         \
         bash perl perl-http-date perlbase-file perlbase-getopt perlbase-time perlbase-unicode perlbase-utf8 \
         \
