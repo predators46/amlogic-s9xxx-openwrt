@@ -75,12 +75,12 @@ download_imagebuilder() {
     fi
 
     # Downloading imagebuilder files
-    download_file="https://downloads.${op_sourse}.org/releases/${op_branch}/targets/${target_system}/${op_sourse}-imagebuilder-${op_branch}-${target_name}.Linux-x86_64.tar.zst"
+    download_file="https://downloads.${op_sourse}.org/releases/${op_branch}/targets/${target_system}/${op_sourse}-imagebuilder-${op_branch}-${target_name}.Linux-x86_64.tar.xz"
     curl -fsSOL ${download_file}
     [[ "${?}" -eq "0" ]] || error_msg "Download failed: [ ${download_file} ]"
 
     # Unzip and change the directory name
-    tar -xf *-imagebuilder-* && sync && rm -f *-imagebuilder-*.tar.zst
+    tar -xf *-imagebuilder-* && sync && rm -f *-imagebuilder-*.tar.xz
     mv -f *-imagebuilder-* ${openwrt_dir}
 
     sync && sleep 3
@@ -172,7 +172,8 @@ rebuild_firmware() {
     # Selecting default packages, lib, theme, app and i18n, etc.
     my_packages="\
         kmod-usb-core kmod-usb2 usb-modeswitch libusb-1.0 kmod-usb-net-cdc-ether \
-	kmod-usb-net-rndis kmod-usb-net-cdc-ncm kmod-usb-net-huawei-cdc-ncm kmod-usb-net-cdc-eem kmod-usb-net-cdc-ether kmod-usb-net-cdc-subset kmod-nls-base kmod-usb-core kmod-usb-net kmod-usb-net-cdc-ether kmod-usb2 \
+        \
+        kmod-usb-net-rndis kmod-usb-net-cdc-ncm kmod-usb-net-huawei-cdc-ncm kmod-usb-net-cdc-eem kmod-usb-net-cdc-ether kmod-usb-net-cdc-subset kmod-nls-base kmod-usb-core kmod-usb-net kmod-usb-net-cdc-ether kmod-usb2 \
         \
         luci \
         \
@@ -186,9 +187,13 @@ rebuild_firmware() {
         \
         bash perl perl-http-date perlbase-file perlbase-getopt perlbase-time perlbase-unicode perlbase-utf8 \
         \
-        dnsmasq-full \
+        php8 php8-cgi php8-cli php8-fastcgi php8-fpm php8-mod-bcmath php8-mod-calendar php8-mod-ctype php8-mod-curl php8-mod-dom php8-mod-exif php8-mod-fileinfo php8-mod-filter php8-mod-ftp php8-mod-gd php8-mod-gettext php8-mod-gmp php8-mod-iconv php8-mod-imap php8-mod-intl php8-mod-ldap php8-mod-mbstring php8-mod-mysqli php8-mod-mysqlnd php8-mod-opcache php8-mod-openssl php8-mod-pcntl php8-mod-pdo php8-mod-pdo-mysql php8-mod-pdo-pgsql php8-mod-pdo-sqlite php8-mod-pgsql php8-mod-phar php8-mod-session php8-mod-shmop php8-mod-simplexml php8-mod-snmp php8-mod-soap php8-mod-sockets php8-mod-sqlite3 php8-mod-sysvmsg php8-mod-sysvsem php8-mod-sysvshm php8-mod-tokenizer php8-mod-xml php8-mod-xmlreader php8-mod-xmlwriter php8-mod-zip \
         \
-        perl perlbase-safe perlbase-open perlbase-bytes perlbase-memoize perlbase-config perlbase-storable perlbase-perl5db perlbase-i18n perlbase-hash perlbase-fatal perlbase-data perlbase-attribute perlbase-db-file perlbase-utf8 perlbase-thread perlbase-unicode perlbase-attributes perlbase-filecache perlbase-autoloader perlbase-filter perlbase-tap perlbase-dirhandle perlbase-experimental perlbase-sdbm-file perlbase-cwd perlbase-benchmark perlbase-dynaloader perlbase-tie perlbase-essential perlbase-encoding perlbase-devel perlbase-time perlbase-math perlbase-search perlbase-integer perlbase-filehandle perlbase-env perlbase-ops perlbase-english perlbase-dbm-filter perlbase-o perlbase-extutils perlbase-anydbm-file perlbase-fields perlbase-encode perlbase-class perlbase-feature perlbase-params perlbase-b perlbase-pod perlbase-xsloader perlbase-bignum perlbase-ipc perlbase-digest perlbase-sigtrap perlbase-app perlbase-io perlbase-user perlbase-re perlbase-fcntl perlbase-mro perlbase-archive perlbase-compress perlbase-autosplit perlbase-meta-notation perlbase-list perlbase-locale perlbase-next perlbase-http-tiny perlbase-base perlbase-charnames perlbase-if perlbase-json-pp perlbase-errno perlbase-filetest perlbase-unicore perlbase-gdbm-file perlbase-getopt perlbase-bigint perlbase-findbin perlbase-dumpvar perlbase-ostype perlbase-selectsaver perlbase-mime perlbase-module perlbase-term perlbase-scalar perlbase-sys perlbase-dumpvalue perlbase-cpan perlbase-autodie perlbase-posix perlbase-sort perlbase-autouse perlbase-file perlbase-threads perlbase-socket perlbase-less perlbase-version perlbase-symbol perlbase-db perlbase-opcode perlbase-perlio perlbase-blib perlbase-selfloader perlbase-universal perlbase-net perlbase-text perlbase-test perlbase-diagnostics \
+        php8-pecl-dio php8-pecl-http php8-pecl-raphf php8-pecl-redis php8-pecl-mcrypt php8-pecl-sodium php8-pecl-imagick \
+        \
+        libmariadb mariadb-client-extra mariadb-server-extra \
+        \
+        dnsmasq-full \
         \
         dnsmasq-full nftables kmod-nft-socket kmod-nft-tproxy kmod-nft-nat \
         \
