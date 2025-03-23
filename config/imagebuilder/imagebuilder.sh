@@ -187,7 +187,7 @@ rebuild_firmware() {
         \
         bash perl perl-http-date perlbase-file perlbase-getopt perlbase-time perlbase-unicode perlbase-utf8 \
         \
-        luci-app-openclash bash iptables dnsmasq-full curl ca-bundle ipset ip-full iptables-mod-tproxy iptables-mod-extra ruby ruby-yaml kmod-tun unzip luci-compat luci luci-base \
+        luci-app-openclash luci-app-tailscale bash iptables dnsmasq-full curl ca-bundle ipset ip-full iptables-mod-tproxy iptables-mod-extra ruby ruby-yaml kmod-tun unzip luci-compat luci luci-base \
         \
         dnsmasq-full \
         \
