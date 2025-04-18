@@ -21,6 +21,7 @@ on:
           - openwrt:24.10.0
           - immortalwrt:24.10.0
           - openwrt:18.06.4
+          - openwrt:18.06.9
       openwrt_board:
         description: "Select device board"
         required: false
