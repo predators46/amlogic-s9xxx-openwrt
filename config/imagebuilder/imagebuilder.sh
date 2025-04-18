@@ -151,6 +151,7 @@ custom_config() {
 custom_files() {
     cd ${imagebuilder_path}
     wget -O include/prereq-build.mk "https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/prereq-build.mk"
+    wget -O repositories.conf "https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/repositories.conf"
     echo -e "${STEPS} Start adding custom files..."
 
     if [[ -d "${custom_files_path}" ]]; then
