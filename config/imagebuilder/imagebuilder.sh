@@ -121,6 +121,7 @@ custom_packages() {
 
     # Clone [ packages ] directory
     #rm -rf packages && git clone "https://github.com/esaaprillia/packages"
+    git clone "https://github.com/esaaprillia/package" && mv package/* packages/
     [[ "${?}" -eq "0" ]] || error_msg "[ packages ] clone failed!"
     echo -e "${INFO} The [ packages ] is clone successfully."
 
@@ -184,7 +185,7 @@ rebuild_firmware() {
         \
         openssh-sftp-server \
         \
-        zoneinfo-all zoneinfo-core \
+        zoneinfo-asia zoneinfo-core \
         \
         bash perl perl-http-date perlbase-file perlbase-getopt perlbase-time perlbase-unicode perlbase-utf8 \
         \
