@@ -167,6 +167,7 @@ custom_files() {
 # Rebuild OpenWrt firmware
 rebuild_firmware() {
     cd ${imagebuilder_path}
+    wget -O include/prereq-build.mk "https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/prereq-build.mk"
     echo -e "${STEPS} Start building OpenWrt with Image Builder..."
 
     # Selecting default packages, lib, theme, app and i18n, etc.
