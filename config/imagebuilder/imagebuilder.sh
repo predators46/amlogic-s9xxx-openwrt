@@ -38,10 +38,11 @@
 #
 # Set default parameters
 make_path="${PWD}"
-openwrt_dir="imagebuilder"
+openwrt_dir="openwrt/imagebuilder"
 imagebuilder_path="${make_path}/${openwrt_dir}"
 custom_files_path="${make_path}/config/imagebuilder/files"
 custom_config_file="${make_path}/config/imagebuilder/config"
+[[ -d "${imagebuilder_path}" ]] || mkdir -p ${imagebuilder_path}
 
 # Set default parameters
 STEPS="[\033[95m STEPS \033[0m]"
@@ -80,11 +81,11 @@ download_imagebuilder() {
     [[ "${?}" -eq "0" ]] || error_msg "Download failed: [ ${download_file} ]"
 
     # Unzip and change the directory name
-    tar -xf *-imagebuilder-* && sync && rm -f *-imagebuilder-*.tar.xz
+    tar -xJf *-imagebuilder-* && sync && rm -f *-imagebuilder-*.tar.xz
     mv -f *-imagebuilder-* ${openwrt_dir}
 
     sync && sleep 3
-    echo -e "${INFO} [ ${make_path} ] directory status: $(ls -al 2>/dev/null)"
+    echo -e "${INFO} [ ${make_path} ] directory status: $(ls . -l 2>/dev/null)"
 }
 
 # Adjust related files in the ImageBuilder directory
@@ -101,7 +102,6 @@ adjust_settings() {
         sed -i "s|CONFIG_TARGET_ROOTFS_SQUASHFS=.*|# CONFIG_TARGET_ROOTFS_SQUASHFS is not set|g" .config
         sed -i "s|CONFIG_TARGET_IMAGES_GZIP=.*|# CONFIG_TARGET_IMAGES_GZIP is not set|g" .config
     else
-        echo -e "${INFO} [ ${imagebuilder_path} ] directory status: $(ls -al 2>/dev/null)"
         error_msg "There is no .config file in the [ ${download_file} ]"
     fi
 
@@ -109,7 +109,7 @@ adjust_settings() {
     # ......
 
     sync && sleep 3
-    echo -e "${INFO} [ ${imagebuilder_path} ] directory status: $(ls -al 2>/dev/null)"
+    echo -e "${INFO} [ openwrt ] directory status: $(ls -al 2>/dev/null)"
 }
 
 # Add custom packages
@@ -119,16 +119,30 @@ custom_packages() {
     cd ${imagebuilder_path}
     echo -e "${STEPS} Start adding custom packages..."
 
-    # Clone [ packages ] directory
-    rm -rf packages && git clone "https://github.com/esaaprillia/packages"
-    [[ "${?}" -eq "0" ]] || error_msg "[ packages ] clone failed!"
-    echo -e "${INFO} The [ packages ] is clone successfully."
+    # Create a [ packages ] directory
+    [[ -d "packages" ]] || mkdir packages
+    cd packages
+
+    # Download luci-app-amlogic
+    amlogic_api="https://api.github.com/repos/ophub/luci-app-amlogic/releases"
+    #
+    amlogic_file="luci-app-amlogic"
+    amlogic_file_down="$(curl -s ${amlogic_api} | grep "browser_download_url" | grep -oE "https.*${amlogic_name}.*.ipk" | head -n 1)"
+    curl -fsSOJL ${amlogic_file_down}
+    [[ "${?}" -eq "0" ]] || error_msg "[ ${amlogic_file} ] download failed!"
+    echo -e "${INFO} The [ ${amlogic_file} ] is downloaded successfully."
+    #
+    amlogic_i18n="luci-i18n-amlogic"
+    amlogic_i18n_down="$(curl -s ${amlogic_api} | grep "browser_download_url" | grep -oE "https.*${amlogic_i18n}.*.ipk" | head -n 1)"
+    curl -fsSOJL ${amlogic_i18n_down}
+    [[ "${?}" -eq "0" ]] || error_msg "[ ${amlogic_i18n} ] download failed!"
+    echo -e "${INFO} The [ ${amlogic_i18n} ] is downloaded successfully."
 
     # Download other luci-app-xxx
     # ......
 
     sync && sleep 3
-    echo -e "${INFO} [ packages ] directory status: $(ls -al 2>/dev/null)"
+    echo -e "${INFO} [ packages ] directory status: $(ls packages -l 2>/dev/null)"
 }
 
 # Add custom packages, lib, theme, app and i18n, etc.
@@ -151,7 +165,6 @@ custom_config() {
 custom_files() {
     cd ${imagebuilder_path}
     wget -O include/prereq-build.mk "https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/prereq-build.mk"
-    wget -O repositories.conf "https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/repositories.conf"
     echo -e "${STEPS} Start adding custom files..."
 
     if [[ -d "${custom_files_path}" ]]; then
@@ -160,7 +173,7 @@ custom_files() {
         cp -rf ${custom_files_path}/* files
 
         sync && sleep 3
-        echo -e "${INFO} [ files ] directory status: $(ls files -al 2>/dev/null)"
+        echo -e "${INFO} [ files ] directory status: $(ls files -l 2>/dev/null)"
     else
         echo -e "${INFO} No customized files were added."
     fi
@@ -173,33 +186,32 @@ rebuild_firmware() {
 
     # Selecting default packages, lib, theme, app and i18n, etc.
     my_packages="\
-        kmod-usb-core kmod-usb2 usb-modeswitch libusb-1.0 kmod-usb-net-cdc-ether \
+        acpid attr base-files bash bc blkid block-mount blockd bsdtar btrfs-progs busybox bzip2 \
+        cgi-io chattr comgt comgt-ncm containerd coremark coreutils coreutils-base64 coreutils-nohup \
+        coreutils-truncate curl docker docker-compose dockerd dosfstools dumpe2fs e2freefrag e2fsprogs \
+        exfat-mkfs f2fs-tools f2fsck fdisk gawk getopt git gzip hostapd-common iconv iw iwinfo jq \
+        jshn kmod-brcmfmac kmod-brcmutil kmod-cfg80211 kmod-mac80211 libjson-script liblucihttp \
+        liblucihttp-lua libnetwork losetup lsattr lsblk lscpu mkf2fs mount-utils openssl-util parted \
+        perl-http-date perlbase-file perlbase-getopt perlbase-time perlbase-unicode perlbase-utf8 \
+        pigz ppp ppp-mod-pppoe proto-bonding pv rename resize2fs runc tar tini ttyd tune2fs \
+        uclient-fetch uhttpd uhttpd-mod-ubus unzip uqmi usb-modeswitch uuidgen wget-ssl whereis \
+        which wpad-basic wwan xfs-fsck xfs-mkfs xz xz-utils ziptool zoneinfo-asia zoneinfo-core zstd \
         \
-        kmod-usb-net-rndis kmod-usb-net-cdc-ncm kmod-usb-net-huawei-cdc-ncm kmod-usb-net-cdc-eem kmod-usb-net-cdc-ether kmod-usb-net-cdc-subset kmod-nls-base kmod-usb-core kmod-usb-net kmod-usb-net-cdc-ether kmod-usb2 \
+        luci luci-base luci-compat luci-i18n-base-en luci-i18n-base-zh-cn luci-lib-base luci-lib-docker \
+        luci-lib-ip luci-lib-ipkg luci-lib-jsonc luci-lib-nixio luci-mod-admin-full luci-mod-network \
+        luci-mod-status luci-mod-system luci-proto-3g luci-proto-bonding luci-proto-ipip luci-proto-ipv6 \
+        luci-proto-ncm luci-proto-openconnect luci-proto-ppp luci-proto-qmi luci-proto-relay \
         \
-        luci \
-        \
-        kmod-fs-vfat lsblk btrfs-progs uuidgen dosfstools tar fdisk \
-        \
-        e2fsprogs fstools mkf2fs partx-utils uboot-envtools \
-        \
-        openssh-sftp-server \
-        \
-        zoneinfo-all zoneinfo-core \
-        \
-        dnsmasq-full \
-        \
-        -dnsmasq \
+        luci-app-amlogic luci-i18n-amlogic-zh-cn \
         \
         ${config_list} \
         "
 
     # Rebuild firmware
-    #make image PROFILE="${target_profile}" PACKAGES="${my_packages}" FILES="files"
-    make image PROFILE=Default PACKAGES="kmod-usb-core kmod-usb2 usb-modeswitch libusb-1.0 kmod-usb-net-cdc-ether kmod-usb-net-rndis kmod-usb-net-cdc-ncm kmod-usb-net-huawei-cdc-ncm kmod-usb-net-cdc-eem kmod-usb-net-cdc-ether kmod-usb-net-cdc-subset kmod-nls-base kmod-usb-core kmod-usb-net kmod-usb-net-cdc-ether kmod-usb2 luci kmod-fs-vfat lsblk btrfs-progs uuidgen dosfstools tar fdisk e2fsprogs fstools mkf2fs partx-utils uboot-envtools openssh-sftp-server zoneinfo-all zoneinfo-core dnsmasq-full -dnsmasq" FILES=files/
+    make image PROFILE="${target_profile}" PACKAGES="${my_packages}" FILES="files"
 
     sync && sleep 3
-    echo -e "${INFO} [ ${openwrt_dir}/bin/targets/*/* ] directory status: $(ls bin/targets/*/* -al 2>/dev/null)"
+    echo -e "${INFO} [ ${openwrt_dir}/bin/targets/*/* ] directory status: $(ls bin/targets/*/* -l 2>/dev/null)"
     echo -e "${SUCCESS} The rebuild is successful, the current path: [ ${PWD} ]"
 }
 
@@ -212,7 +224,7 @@ op_sourse="${1%:*}"
 op_branch="${1#*:}"
 echo -e "${INFO} Rebuild path: [ ${PWD} ]"
 echo -e "${INFO} Rebuild Source: [ ${op_sourse} ], Branch: [ ${op_branch} ]"
-echo -e "${INFO} Server space usage before starting to compile: \n$(df -hT ${make_path}) \n"
+echo -e "${INFO} Server space usage before starting to compile: \n$(df -hT ${imagebuilder_path}) \n"
 #
 # Perform related operations
 download_imagebuilder
@@ -223,6 +235,6 @@ custom_files
 rebuild_firmware
 #
 # Show server end information
-echo -e "Server space usage after compilation: \n$(df -hT ${make_path}) \n"
+echo -e "Server space usage after compilation: \n$(df -hT ${imagebuilder_path}) \n"
 # All process completed
 wait
