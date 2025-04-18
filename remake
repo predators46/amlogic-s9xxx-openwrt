@@ -1046,17 +1046,17 @@ EOF
         done
     )
 
-    # Add wireless master mode
-    wireless_mac80211="lib/netifd/wireless/mac80211.sh"
-    [[ -f "${wireless_mac80211}" ]] && {
-        cp -f ${wireless_mac80211} ${wireless_mac80211}.bak
-        sed -i "s|iw |ipconfig |g" ${wireless_mac80211}
-    }
+#    # Add wireless master mode
+#    wireless_mac80211="lib/netifd/wireless/mac80211.sh"
+#    [[ -f "${wireless_mac80211}" ]] && {
+#        cp -f ${wireless_mac80211} ${wireless_mac80211}.bak
+#        sed -i "s|iw |ipconfig |g" ${wireless_mac80211}
+#    }
 
-    # Get random macaddr
-    mac_hexchars="0123456789ABCDEF"
-    mac_end=$(for i in {1..6}; do echo -n ${mac_hexchars:$((${RANDOM} % 16)):1}; done | sed -e 's/\(..\)/:\1/g')
-    random_macaddr="9E:62${mac_end}"
+#    # Get random macaddr
+#    mac_hexchars="0123456789ABCDEF"
+#    mac_end=$(for i in {1..6}; do echo -n ${mac_hexchars:$((${RANDOM} % 16)):1}; done | sed -e 's/\(..\)/:\1/g')
+#    random_macaddr="9E:62${mac_end}"
 
     # Optimize wifi/bluetooth module
     [[ -d "lib/firmware/brcm" ]] && (
