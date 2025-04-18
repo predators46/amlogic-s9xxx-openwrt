@@ -38,7 +38,7 @@
 #
 # Set default parameters
 make_path="${PWD}"
-openwrt_dir="openwrt/imagebuilder"
+openwrt_dir="imagebuilder"
 imagebuilder_path="${make_path}/${openwrt_dir}"
 custom_files_path="${make_path}/config/imagebuilder/files"
 custom_config_file="${make_path}/config/imagebuilder/config"
@@ -224,7 +224,7 @@ op_sourse="${1%:*}"
 op_branch="${1#*:}"
 echo -e "${INFO} Rebuild path: [ ${PWD} ]"
 echo -e "${INFO} Rebuild Source: [ ${op_sourse} ], Branch: [ ${op_branch} ]"
-echo -e "${INFO} Server space usage before starting to compile: \n$(df -hT ${imagebuilder_path}) \n"
+echo -e "${INFO} Server space usage before starting to compile: \n$(df -hT ${make_path}) \n"
 #
 # Perform related operations
 download_imagebuilder
@@ -235,6 +235,6 @@ custom_files
 rebuild_firmware
 #
 # Show server end information
-echo -e "Server space usage after compilation: \n$(df -hT ${imagebuilder_path}) \n"
+echo -e "Server space usage after compilation: \n$(df -hT ${make_path}) \n"
 # All process completed
 wait
