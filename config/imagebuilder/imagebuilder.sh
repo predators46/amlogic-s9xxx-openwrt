@@ -195,7 +195,8 @@ rebuild_firmware() {
         "
 
     # Rebuild firmware
-    make image PROFILE="${target_profile}" PACKAGES="${my_packages}" FILES="files"
+    #make image PROFILE="${target_profile}" PACKAGES="${my_packages}" FILES="files"
+    make image PROFILE=Default PACKAGES="kmod-usb-core kmod-usb2 usb-modeswitch libusb-1.0 kmod-usb-net-cdc-ether kmod-usb-net-rndis kmod-usb-net-cdc-ncm kmod-usb-net-huawei-cdc-ncm kmod-usb-net-cdc-eem kmod-usb-net-cdc-ether kmod-usb-net-cdc-subset kmod-nls-base kmod-usb-core kmod-usb-net kmod-usb-net-cdc-ether kmod-usb2 luci kmod-fs-vfat lsblk btrfs-progs uuidgen dosfstools tar fdisk e2fsprogs fstools mkf2fs partx-utils uboot-envtools openssh-sftp-server zoneinfo-all zoneinfo-core dnsmasq-full -dnsmasq" FILES=files/
 
     sync && sleep 3
     echo -e "${INFO} [ ${openwrt_dir}/bin/targets/*/* ] directory status: $(ls bin/targets/*/* -al 2>/dev/null)"
