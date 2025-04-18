@@ -177,8 +177,6 @@ rebuild_firmware() {
         \
         kmod-usb-net-rndis kmod-usb-net-cdc-ncm kmod-usb-net-huawei-cdc-ncm kmod-usb-net-cdc-eem kmod-usb-net-cdc-ether kmod-usb-net-cdc-subset kmod-nls-base kmod-usb-core kmod-usb-net kmod-usb-net-cdc-ether kmod-usb2 \
         \
-        kmod-usb-storage kmod-usb-net kmod-usb-net-cdc-ether kmod-usb-net-cdc-mbim kmod-usb-net-cdc-ncm kmod-usb-net-huawei-cdc-ncm kmod-usb-net-qmi-wwan kmod-usb-net-rndis kmod-usb-net-sierrawireless kmod-usb-ohci kmod-usb-serial kmod-usb-serial-option kmod-usb-serial-qualcomm kmod-usb-serial-sierrawireless kmod-usb-serial-wwan kmod-usb-uhci kmod-usb-wdm usb-modeswitch kmod-usb-acm kmod-usb-net-hso comgt-ncm usbutils libc blkid kmod-usb-storage kmod-usb-storage-extras kmod-usb2 kmod-rt2x00-usb kmod-rt2800-lib kmod-rt2800-usb kmod-rt2x00-lib kmod-rt2x00-usb ip-bridge kmod-usb-net-dm9601-ether \
-        \
         luci \
         \
         kmod-fs-vfat lsblk btrfs-progs uuidgen dosfstools tar fdisk \
@@ -186,6 +184,8 @@ rebuild_firmware() {
         e2fsprogs fstools mkf2fs partx-utils uboot-envtools \
         \
         openssh-sftp-server \
+        \
+        bash perl perl-http-date perlbase-file perlbase-getopt perlbase-time perlbase-unicode perlbase-utf8 \
         \
         zoneinfo-asia zoneinfo-core \
         \
