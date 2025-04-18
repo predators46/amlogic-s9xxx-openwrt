@@ -121,7 +121,7 @@ custom_packages() {
 
     # Clone [ packages ] directory
     #rm -rf packages && git clone "https://github.com/esaaprillia/packages"
-    git clone "https://github.com/esaaprillia/package" && mv package/* packages/
+    git clone "https://github.com/esaaprillia/package" && cp -r package/* packages/
     [[ "${?}" -eq "0" ]] || error_msg "[ packages ] clone failed!"
     echo -e "${INFO} The [ packages ] is clone successfully."
 
