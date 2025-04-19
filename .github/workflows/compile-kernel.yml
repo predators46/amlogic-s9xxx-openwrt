@@ -21,18 +21,17 @@ on:
       kernel_version:
         description: "Select kernel version"
         required: false
-        default: "6.12.y"
+        default: "6.6.1"
         type: choice
         options:
-          - 5.4.y
-          - 5.10.y
-          - 5.15.y
-          - 6.1.y
-          - 6.6.y
-          - 6.12.y
-          - 5.4.y_5.10.y
-          - 5.15.y_6.1.y
-          - 6.6.y_6.12.y
+          - 5.4.1_5.10.1
+          - 5.15.1_6.1.1
+          - 6.1.1_6.6.1
+          - 5.4.1
+          - 5.10.1
+          - 5.15.1
+          - 6.1.1
+          - 6.6.1
       kernel_auto:
         description: "Auto use the latest kernel"
         required: false
@@ -54,11 +53,6 @@ on:
         options:
           - clang
           - gcc
-          - gcc-11.3
-          - gcc-12.2
-          - gcc-12.3
-          - gcc-13.2
-          - gcc-13.3
       compress_format:
         description: "Set the initrd compression format"
         required: false
@@ -102,7 +96,7 @@ jobs:
           sudo rm -f /swapfile /mnt/swapfile
           sudo -E apt-get -y update
           sudo -E apt-get -y purge azure-cli ghc* zulu* llvm* firefox google* dotnet* powershell openjdk* mongodb* moby* || true
-          sudo -E apt-get -y install $(curl -fsSL https://tinyurl.com/ubuntu2204-build-armbian)
+          sudo -E apt-get -y install $(curl -fsSL https://is.gd/depend_ubuntu2204_armbian)
           sudo -E systemctl daemon-reload
           #sudo -E apt-get -y full-upgrade
           sudo -E apt-get -y autoremove --purge

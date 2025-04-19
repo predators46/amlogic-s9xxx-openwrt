@@ -21,10 +21,13 @@ on:
           - ak88
           - beikeyun
           - cm3
-          - e20c
           - e25
-          - e52c
-          - e54c
+          - l1pro
+          - photonicat
+          - qemu
+          - r66s
+          - r68s
+          - jp-tvbox
           - ht2
           - h28k
           - h66k
@@ -33,15 +36,8 @@ on:
           - h69k-max
           - h88k
           - h88k-v3
-          - jp-tvbox
-          - l1pro
-          - photonicat
-          - qemu
-          - r66s
-          - r68s
+          - watermelon-pi
           - rock5b
-          - rock5c
-          - rk3399
           - s905
           - s905d
           - s905x2
@@ -50,17 +46,12 @@ on:
           - s922x
           - s922x-n2
           - vplus
-          - watermelon-pi
           - zcube1-max
           - diy
-      customize_rk3399:
-        description: "Set customize rk3399 devices"
-        required: false
-        default: "tvi3315a:rk3399-tvi3315a.dtb/sw799:rk3399-bozz-sw799.dtb"
       openwrt_kernel:
         description: "Select kernel version"
         required: false
-        default: "6.1.y_6.12.y"
+        default: "6.1.y_5.15.y"
         type: choice
         options:
           - 5.4.y
@@ -68,12 +59,9 @@ on:
           - 5.15.y
           - 6.1.y
           - 6.6.y
-          - 6.12.y
-          - 5.4.y_5.10.y
-          - 5.15.y_6.1.y
-          - 6.1.y_6.12.y
           - 6.1.y_6.6.y
-          - 6.6.y_6.12.y
+          - 6.1.y_5.15.y
+          - 5.4.y_5.10.y
       kernel_repo:
         description: "Set the kernel repository"
         required: false
@@ -81,7 +69,7 @@ on:
         type: choice
         options:
           - ophub/kernel
-          - breakingbadboy/OpenWrt
+          - breakings/OpenWrt
       auto_kernel:
         description: "Auto use the latest kernel"
         required: false
@@ -129,7 +117,7 @@ jobs:
           sudo rm -f /swapfile /mnt/swapfile
           sudo -E apt-get -y update
           sudo -E apt-get -y purge azure-cli ghc* zulu* llvm* firefox google* dotnet* powershell openjdk* mongodb* moby* || true
-          sudo -E apt-get -y install $(curl -fsSL https://tinyurl.com/ubuntu2204-make-openwrt)
+          sudo -E apt-get -y install $(curl -fsSL https://is.gd/depend_ubuntu2204_openwrt)
           sudo -E systemctl daemon-reload
           #sudo -E apt-get -y full-upgrade
           sudo -E apt-get -y autoremove --purge
@@ -169,20 +157,19 @@ jobs:
           [[ -d "${armvirt_tarfile_path}" ]] || mkdir -p ${armvirt_tarfile_path}
           ln -sf /builder/openwrt ${GITHUB_WORKSPACE}/openwrt
 
-          latest_version=$(curl -s \
-                -H "Accept: application/vnd.github+json" \
-                -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-                https://api.github.com/repos/${armvirt_tarfile_repo}/releases?per_page=100 | \
-                jq -r --arg RTK "${releases_tag_keywords}" \
-                --arg BOARD "-rootfs.tar.gz" \
-                '[.[] | select(.tag_name | contains($RTK))] |
-                map(.assets[] | select(.browser_download_url | endswith($BOARD))) |
-                sort_by(.updated_at) |
-                reverse |
-                .[0] |
-                {data: .updated_at, url: .browser_download_url}')
+          latest_version="$(curl -s \
+                              -H "Accept: application/vnd.github+json" \
+                              -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+                              https://api.github.com/repos/${armvirt_tarfile_repo}/releases?per_page=100 |
+                              jq '.[]' |
+                              jq -s --arg RTK "${releases_tag_keywords}" '.[] | select(.tag_name | contains($RTK))' |
+                              jq -s '.[].assets[] | {data:.updated_at, url:.browser_download_url}' |
+                              jq -s --arg BOARD "-rootfs.tar.gz" '.[] | select(.url | endswith($BOARD))' |
+                              jq -s 'sort_by(.data)|reverse[]' |
+                              jq -s '.[0]' -c
+                          )"
 
-          [[ -z "${latest_version}" || "${latest_version}" == "null" ]] && echo "Invalid OpenWrt rootfs download address." && exit 1
+          [[ "${latest_version}" == "null" ]] && echo "Invalid OpenWrt rootfs download address." && exit 1
           latest_updated_at="$(echo ${latest_version} | jq -r '.data')"
           latest_url="$(echo ${latest_version} | jq -r '.url')"
 
@@ -190,7 +177,7 @@ jobs:
           curl -fsSL "${latest_url}" -o "${armvirt_tarfile_path}/${openwrt_filename}"
           [[ "${?}" -ne "0" ]] && echo "Invalid OpenWrt rootfs download address." && exit 1
 
-          echo "build_tag=OpenWrt_armv8_${{ inputs.openwrt_storage }}_$(date +"%Y.%m")" >> ${GITHUB_OUTPUT}
+          echo "build_tag=OpenWrt_aarch64_${{ inputs.openwrt_storage }}_$(date +"%Y.%m")" >> ${GITHUB_OUTPUT}
           echo "status=success" >> ${GITHUB_OUTPUT}
 
       - name: Clone packit source code
@@ -209,9 +196,8 @@ jobs:
         env:
           OPENWRT_ARMVIRT: openwrt/output/*rootfs.tar.gz
           SELECT_PACKITPATH: openwrt_packit
-          PACKAGE_SOC: ${{ inputs.openwrt_soc }}
-          CUSTOMIZE_RK3399: ${{ inputs.customize_rk3399 }}
           KERNEL_REPO_URL: ${{ inputs.kernel_repo }}
+          PACKAGE_SOC: ${{ inputs.openwrt_soc }}
           KERNEL_VERSION_NAME: ${{ inputs.openwrt_kernel }}
           KERNEL_AUTO_LATEST: ${{ inputs.auto_kernel }}
           WHOAMI: ${{ inputs.builder_name }}
