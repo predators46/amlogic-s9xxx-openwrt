@@ -312,7 +312,7 @@ jobs:
           echo "status=success" >> ${GITHUB_OUTPUT}
 
       - name: Upload OpenWrt to Release
-        uses: ncipollo/release-action@main
+        uses: ncipollo/release-action@18-old
         if: ${{ steps.clean.outputs.status }} == 'success' && !cancelled()
         with:
           tag: ${{ steps.imagebuilder.outputs.build_tag }}
@@ -324,7 +324,7 @@ jobs:
 
       - name: Packaging OpenWrt
         if: ${{ steps.clean.outputs.status }} == 'success' && !cancelled()
-        uses: predators46/amlogic-s9xxx-openwrt@main
+        uses: predators46/amlogic-s9xxx-openwrt@18-old
         with:
           openwrt_path: imagebuilder/output/*rootfs.tar.gz
           openwrt_board: ${{ inputs.openwrt_board }}
@@ -335,7 +335,7 @@ jobs:
           builder_name: ${{ inputs.builder_name }}
 
       - name: Upload the packaged OpenWrt
-        uses: ncipollo/release-action@main
+        uses: ncipollo/release-action@18-old
         if: ${{ env.PACKAGED_STATUS }} == 'success' && !cancelled()
         with:
           tag: ${{ steps.imagebuilder.outputs.build_tag }}
