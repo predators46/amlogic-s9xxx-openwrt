@@ -180,11 +180,11 @@ rebuild_firmware() {
         \
         kmod-fs-vfat lsblk btrfs-progs uuidgen dosfstools tar fdisk \
         \
-        e2fsprogs fstools mkf2fs partx-utils uboot-envtools \
+        e2fsprogs fstools mkf2fs partx-utils \
         \
         openssh-sftp-server \
         \
-        zoneinfo-all zoneinfo-core \
+        zoneinfo-asia zoneinfo-core \
         \
         bash perl perl-http-date perlbase-file perlbase-getopt perlbase-time perlbase-unicode perlbase-utf8 \
         \
