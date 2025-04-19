@@ -183,6 +183,7 @@ on:
         type: choice
         options:
           - ophub/kernel
+          - predators46/kernel
       kernel_usage:
         description: "Set the tags of the stable kernel."
         required: false
@@ -202,6 +203,7 @@ on:
           - ophub
           - angel
           - yourname
+          - OpenWrt
 
 env:
   TZ: America/New_York
@@ -263,7 +265,7 @@ jobs:
           openwrt_makepath="/builder/openwrt"
           [[ -d "${openwrt_makepath}" ]] || mkdir -p "${openwrt_makepath}"
           ln -sf /builder/openwrt ${GITHUB_WORKSPACE}/openwrt
-          ln -sf /builder/openwrt /home/runner/work/_actions/ophub/amlogic-s9xxx-openwrt/main/openwrt
+          ln -sf /builder/openwrt /home/runner/work/_actions/predators46/amlogic-s9xxx-openwrt/main/openwrt
 
           RELEASES_BRANCH="${{ inputs.releases_branch }}"
           chmod +x ${IMAGEBUILDER_SH}
