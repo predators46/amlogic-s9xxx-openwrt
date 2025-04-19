@@ -932,11 +932,11 @@ refactor_rootfs() {
         sed -i "s|option amlogic_firmware_tag.*|option amlogic_firmware_tag '${source_codename}'|g" etc/config/amlogic
     }
 
-#    # Modify the default script to [ bash ] for [ cpustat ]
-#    [[ -x "bin/bash" ]] && {
-#        sed -i "s/\/bin\/ash/\/bin\/bash/" etc/passwd
-#        sed -i "s/\/bin\/ash/\/bin\/bash/" usr/libexec/login.sh
-#    }
+    # Modify the default script to [ bash ] for [ cpustat ]
+    [[ -x "bin/bash" ]] && {
+        sed -i "s/\/bin\/ash/\/bin\/bash/" etc/passwd
+        sed -i "s/\/bin\/ash/\/bin\/bash/" usr/libexec/login.sh
+    }
 
     # Turn off hw_flow by default
     [[ -f "etc/config/turboacc" ]] && {
