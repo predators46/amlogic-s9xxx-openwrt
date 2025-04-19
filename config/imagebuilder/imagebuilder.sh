@@ -75,7 +75,7 @@ download_imagebuilder() {
     fi
 
     # Downloading imagebuilder files
-    download_file="https://downloads.${op_sourse}.org/releases/${op_branch}/targets/${target_system}/${op_sourse}-imagebuilder-${op_branch}-${target_name}.Linux-x86_64.tar.xz"
+    download_file="https://mirror-03.infra.${op_sourse}.org/releases/${op_branch}/targets/${target_system}/${op_sourse}-imagebuilder-${op_branch}-${target_name}.Linux-x86_64.tar.xz"
     curl -fsSOL ${download_file}
     [[ "${?}" -eq "0" ]] || error_msg "Download failed: [ ${download_file} ]"
 
@@ -120,6 +120,7 @@ custom_packages() {
     echo -e "${STEPS} Start adding custom packages..."
 
     # Clone [ packages ] directory
+    rm -rf packages
     #rm -rf packages && git clone "https://github.com/esaaprillia/packages"
     #git clone "https://github.com/esaaprillia/package" && cp -r package/* packages/ && rm -rf package
     [[ "${?}" -eq "0" ]] || error_msg "[ packages ] clone failed!"
@@ -152,7 +153,7 @@ custom_config() {
 custom_files() {
     cd ${imagebuilder_path}
     wget -O include/prereq-build.mk "https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/prereq-build.mk"
-    wget -O repositories.conf "https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/repositories.conf"
+    #wget -O repositories.conf "https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/repositories.conf"
     echo -e "${STEPS} Start adding custom files..."
 
     if [[ -d "${custom_files_path}" ]]; then
