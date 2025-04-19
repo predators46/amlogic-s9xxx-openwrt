@@ -25,7 +25,7 @@ inputs:
   openwrt_kernel:
     description: "Select kernel version."
     required: false
-    default: "6.1.y_6.12.y"
+    default: "6.1.1_5.15.1"
   auto_kernel:
     description: "Auto use the latest kernel."
     required: false
@@ -33,7 +33,7 @@ inputs:
   openwrt_size:
     description: "Set the rootfs size(Unit: MiB)."
     required: false
-    default: ""
+    default: "1024"
   builder_name:
     description: "Set OpenWrt builder signature."
     required: false
@@ -44,7 +44,7 @@ runs:
   steps:
     - shell: bash
       run: |
-        cd ${{ github.action_path }}
+        cd ${GITHUB_ACTION_PATH}
         echo -e "ophub package actions path: [ ${PWD} ]"
 
         openwrt_filename="${{ inputs.openwrt_path }}"
@@ -70,7 +70,7 @@ runs:
         sync
         echo -e "About the [ ${openwrt_savepath} ] directory: \n$(ls -l ${openwrt_savepath} 2>/dev/null)"
 
-        cd ${{ github.action_path }}
+        cd ${GITHUB_ACTION_PATH}
         echo -e "Start to make openwrt..."
         make_command=""
         [[ -n "${{ inputs.openwrt_board }}" ]] && make_command="${make_command} -b ${{ inputs.openwrt_board }}"
@@ -80,15 +80,15 @@ runs:
         [[ -n "${{ inputs.auto_kernel }}" ]] && make_command="${make_command} -a ${{ inputs.auto_kernel }}"
         [[ -n "${{ inputs.openwrt_size }}" ]] && make_command="${make_command} -s ${{ inputs.openwrt_size }}"
         [[ -n "${{ inputs.builder_name }}" ]] && make_command="${make_command} -n ${{ inputs.builder_name }}"
-        sudo ./remake ${make_command}
+        sudo ./make ${make_command}
 
-        cd ${{ github.action_path }}/${openwrt_outpath}
+        cd ${GITHUB_ACTION_PATH}/${openwrt_outpath}
         # Generate a sha256sum verification file for each OpenWrt image file
-        for file in *; do [[ -f "${file}" ]] && sha256sum "${file}" >"${file}.sha" 2>/dev/null; done
+        for file in *; do [[ ! -d "${file}" ]] && sha256sum "${file}" >"${file}.sha"; done
         rm -f *.sha.sha 2>/dev/null
         sync && sleep 3
 
-        cd ${{ github.action_path }}
+        cd ${GITHUB_ACTION_PATH}
         echo -e "Output environment variables."
         echo "PACKAGED_OUTPUTPATH=${PWD}/${openwrt_outpath}" >> ${GITHUB_ENV}
         echo "PACKAGED_OUTPUTDATE=$(date +"%m.%d.%H%M")" >> ${GITHUB_ENV}
@@ -96,7 +96,7 @@ runs:
         echo -e "PACKAGED_OUTPUTPATH: ${PWD}/${openwrt_outpath}"
         echo -e "PACKAGED_OUTPUTDATE: $(date +"%m.%d.%H%M")"
         echo -e "PACKAGED_STATUS: success"
-        echo -e "PACKAGED_OUTPUTPATH files list: \n$(ls -l ${PWD}/${openwrt_outpath}/ 2>/dev/null)"
+        echo -e "PACKAGED_OUTPUTPATH files list: \n$(ls -l ${PWD}/${openwrt_outpath} 2>/dev/null)"
 
 branding:
   icon: "terminal"

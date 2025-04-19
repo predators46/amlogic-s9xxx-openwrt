@@ -22,7 +22,7 @@
 #                Use Image Builder to add packages, lib, theme, app and i18n, etc.
 #
 # Command: ./config/imagebuilder/imagebuilder.sh <source:branch>
-#          ./config/imagebuilder/imagebuilder.sh openwrt:24.10.0
+#          ./config/imagebuilder/imagebuilder.sh openwrt:21.02.3
 #
 #======================================== Functions list ========================================
 #
@@ -38,10 +38,11 @@
 #
 # Set default parameters
 make_path="${PWD}"
-openwrt_dir="imagebuilder"
+openwrt_dir="openwrt/imagebuilder"
 imagebuilder_path="${make_path}/${openwrt_dir}"
 custom_files_path="${make_path}/config/imagebuilder/files"
 custom_config_file="${make_path}/config/imagebuilder/config"
+[[ -d "${imagebuilder_path}" ]] || mkdir -p ${imagebuilder_path}
 
 # Set default parameters
 STEPS="[\033[95m STEPS \033[0m]"
@@ -63,17 +64,28 @@ download_imagebuilder() {
     cd ${make_path}
     echo -e "${STEPS} Start downloading OpenWrt files..."
 
+    # Determine the target system (Imagebuilder files naming has changed since 23.05.0)
+    if [[ "${op_branch:0:2}" -ge "23" && "${op_branch:3:2}" -ge "05" ]]; then
+        target_system="armsr/armv8"
+        target_name="armsr-armv8"
+        target_profile=""
+    else
+        target_system="armvirt/64"
+        target_name="armvirt-64"
+        target_profile="Default"
+    fi
+
     # Downloading imagebuilder files
-    download_file="https://downloads.${op_sourse}.org/releases/${op_branch}/targets/armsr/armv8/${op_sourse}-imagebuilder-${op_branch}-armsr-armv8.Linux-x86_64.tar.zst"
+    download_file="https://downloads.${op_sourse}.org/releases/${op_branch}/targets/${target_system}/${op_sourse}-imagebuilder-${op_branch}-${target_name}.Linux-x86_64.tar.xz"
     curl -fsSOL ${download_file}
     [[ "${?}" -eq "0" ]] || error_msg "Download failed: [ ${download_file} ]"
 
     # Unzip and change the directory name
-    tar -I zstd -xvf *-imagebuilder-*.tar.zst -C . && sync && rm -f *-imagebuilder-*.tar.zst
+    tar -xJf *-imagebuilder-* && sync && rm -f *-imagebuilder-*.tar.xz
     mv -f *-imagebuilder-* ${openwrt_dir}
 
     sync && sleep 3
-    echo -e "${INFO} [ ${make_path} ] directory status: $(ls -al 2>/dev/null)"
+    echo -e "${INFO} [ ${make_path} ] directory status: $(ls . -l 2>/dev/null)"
 }
 
 # Adjust related files in the ImageBuilder directory
@@ -90,7 +102,6 @@ adjust_settings() {
         sed -i "s|CONFIG_TARGET_ROOTFS_SQUASHFS=.*|# CONFIG_TARGET_ROOTFS_SQUASHFS is not set|g" .config
         sed -i "s|CONFIG_TARGET_IMAGES_GZIP=.*|# CONFIG_TARGET_IMAGES_GZIP is not set|g" .config
     else
-        echo -e "${INFO} [ ${imagebuilder_path} ] directory status: $(ls -al 2>/dev/null)"
         error_msg "There is no .config file in the [ ${download_file} ]"
     fi
 
@@ -98,7 +109,7 @@ adjust_settings() {
     # ......
 
     sync && sleep 3
-    echo -e "${INFO} [ ${imagebuilder_path} ] directory status: $(ls -al 2>/dev/null)"
+    echo -e "${INFO} [ openwrt ] directory status: $(ls -al 2>/dev/null)"
 }
 
 # Add custom packages
@@ -108,16 +119,30 @@ custom_packages() {
     cd ${imagebuilder_path}
     echo -e "${STEPS} Start adding custom packages..."
 
-    # Clone [ packages ] directory
-    rm -rf packages && git clone "https://github.com/esaaprillia/packages"
-    [[ "${?}" -eq "0" ]] || error_msg "[ packages ] clone failed!"
-    echo -e "${INFO} The [ packages ] is clone successfully."
+    # Create a [ packages ] directory
+    [[ -d "packages" ]] || mkdir packages
+    cd packages
+
+    # Download luci-app-amlogic
+    amlogic_api="https://api.github.com/repos/ophub/luci-app-amlogic/releases"
+    #
+    amlogic_file="luci-app-amlogic"
+    amlogic_file_down="$(curl -s ${amlogic_api} | grep "browser_download_url" | grep -oE "https.*${amlogic_name}.*.ipk" | head -n 1)"
+    curl -fsSOJL ${amlogic_file_down}
+    [[ "${?}" -eq "0" ]] || error_msg "[ ${amlogic_file} ] download failed!"
+    echo -e "${INFO} The [ ${amlogic_file} ] is downloaded successfully."
+    #
+    amlogic_i18n="luci-i18n-amlogic"
+    amlogic_i18n_down="$(curl -s ${amlogic_api} | grep "browser_download_url" | grep -oE "https.*${amlogic_i18n}.*.ipk" | head -n 1)"
+    curl -fsSOJL ${amlogic_i18n_down}
+    [[ "${?}" -eq "0" ]] || error_msg "[ ${amlogic_i18n} ] download failed!"
+    echo -e "${INFO} The [ ${amlogic_i18n} ] is downloaded successfully."
 
     # Download other luci-app-xxx
     # ......
 
     sync && sleep 3
-    echo -e "${INFO} [ packages ] directory status: $(ls -al 2>/dev/null)"
+    echo -e "${INFO} [ packages ] directory status: $(ls packages -l 2>/dev/null)"
 }
 
 # Add custom packages, lib, theme, app and i18n, etc.
@@ -147,7 +172,7 @@ custom_files() {
         cp -rf ${custom_files_path}/* files
 
         sync && sleep 3
-        echo -e "${INFO} [ files ] directory status: $(ls files -al 2>/dev/null)"
+        echo -e "${INFO} [ files ] directory status: $(ls files -l 2>/dev/null)"
     else
         echo -e "${INFO} No customized files were added."
     fi
@@ -160,46 +185,32 @@ rebuild_firmware() {
 
     # Selecting default packages, lib, theme, app and i18n, etc.
     my_packages="\
-        kmod-usb-core kmod-usb2 usb-modeswitch libusb-1.0 kmod-usb-net-cdc-ether \
+        acpid attr base-files bash bc blkid block-mount blockd bsdtar btrfs-progs busybox bzip2 \
+        cgi-io chattr comgt comgt-ncm containerd coremark coreutils coreutils-base64 coreutils-nohup \
+        coreutils-truncate curl docker docker-compose dockerd dosfstools dumpe2fs e2freefrag e2fsprogs \
+        exfat-mkfs f2fs-tools f2fsck fdisk gawk getopt git gzip hostapd-common iconv iw iwinfo jq \
+        jshn kmod-brcmfmac kmod-brcmutil kmod-cfg80211 kmod-mac80211 libjson-script liblucihttp \
+        liblucihttp-lua libnetwork losetup lsattr lsblk lscpu mkf2fs mount-utils openssl-util parted \
+        perl-http-date perlbase-file perlbase-getopt perlbase-time perlbase-unicode perlbase-utf8 \
+        pigz ppp ppp-mod-pppoe proto-bonding pv rename resize2fs runc tar tini ttyd tune2fs \
+        uclient-fetch uhttpd uhttpd-mod-ubus unzip uqmi usb-modeswitch uuidgen wget-ssl whereis \
+        which wpad-basic wwan xfs-fsck xfs-mkfs xz xz-utils ziptool zoneinfo-asia zoneinfo-core zstd \
         \
-        kmod-usb-net-rndis kmod-usb-net-cdc-ncm kmod-usb-net-huawei-cdc-ncm kmod-usb-net-cdc-eem kmod-usb-net-cdc-ether kmod-usb-net-cdc-subset kmod-nls-base kmod-usb-core kmod-usb-net kmod-usb-net-cdc-ether kmod-usb2 \
+        luci luci-base luci-compat luci-i18n-base-en luci-i18n-base-zh-cn luci-lib-base luci-lib-docker \
+        luci-lib-ip luci-lib-ipkg luci-lib-jsonc luci-lib-nixio luci-mod-admin-full luci-mod-network \
+        luci-mod-status luci-mod-system luci-proto-3g luci-proto-bonding luci-proto-ipip luci-proto-ipv6 \
+        luci-proto-ncm luci-proto-openconnect luci-proto-ppp luci-proto-qmi luci-proto-relay \
         \
-        luci \
-        \
-        kmod-fs-vfat lsblk btrfs-progs uuidgen dosfstools tar fdisk \
-        \
-        e2fsprogs fstools mkf2fs partx-utils uboot-envtools \
-        \
-        openssh-sftp-server \
-        \
-        zoneinfo-asia zoneinfo-core \
-        \
-        bash perl perl-http-date perlbase-file perlbase-getopt perlbase-time perlbase-unicode perlbase-utf8 \
-        \
-        php8 php8-cgi php8-cli php8-fastcgi php8-fpm php8-mod-bcmath php8-mod-calendar php8-mod-ctype php8-mod-curl php8-mod-dom php8-mod-exif php8-mod-fileinfo php8-mod-filter php8-mod-ftp php8-mod-gd php8-mod-gettext php8-mod-gmp php8-mod-iconv php8-mod-imap php8-mod-intl php8-mod-ldap php8-mod-mbstring php8-mod-mysqli php8-mod-mysqlnd php8-mod-opcache php8-mod-openssl php8-mod-pcntl php8-mod-pdo php8-mod-pdo-mysql php8-mod-pdo-pgsql php8-mod-pdo-sqlite php8-mod-pgsql php8-mod-phar php8-mod-session php8-mod-shmop php8-mod-simplexml php8-mod-snmp php8-mod-soap php8-mod-sockets php8-mod-sodium php8-mod-sqlite3 php8-mod-sysvmsg php8-mod-sysvsem php8-mod-sysvshm php8-mod-tokenizer php8-mod-xml php8-mod-xmlreader php8-mod-xmlwriter php8-mod-zip \
-        \
-        php8-pecl-dio php8-pecl-http php8-pecl-raphf php8-pecl-redis php8-pecl-mcrypt php8-pecl-xdebug php8-pecl-imagick \
-        \
-        icu-full-data \
-        \
-        libmariadb mariadb-client-extra mariadb-server-extra \
-        \
-        dnsmasq-full \
-        \
-        dnsmasq-full nftables kmod-nft-socket kmod-nft-tproxy kmod-nft-nat \
-        \
-        dnsmasq-full ipset iptables iptables-nft iptables-zz-legacy iptables-mod-conntrack-extra iptables-mod-iprange iptables-mod-socket iptables-mod-tproxy kmod-ipt-nat \
-        \
-        -dnsmasq \
+        luci-app-amlogic luci-i18n-amlogic-zh-cn \
         \
         ${config_list} \
         "
 
     # Rebuild firmware
-    make image PROFILE="" PACKAGES="${my_packages}" FILES="files"
+    make image PROFILE="${target_profile}" PACKAGES="${my_packages}" FILES="files"
 
     sync && sleep 3
-    echo -e "${INFO} [ ${openwrt_dir}/bin/targets/*/* ] directory status: $(ls bin/targets/*/* -al 2>/dev/null)"
+    echo -e "${INFO} [ ${openwrt_dir}/bin/targets/*/* ] directory status: $(ls bin/targets/*/* -l 2>/dev/null)"
     echo -e "${SUCCESS} The rebuild is successful, the current path: [ ${PWD} ]"
 }
 
@@ -212,7 +223,7 @@ op_sourse="${1%:*}"
 op_branch="${1#*:}"
 echo -e "${INFO} Rebuild path: [ ${PWD} ]"
 echo -e "${INFO} Rebuild Source: [ ${op_sourse} ], Branch: [ ${op_branch} ]"
-echo -e "${INFO} Server space usage before starting to compile: \n$(df -hT ${make_path}) \n"
+echo -e "${INFO} Server space usage before starting to compile: \n$(df -hT ${imagebuilder_path}) \n"
 #
 # Perform related operations
 download_imagebuilder
@@ -223,6 +234,6 @@ custom_files
 rebuild_firmware
 #
 # Show server end information
-echo -e "Server space usage after compilation: \n$(df -hT ${make_path}) \n"
+echo -e "Server space usage after compilation: \n$(df -hT ${imagebuilder_path}) \n"
 # All process completed
 wait

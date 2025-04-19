@@ -15,7 +15,7 @@ config  mount
 
 config  mount
 		option enabled '1'
-		option target '/rom'
+		option target '/overlay'
 		option label 'ROOTFS'
 		option fstype 'btrfs'
 		option options 'compress=zstd:6'
