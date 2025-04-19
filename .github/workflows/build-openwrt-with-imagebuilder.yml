@@ -312,7 +312,7 @@ jobs:
           echo "status=success" >> ${GITHUB_OUTPUT}
 
       - name: Upload OpenWrt to Release
-        uses: ncipollo/release-action@18-old
+        uses: ncipollo/release-action@main
         if: ${{ steps.clean.outputs.status }} == 'success' && !cancelled()
         with:
           tag: ${{ steps.imagebuilder.outputs.build_tag }}
@@ -335,7 +335,7 @@ jobs:
           builder_name: ${{ inputs.builder_name }}
 
       - name: Upload the packaged OpenWrt
-        uses: ncipollo/release-action@18-old
+        uses: ncipollo/release-action@main
         if: ${{ env.PACKAGED_STATUS }} == 'success' && !cancelled()
         with:
           tag: ${{ steps.imagebuilder.outputs.build_tag }}
