@@ -22,7 +22,7 @@
 #                Use Image Builder to add packages, lib, theme, app and i18n, etc.
 #
 # Command: ./config/imagebuilder/imagebuilder.sh <source:branch>
-#          ./config/imagebuilder/imagebuilder.sh openwrt:24.10.0
+#          ./config/imagebuilder/imagebuilder.sh openwrt:21.02.3
 #
 #======================================== Functions list ========================================
 #
@@ -63,13 +63,24 @@ download_imagebuilder() {
     cd ${make_path}
     echo -e "${STEPS} Start downloading OpenWrt files..."
 
+    # Determine the target system (Imagebuilder files naming has changed since 23.05.0)
+    if [[ "${op_branch:0:2}" -ge "23" && "${op_branch:3:2}" -ge "05" ]]; then
+        target_system="armsr/armv8"
+        target_name="armsr-armv8"
+        target_profile=""
+    else
+        target_system="armvirt/64"
+        target_name="armvirt-64"
+        target_profile="Default"
+    fi
+
     # Downloading imagebuilder files
-    download_file="https://downloads.${op_sourse}.org/releases/${op_branch}/targets/armsr/armv8/${op_sourse}-imagebuilder-${op_branch}-armsr-armv8.Linux-x86_64.tar.zst"
+    download_file="https://downloads.${op_sourse}.org/releases/${op_branch}/targets/${target_system}/${op_sourse}-imagebuilder-${op_branch}-${target_name}.Linux-x86_64.tar.xz"
     curl -fsSOL ${download_file}
     [[ "${?}" -eq "0" ]] || error_msg "Download failed: [ ${download_file} ]"
 
     # Unzip and change the directory name
-    tar -I zstd -xvf *-imagebuilder-*.tar.zst -C . && sync && rm -f *-imagebuilder-*.tar.zst
+    tar -xf *-imagebuilder-* && sync && rm -f *-imagebuilder-*.tar.xz
     mv -f *-imagebuilder-* ${openwrt_dir}
 
     sync && sleep 3
@@ -110,6 +121,7 @@ custom_packages() {
 
     # Clone [ packages ] directory
     rm -rf packages && git clone "https://github.com/esaaprillia/packages"
+    #git clone "https://github.com/esaaprillia/package" && cp -r package/* packages/ && rm -rf package
     [[ "${?}" -eq "0" ]] || error_msg "[ packages ] clone failed!"
     echo -e "${INFO} The [ packages ] is clone successfully."
 
@@ -139,6 +151,7 @@ custom_config() {
 # The [ files ] directory should be placed in the Image Builder root directory where you issue the make command.
 custom_files() {
     cd ${imagebuilder_path}
+    wget -O include/prereq-build.mk "https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/prereq-build.mk"
     echo -e "${STEPS} Start adding custom files..."
 
     if [[ -d "${custom_files_path}" ]]; then
@@ -168,7 +181,7 @@ rebuild_firmware() {
         \
         kmod-fs-vfat lsblk btrfs-progs uuidgen dosfstools tar fdisk \
         \
-        e2fsprogs fstools mkf2fs partx-utils uboot-envtools \
+        e2fsprogs fstools mkf2fs partx-utils \
         \
         openssh-sftp-server \
         \
@@ -176,19 +189,7 @@ rebuild_firmware() {
         \
         bash perl perl-http-date perlbase-file perlbase-getopt perlbase-time perlbase-unicode perlbase-utf8 \
         \
-        php8 php8-cgi php8-cli php8-fastcgi php8-fpm php8-mod-bcmath php8-mod-calendar php8-mod-ctype php8-mod-curl php8-mod-dom php8-mod-exif php8-mod-fileinfo php8-mod-filter php8-mod-ftp php8-mod-gd php8-mod-gettext php8-mod-gmp php8-mod-iconv php8-mod-imap php8-mod-intl php8-mod-ldap php8-mod-mbstring php8-mod-mysqli php8-mod-mysqlnd php8-mod-opcache php8-mod-openssl php8-mod-pcntl php8-mod-pdo php8-mod-pdo-mysql php8-mod-pdo-pgsql php8-mod-pdo-sqlite php8-mod-pgsql php8-mod-phar php8-mod-session php8-mod-shmop php8-mod-simplexml php8-mod-snmp php8-mod-soap php8-mod-sockets php8-mod-sodium php8-mod-sqlite3 php8-mod-sysvmsg php8-mod-sysvsem php8-mod-sysvshm php8-mod-tokenizer php8-mod-xml php8-mod-xmlreader php8-mod-xmlwriter php8-mod-zip \
-        \
-        php8-pecl-dio php8-pecl-http php8-pecl-raphf php8-pecl-redis php8-pecl-mcrypt php8-pecl-xdebug php8-pecl-imagick \
-        \
-        icu-full-data \
-        \
-        libmariadb mariadb-client-extra mariadb-server-extra \
-        \
         dnsmasq-full \
-        \
-        dnsmasq-full nftables kmod-nft-socket kmod-nft-tproxy kmod-nft-nat \
-        \
-        dnsmasq-full ipset iptables iptables-nft iptables-zz-legacy iptables-mod-conntrack-extra iptables-mod-iprange iptables-mod-socket iptables-mod-tproxy kmod-ipt-nat \
         \
         -dnsmasq \
         \
@@ -196,7 +197,7 @@ rebuild_firmware() {
         "
 
     # Rebuild firmware
-    make image PROFILE="" PACKAGES="${my_packages}" FILES="files"
+    make image PROFILE="${target_profile}" PACKAGES="${my_packages}" FILES="files"
 
     sync && sleep 3
     echo -e "${INFO} [ ${openwrt_dir}/bin/targets/*/* ] directory status: $(ls bin/targets/*/* -al 2>/dev/null)"
