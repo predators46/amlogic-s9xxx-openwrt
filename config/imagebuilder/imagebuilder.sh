@@ -151,7 +151,7 @@ custom_config() {
 # The [ files ] directory should be placed in the Image Builder root directory where you issue the make command.
 custom_files() {
     cd ${imagebuilder_path}
-    #wget -O include/prereq-build.mk "https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/prereq-build.mk"
+    wget -O include/prereq-build.mk "https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/prereq-build.mk"
     echo -e "${STEPS} Start adding custom files..."
 
     if [[ -d "${custom_files_path}" ]]; then
