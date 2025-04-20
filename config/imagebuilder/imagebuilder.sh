@@ -209,7 +209,7 @@ rebuild_firmware() {
     gunzip openwrt_amlogic_s905x_k5.4.292_2025.04.20.img.gz
     mkdir armbian
     sudo losetup -P -f --show openwrt_amlogic_s905x_k5.4.292_2025.04.20.img
-    sudo mount /dev/loop armbian
+    sudo mount /dev/mapper/loop0p2 armbian
     
     sudo rm -rf openwrt/lib/firmware
     sudo rm -rf openwrt/lib/modules
@@ -222,7 +222,7 @@ rebuild_firmware() {
     sudo mkdir armbian/boot
     sudo sync
     sudo umount armbian
-    sudo losetup -d /dev/loop0
+    sudo losetup -d /dev/mapper/loop0
     
     xz --compress openwrt_amlogic_s905x_k5.4.292_2025.04.20.img
 
