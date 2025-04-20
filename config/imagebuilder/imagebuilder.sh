@@ -210,7 +210,7 @@ rebuild_firmware() {
     mkdir armbian
     #sudo losetup --partscan --show --find openwrt_amlogic_s905x_k5.4.292_2025.04.20.img
     sudo losetup -P -f --show openwrt_amlogic_s905x_k5.4.292_2025.04.20.img
-    mkdir -p /dev/loop0p2
+    sudo mkdir -p /dev/loop0p2
     sudo mount /dev/loop0p2 armbian
     
     sudo rm -rf openwrt/lib/firmware
