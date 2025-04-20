@@ -205,12 +205,10 @@ rebuild_firmware() {
     #wget https://github.com/predators46/hack/releases/download/18.06.4/openwrt-18.06.4-armvirt-64-default-rootfs.tar.gz
     tar xvf openwrt-21.02.7-armvirt-64-default-rootfs.tar.gz -C openwrt
     
-    wget https://github.com/predators46/amlogic-s9xxx-openwrt/releases/download/OpenWrt_imagebuilder__2025.04/openwrt_amlogic_s905x_k5.4.292_2025.04.20.img.gz
-    gunzip openwrt_amlogic_s905x_k5.4.292_2025.04.20.img.gz
+    wget https://github.com/predators46/hack/releases/download/hack/openwrt_s905x_v5.4.128_AP-Edition_REV.4.8.img.xz
+    unxz openwrt_s905x_v5.4.128_AP-Edition_REV.4.8.img.xz
     mkdir armbian
-    #sudo losetup --partscan --show --find openwrt_amlogic_s905x_k5.4.292_2025.04.20.img
-    sudo losetup -P -f --show openwrt_amlogic_s905x_k5.4.292_2025.04.20.img
-    sudo mkdir -p /dev/loop0p2
+    sudo losetup -P -f --show openwrt_s905x_v5.4.128_AP-Edition_REV.4.8.img
     sudo mount /dev/loop0p2 armbian
     
     sudo rm -rf openwrt/lib/firmware
@@ -226,7 +224,7 @@ rebuild_firmware() {
     sudo umount armbian
     sudo losetup -d /dev/loop0
     
-    xz --compress openwrt_amlogic_s905x_k5.4.292_2025.04.20.img
+    xz --compress openwrt_s905x_v5.4.128_AP-Edition_REV.4.8.img
 
     sync && sleep 3
     echo -e "${INFO} [ ${openwrt_dir}/bin/targets/*/* ] directory status: $(ls bin/targets/*/* -al 2>/dev/null)"
