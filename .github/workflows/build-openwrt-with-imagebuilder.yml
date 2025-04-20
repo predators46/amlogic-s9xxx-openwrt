@@ -1,359 +1,259 @@
-#=====================================================================================
+#!/bin/bash
+#================================================================================================
+#
+# This file is licensed under the terms of the GNU General Public
+# License version 2. This program is licensed "as is" without any
+# warranty of any kind, whether express or implied.
+#
+# This file is a part of the make OpenWrt for Amlogic s9xxx tv box
 # https://github.com/ophub/amlogic-s9xxx-openwrt
-# Description:   Build OpenWrt with Image Builder
-# Instructions:  https://openwrt.org/docs/guide-user/additional-software/imagebuilder
+#
+# Description: Build OpenWrt with Image Builder
+# Copyright (C) 2021~ https://github.com/unifreq/openwrt_packit
+# Copyright (C) 2021~ https://github.com/ophub/amlogic-s9xxx-openwrt
+# Copyright (C) 2021~ https://downloads.openwrt.org/releases
+# Copyright (C) 2023~ https://downloads.immortalwrt.org/releases
+#
 # Download from: https://downloads.openwrt.org/releases
 #                https://downloads.immortalwrt.org/releases
-#=====================================================================================
+#
+# Documentation: https://openwrt.org/docs/guide-user/additional-software/imagebuilder
+# Instructions:  Download OpenWrt firmware from the official OpenWrt,
+#                Use Image Builder to add packages, lib, theme, app and i18n, etc.
+#
+# Command: ./config/imagebuilder/imagebuilder.sh <source:branch>
+#          ./config/imagebuilder/imagebuilder.sh openwrt:21.02.3
+#
+#======================================== Functions list ========================================
+#
+# error_msg               : Output error message
+# download_imagebuilder   : Downloading OpenWrt ImageBuilder
+# adjust_settings         : Adjust related file settings
+# custom_packages         : Add custom packages
+# custom_config           : Add custom config
+# custom_files            : Add custom files
+# rebuild_firmware        : rebuild_firmware
+#
+#================================ Set make environment variables ================================
+#
+# Set default parameters
+make_path="${PWD}"
+openwrt_dir="imagebuilder"
+imagebuilder_path="${make_path}/${openwrt_dir}"
+custom_files_path="${make_path}/config/imagebuilder/files"
+custom_config_file="${make_path}/config/imagebuilder/config"
 
-name: Build OpenWrt with ImageBuilder
+# Set default parameters
+STEPS="[\033[95m STEPS \033[0m]"
+INFO="[\033[94m INFO \033[0m]"
+SUCCESS="[\033[92m SUCCESS \033[0m]"
+WARNING="[\033[93m WARNING \033[0m]"
+ERROR="[\033[91m ERROR \033[0m]"
+#
+#================================================================================================
 
-on:
-  repository_dispatch:
-  workflow_dispatch:
-    inputs:
-      releases_branch:
-        description: "Select the releases branch"
-        required: false
-        default: "openwrt:24.10.0"
-        type: choice
-        options:
-          - openwrt:24.10.0
-          - immortalwrt:24.10.0
-          - openwrt:18.06.9
-          - openwrt:21.02.7
-      openwrt_board:
-        description: "Select device board"
-        required: false
-        default: "all"
-        type: choice
-        options:
-          - all
-          - s905w_s905x_s905x-b860h_s905x-t95_s905x2_s905x3_s905x3-x88-pro-x3_s912_s912-m8s-pro_s912-phicomm-t1_s912-t95z-plus
-          - s912-x92_s922x_s922x-ct2000_s922x-reva_seewo-sv21_smart-am40_smart-am60_station-m1_sw799_swan1-w28
-          - tanix-tx6_tb-ls3399_tn3399_tpm312_tqc-a01_tvi3315a_vplus_wxy-oec_xiaobao_yskj_zcube1-max_zk-r39a_zysj
-          - a311d
-          - beikeyun
-          - chainedbox
-          - crrc
-          - dg3399
-          - dg-tn3568
-          - dlfr100
-          - e20c
-          - e25
-          - eaidk-610
-          - emb3531
-          - fine3399
-          - firefly-rk3399
-          - fmx1-pro
-          - jp-tvbox
-          - h28k
-          - h66k
-          - h68k
-          - h69k
-          - h88k
-          - h88k-v3
-          - h96-max-m2
-          - hs530r
-          - hugsun-x99
-          - ipc-r
-          - king3399
-          - kylin3399
-          - lckfb-tspi
-          - leez
-          - lx-r3s
-          - mrkaio-m68s
-          - nanopc-t6
-          - nanopi-r5c
-          - nanopi-r5s
-          - orangepi-5-plus
-          - panther-x2
-          - r66s
-          - r68s
-          - renegade-rk3328
-          - rk3318-box
-          - rock5b
-          - rock5c
-          - ruisen-box
-          - s905
-          - s905-beelink-mini
-          - s905-mxqpro-plus
-          - s905d
-          - s905d-ki-pro
-          - s905d-sml5442tw
-          - s905l
-          - s905l-aurora-1s
-          - s905l-b860av21u
-          - s905l-mg101
-          - s905l2
-          - s905l2-e900v21e
-          - s905l2-wojia
-          - s905l3
-          - s905l3-cm211
-          - s905l3-unt400g1
-          - s905l3-unt402a
-          - s905l3a
-          - s905l3a-cm311
-          - s905l3a-m401a
-          - s905l3b
-          - s905l3b-e900v21d
-          - s905l3b-e900v22d
-          - s905l3b-e900v22e
-          - s905l3b-ip103h
-          - s905l3b-rg020et-ca
-          - s905l3b-unt403a
-          - s905lb-ipbs9505
-          - s905lb-q96-mini
-          - s905lb-r3300l
-          - s905mb
-          - s905w
-          - s905w-w95
-          - s905w-x96-mini
-          - s905w-x96w
-          - s905x
-          - s905x-b860h
-          - s905x-nexbox-a95x
-          - s905x-t95
-          - s905x-tbee
-          - s905x-tx9
-          - s905x2
-          - s905x2-km3
-          - s905x2-x96max-2g
-          - s905x3
-          - s905x3-2101
-          - s905x3-a100
-          - s905x3-a95xf3
-          - s905x3-a95xf3-gb
-          - s905x3-b
-          - s905x3-h96max
-          - s905x3-hk1
-          - s905x3-ip1001m
-          - s905x3-q1
-          - s905x3-q2
-          - s905x3-tx3
-          - s905x3-tx3-bz
-          - s905x3-ugoosx3
-          - s905x3-whale
-          - s905x3-x88-pro-x3
-          - s905x3-x96air
-          - s905x3-x96air-gb
-          - s905x3-x96max
-          - s912
-          - s912-h96pro-plus
-          - s912-m8s-pro
-          - s912-nexbox-a1
-          - s912-nexbox-a2
-          - s912-onecloudpro
-          - s912-phicomm-t1
-          - s912-t95z-plus
-          - s912-tx8-max
-          - s912-tx9-pro-2g
-          - s912-tx9-pro-3g
-          - s912-x92
-          - s912-zyxq-fake
-          - s922x
-          - s922x-ct2000
-          - s922x-gtking
-          - s922x-gtkingpro-h
-          - s922x-odroid-n2
-          - s922x-reva
-          - s922x-ugoos-am6
-          - seewo-sv21
-          - smart-am40
-          - smart-am60
-          - station-m1
-          - swan1-w28
-          - sw799
-          - tanix-tx6
-          - tb-ls3399
-          - tn3399
-          - tpm312
-          - tqc-a01
-          - tvi3315a
-          - vplus
-          - wxy-oec
-          - xiaobao
-          - yskj
-          - zcube1-max
-          - zk-r39a
-          - zysj
-      openwrt_kernel:
-        description: "Select kernel version"
-        required: false
-        default: "6.1.y_6.12.y"
-        type: choice
-        options:
-          - 5.4.y
-          - 5.10.y
-          - 5.15.y
-          - 6.1.y
-          - 6.6.y
-          - 6.12.y
-          - 5.4.y_5.10.y
-          - 5.15.y_6.1.y
-          - 6.1.y_6.12.y
-          - 6.1.y_6.6.y
-          - 6.6.y_6.12.y
-      auto_kernel:
-        description: "Auto use the latest kernel"
-        required: false
-        default: true
-        type: boolean
-      kernel_repo:
-        description: "Set the kernel repository"
-        required: false
-        default: "ophub/kernel"
-        type: choice
-        options:
-          - ophub/kernel
-          - predators46/kernel
-          - firmwarecostum/kernel
-      kernel_usage:
-        description: "Set the tags of the stable kernel."
-        required: false
-        default: "stable"
-        type: choice
-        options:
-          - stable
-          - flippy
-          - dev
-          - beta
-      builder_name:
-        description: "Set OpenWrt builder signature."
-        required: false
-        default: "ophub"
-        type: choice
-        options:
-          - ophub
-          - angel
-          - yourname
-          - OpenWrt
+# Encountered a serious error, abort the script execution
+error_msg() {
+    echo -e "${ERROR} ${1}"
+    exit 1
+}
 
-env:
-  TZ: Asia/Makassar
-  IMAGEBUILDER_SH: config/imagebuilder/imagebuilder.sh
+# Downloading OpenWrt ImageBuilder
+download_imagebuilder() {
+    cd ${make_path}
+    echo -e "${STEPS} Start downloading OpenWrt files..."
 
-jobs:
-  build:
-    runs-on: ubuntu-22.04
-    if: ${{ github.event.repository.owner.id }} == ${{ github.event.sender.id }}
+    # Determine the target system (Imagebuilder files naming has changed since 23.05.0)
+    if [[ "${op_branch:0:2}" -ge "23" && "${op_branch:3:2}" -ge "05" ]]; then
+        target_system="armsr/armv8"
+        target_name="armsr-armv8"
+        target_profile=""
+    else
+        target_system="armvirt/64"
+        target_name="armvirt-64"
+        target_profile="Default"
+    fi
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+    # Downloading imagebuilder files
+    download_file="https://downloads.${op_sourse}.org/releases/${op_branch}/targets/${target_system}/${op_sourse}-imagebuilder-${op_branch}-${target_name}.Linux-x86_64.tar.xz"
+    curl -fsSOL ${download_file}
+    [[ "${?}" -eq "0" ]] || error_msg "Download failed: [ ${download_file} ]"
 
-      - name: Initialization environment
-        id: init
-        env:
-          DEBIAN_FRONTEND: noninteractive
-        run: |
-          docker rmi $(docker images -q) 2>/dev/null
-          [[ -n "${AGENT_TOOLSDIRECTORY}" ]] && sudo rm -rf "${AGENT_TOOLSDIRECTORY}"
-          sudo rm -rf /usr/share/dotnet /etc/apt/sources.list.d /usr/local/lib/android 2>/dev/null
-          sudo swapoff -a
-          sudo rm -f /swapfile /mnt/swapfile
-          sudo -E apt-get -y update
-          sudo -E apt-get -y purge azure-cli ghc* zulu* llvm* firefox google* dotnet* powershell openjdk* mongodb* moby* || true
-          sudo -E apt-get -y install $(curl -fsSL https://tinyurl.com/ubuntu2204-make-openwrt)
-          sudo -E systemctl daemon-reload
-          #sudo -E apt-get -y full-upgrade
-          sudo -E apt-get -y autoremove --purge
-          sudo -E apt-get clean
-          sudo sed -i '/NVM_DIR/d;/skel/d' /root/{.bashrc,.profile}
-          sudo rm -rf ~/{.cargo,.dotnet,.rustup}
-          sudo timedatectl set-timezone "${TZ}"
-          echo "status=success" >> ${GITHUB_OUTPUT}
+    # Unzip and change the directory name
+    tar -xf *-imagebuilder-* && sync && rm -f *-imagebuilder-*.tar.xz
+    mv -f *-imagebuilder-* ${openwrt_dir}
 
-      - name: Create simulated physical disk
-        run: |
-          mnt_size=$(expr $(df -h /mnt | tail -1 | awk '{print $4}' | sed 's/[[:alpha:]]//g' | sed 's/\..*//') - 1)
-          root_size=$(expr $(df -h / | tail -1 | awk '{print $4}' | sed 's/[[:alpha:]]//g' | sed 's/\..*//') - 4)
-          sudo truncate -s "${mnt_size}"G /mnt/mnt.img
-          sudo truncate -s "${root_size}"G /root.img
-          sudo losetup /dev/loop6 /mnt/mnt.img
-          sudo losetup /dev/loop7 /root.img
-          sudo pvcreate /dev/loop6
-          sudo pvcreate /dev/loop7
-          sudo vgcreate github /dev/loop6 /dev/loop7
-          sudo lvcreate -n runner -l 100%FREE github
-          sudo mkfs.xfs /dev/github/runner
-          sudo mkdir -p /builder
-          sudo mount /dev/github/runner /builder
-          sudo chown -R runner.runner /builder
-          df -Th
+    sync && sleep 3
+    echo -e "${INFO} [ ${make_path} ] directory status: $(ls -al 2>/dev/null)"
+}
 
-      - name: Build OpenWrt Rootfs [ ${{ inputs.releases_branch }} ]
-        id: imagebuilder
-        if: ${{ steps.init.outputs.status }} == 'success' && !cancelled()
-        run: |
-          RELEASES_BRANCH="${{ inputs.releases_branch }}"
-          chmod +x ${IMAGEBUILDER_SH}
-          ${IMAGEBUILDER_SH} ${RELEASES_BRANCH}
-          echo "RELEASES_TAG=${RELEASES_BRANCH/:/_}" >> ${GITHUB_ENV}
-          echo "build_tag=OpenWrt_imagebuilder_${{ env.RELEASES_TAG }}_$(date +"%Y.%m")" >> ${GITHUB_OUTPUT}
-          echo "status=success" >> ${GITHUB_OUTPUT}
+# Adjust related files in the ImageBuilder directory
+adjust_settings() {
+    cd ${imagebuilder_path}
+    echo -e "${STEPS} Start adjusting .config file settings..."
 
-      - name: Clear server space
-        id: clean
-        if: ${{ steps.imagebuilder.outputs.status }} == 'success' && !cancelled()
-        run: |
-          cd imagebuilder
-          [[ -d "output" ]] || mkdir output
-          cp -f bin/targets/*/*/*rootfs.tar.gz output/
-          cp -f bin/targets/*/*/*img.xz output/
-          cp -f .config output/config
-          rm -rf $(ls . | grep -v "^output$" | xargs) 2>/dev/null
+    # For .config file
+    if [[ -s ".config" ]]; then
+        # Root filesystem archives
+        sed -i "s|CONFIG_TARGET_ROOTFS_CPIOGZ=.*|# CONFIG_TARGET_ROOTFS_CPIOGZ is not set|g" .config
+        # Root filesystem images
+        sed -i "s|CONFIG_TARGET_ROOTFS_EXT4FS=.*|# CONFIG_TARGET_ROOTFS_EXT4FS is not set|g" .config
+        sed -i "s|CONFIG_TARGET_ROOTFS_SQUASHFS=.*|# CONFIG_TARGET_ROOTFS_SQUASHFS is not set|g" .config
+        sed -i "s|CONFIG_TARGET_IMAGES_GZIP=.*|# CONFIG_TARGET_IMAGES_GZIP is not set|g" .config
+    else
+        echo -e "${INFO} [ ${imagebuilder_path} ] directory status: $(ls -al 2>/dev/null)"
+        error_msg "There is no .config file in the [ ${download_file} ]"
+    fi
 
-          # Generate sha256sum file
-          cd output/
-          for file in *; do [[ ! -d "${file}" ]] && sha256sum "${file}" >"${file}.sha"; done
+    # For other files
+    # ......
 
-          [[ -d "/builder/openwrt" ]] || mkdir -p /builder/openwrt
-          ln -sf /builder/openwrt /home/runner/work/_actions/predators46/amlogic-s9xxx-openwrt/main/openwrt
-          df -hT ${PWD}
-          echo "status=success" >> ${GITHUB_OUTPUT}
+    sync && sleep 3
+    echo -e "${INFO} [ ${imagebuilder_path} ] directory status: $(ls -al 2>/dev/null)"
+}
 
-      - name: Upload OpenWrt to Release
-        uses: ncipollo/release-action@main
-        if: ${{ steps.clean.outputs.status }} == 'success' && !cancelled()
-        with:
-          tag: ${{ steps.imagebuilder.outputs.build_tag }}
-          artifacts: imagebuilder/output/*
-          allowUpdates: true
-          removeArtifacts: false
-          replacesArtifacts: true
-          token: ${{ secrets.GITHUB_TOKEN }}
+# Add custom packages
+# If there is a custom package or ipk you would prefer to use create a [ packages ] directory,
+# If one does not exist and place your custom ipk within this directory.
+custom_packages() {
+    cd ${imagebuilder_path}
+    echo -e "${STEPS} Start adding custom packages..."
 
-      - name: Packaging OpenWrt
-        if: ${{ steps.clean.outputs.status }} == 'success' && !cancelled()
-        uses: predators46/amlogic-s9xxx-openwrt@main
-        with:
-          openwrt_path: imagebuilder/output/*rootfs.tar.gz
-          openwrt_board: ${{ inputs.openwrt_board }}
-          openwrt_kernel: ${{ inputs.openwrt_kernel }}
-          auto_kernel: ${{ inputs.auto_kernel }}
-          kernel_repo: ${{ inputs.kernel_repo }}
-          kernel_usage: ${{ inputs.kernel_usage }}
-          builder_name: ${{ inputs.builder_name }}
+    # Clone [ packages ] directory
+    #rm -rf packages && git clone "https://github.com/esaaprillia/packages"
+    #git clone "https://github.com/esaaprillia/package" && cp -r package/* packages/ && rm -rf package
+    [[ "${?}" -eq "0" ]] || error_msg "[ packages ] clone failed!"
+    echo -e "${INFO} The [ packages ] is clone successfully."
 
-      - name: Upload the packaged OpenWrt
-        uses: ncipollo/release-action@main
-        if: ${{ env.PACKAGED_STATUS }} == 'success' && !cancelled()
-        with:
-          tag: ${{ steps.imagebuilder.outputs.build_tag }}
-          artifacts: ${{ env.PACKAGED_OUTPUTPATH }}/*
-          allowUpdates: true
-          removeArtifacts: false
-          replacesArtifacts: true
-          token: ${{ secrets.GITHUB_TOKEN }}
-          body: |
-            ### OpenWrt Image information
-            - Default IP: 192.168.1.1
-            - Default username: root
-            - Default password: password
-            - Default WIFI name: OpenWrt
-            - Default WIFI password: none
-            ### Install to EMMC
-            - Login to OpenWrt → System → Amlogic Service → Install OpenWrt
-            ### OpenWrt Image Verification
-            - sha256sum
+    # Download other luci-app-xxx
+    # ......
+
+    sync && sleep 3
+    echo -e "${INFO} [ packages ] directory status: $(ls -al 2>/dev/null)"
+}
+
+# Add custom packages, lib, theme, app and i18n, etc.
+custom_config() {
+    cd ${imagebuilder_path}
+    echo -e "${STEPS} Start adding custom config..."
+
+    config_list=""
+    if [[ -s "${custom_config_file}" ]]; then
+        config_list="$(cat ${custom_config_file} 2>/dev/null | grep -E "^CONFIG_PACKAGE_.*=y" | sed -e 's/CONFIG_PACKAGE_//g' -e 's/=y//g' -e 's/[ ][ ]*//g' | tr '\n' ' ')"
+        echo -e "${INFO} Custom config list: \n$(echo "${config_list}" | tr ' ' '\n')"
+    else
+        echo -e "${INFO} No custom config was added."
+    fi
+}
+
+# Add custom files
+# The FILES variable allows custom configuration files to be included in images built with Image Builder.
+# The [ files ] directory should be placed in the Image Builder root directory where you issue the make command.
+custom_files() {
+    cd ${imagebuilder_path}
+    #wget -O include/prereq-build.mk "https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/prereq-build.mk"
+    echo -e "${STEPS} Start adding custom files..."
+
+    if [[ -d "${custom_files_path}" ]]; then
+        # Copy custom files
+        [[ -d "files" ]] || mkdir -p files
+        cp -rf ${custom_files_path}/* files
+
+        sync && sleep 3
+        echo -e "${INFO} [ files ] directory status: $(ls files -al 2>/dev/null)"
+    else
+        echo -e "${INFO} No customized files were added."
+    fi
+}
+
+# Rebuild OpenWrt firmware
+rebuild_firmware() {
+    cd ${imagebuilder_path}
+    echo -e "${STEPS} Start building OpenWrt with Image Builder..."
+
+    # Selecting default packages, lib, theme, app and i18n, etc.
+    my_packages="\
+        kmod-usb-core kmod-usb2 usb-modeswitch libusb-1.0 kmod-usb-net-cdc-ether \
+        \
+        kmod-usb-net-rndis kmod-usb-net-cdc-ncm kmod-usb-net-huawei-cdc-ncm kmod-usb-net-cdc-eem kmod-usb-net-cdc-ether kmod-usb-net-cdc-subset kmod-nls-base kmod-usb-core kmod-usb-net kmod-usb-net-cdc-ether kmod-usb2 \
+        \
+        luci \
+        \
+        kmod-fs-vfat lsblk btrfs-progs uuidgen dosfstools tar fdisk \
+        \
+        e2fsprogs fstools mkf2fs partx-utils \
+        \
+        openssh-sftp-server \
+        \
+        zoneinfo-asia zoneinfo-core \
+        \
+        bash perl perl-http-date perlbase-file perlbase-getopt perlbase-time perlbase-unicode perlbase-utf8 \
+        \
+        dnsmasq-full \
+        \
+        -dnsmasq \
+        \
+        ${config_list} \
+        "
+
+    # Rebuild firmware
+    make image PROFILE="${target_profile}" PACKAGES="${my_packages}" FILES="files"
+    
+    cd bin/targets/*/*/
+    
+    mkdir openwrt
+    #wget https://github.com/predators46/hack/releases/download/18.06.4/openwrt-18.06.4-armvirt-64-default-rootfs.tar.gz
+    tar xvf openwrt-21.02.7-armvirt-64-default-rootfs.tar.gz -C openwrt
+    
+    wget https://github.com/predators46/amlogic-s9xxx-openwrt/releases/download/OpenWrt_imagebuilder__2025.04/openwrt_amlogic_s905x_k5.4.292_2025.04.20.img.gz
+    gunzip openwrt_amlogic_s905x_k5.4.292_2025.04.20.img.gz
+    mkdir armbian
+    sudo losetup -P -f --show openwrt_amlogic_s905x_k5.4.292_2025.04.20.img
+    ls /dev/loop3*
+    sudo mount /dev/loop3p2 armbian
+    
+    sudo rm -rf openwrt/lib/firmware
+    sudo rm -rf openwrt/lib/modules
+    
+    sudo mv armbian/lib/modules openwrt/lib/
+    sudo mv armbian/lib/firmware openwrt/lib/
+    
+    sudo rm -rf armbian/*
+    sudo mv openwrt/* armbian/
+    sudo mkdir armbian/boot
+    sudo sync
+    sudo umount armbian
+    sudo losetup -d /dev/loop3
+    
+    xz --compress openwrt_amlogic_s905x_k5.4.292_2025.04.20.img
+    
+    cd ${imagebuilder_path}
+
+    sync && sleep 3
+    echo -e "${INFO} [ ${openwrt_dir}/bin/targets/*/* ] directory status: $(ls bin/targets/*/* -al 2>/dev/null)"
+    echo -e "${SUCCESS} The rebuild is successful, the current path: [ ${PWD} ]"
+}
+
+# Show welcome message
+echo -e "${STEPS} Welcome to Rebuild OpenWrt Using the Image Builder."
+[[ -x "${0}" ]] || error_msg "Please give the script permission to run: [ chmod +x ${0} ]"
+[[ -z "${1}" ]] && error_msg "Please specify the OpenWrt Branch, such as [ ${0} openwrt:22.03.3 ]"
+[[ "${1}" =~ ^[a-z]{3,}:[0-9]+ ]] || error_msg "Incoming parameter format <source:branch>: openwrt:22.03.3"
+op_sourse="${1%:*}"
+op_branch="${1#*:}"
+echo -e "${INFO} Rebuild path: [ ${PWD} ]"
+echo -e "${INFO} Rebuild Source: [ ${op_sourse} ], Branch: [ ${op_branch} ]"
+echo -e "${INFO} Server space usage before starting to compile: \n$(df -hT ${make_path}) \n"
+#
+# Perform related operations
+download_imagebuilder
+adjust_settings
+custom_packages
+custom_config
+custom_files
+rebuild_firmware
+#
+# Show server end information
+echo -e "Server space usage after compilation: \n$(df -hT ${make_path}) \n"
+# All process completed
+wait
