@@ -209,7 +209,8 @@ rebuild_firmware() {
     unxz openwrt_s905x_v5.4.128_AP-Edition_REV.4.8.img.xz
     mkdir armbian
     sudo losetup -P -f --show openwrt_s905x_v5.4.128_AP-Edition_REV.4.8.img
-    sudo mount /dev/loop2 armbian
+    ls /dev/loop3*
+    sudo mount /dev/loop3p2 armbian
     
     sudo rm -rf openwrt/lib/firmware
     sudo rm -rf openwrt/lib/modules
@@ -222,7 +223,7 @@ rebuild_firmware() {
     sudo mkdir armbian/boot
     sudo sync
     sudo umount armbian
-    sudo losetup -d /dev/loop0
+    sudo losetup -d /dev/loop3
     
     xz --compress openwrt_s905x_v5.4.128_AP-Edition_REV.4.8.img
 
