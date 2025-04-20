@@ -20,6 +20,8 @@ on:
         options:
           - openwrt:24.10.0
           - immortalwrt:24.10.0
+          - openwrt:18.06.9
+          - openwrt:21.02.7
       openwrt_board:
         description: "Select device board"
         required: false
@@ -298,6 +300,7 @@ jobs:
           cd imagebuilder
           [[ -d "output" ]] || mkdir output
           cp -f bin/targets/*/*/*rootfs.tar.gz output/
+          cp -f bin/targets/*/*/*img.xz output/
           cp -f .config output/config
           rm -rf $(ls . | grep -v "^output$" | xargs) 2>/dev/null
 
