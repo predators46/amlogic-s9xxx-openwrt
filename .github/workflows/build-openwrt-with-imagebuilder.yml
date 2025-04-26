@@ -324,7 +324,7 @@ jobs:
 
       - name: Packaging OpenWrt
         if: ${{ steps.clean.outputs.status }} == 'success' && !cancelled()
-        uses: predators46/amlogic-s9xxx-openwrt@24-fix-ori
+        uses: predators46/amlogic-s9xxx-openwrt@main
         with:
           openwrt_path: imagebuilder/output/*rootfs.tar.gz
           openwrt_board: ${{ inputs.openwrt_board }}
