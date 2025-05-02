@@ -182,7 +182,7 @@ rebuild_firmware() {
         \
         mariadb-client-extra mariadb-server-extra \
         \
-        luci-nginx nginx-full \
+        luci-nginx \
         \
         dnsmasq-full \
         \
