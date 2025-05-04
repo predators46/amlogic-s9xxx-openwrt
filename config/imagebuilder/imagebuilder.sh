@@ -176,8 +176,6 @@ rebuild_firmware() {
         \
         dnsmasq-full \
         \
-        -uhttpd \
-        \
         -dnsmasq \
         \
         ${config_list} \
