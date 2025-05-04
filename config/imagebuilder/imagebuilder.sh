@@ -216,7 +216,7 @@ rebuild_firmware() {
     sudo mv armbian/lib/modules openwrt/lib/
     sudo mv armbian/lib/firmware openwrt/lib/
 
-    #sudo sed -i '/kmodloader/i \\tulimit -n 51200\n' openwrt/etc/init.d/boot
+    sudo sed -i '/kmodloader/i \\tulimit -n 51200\n' openwrt/etc/init.d/boot
     
     sudo rm -rf armbian/*
     sudo mv openwrt/* armbian/
