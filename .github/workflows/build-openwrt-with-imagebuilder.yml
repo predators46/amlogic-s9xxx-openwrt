@@ -296,7 +296,7 @@ jobs:
         id: clean
         if: ${{ steps.imagebuilder.outputs.status }} == 'success' && !cancelled()
         run: |
-          cd imagebuilder
+          cd imagebuilder && su
           [[ -d "output" ]] || mkdir output
           cp -f bin/targets/*/*/*rootfs.tar.gz output/
           cp -f bin/targets/*/*/*img.xz output/
