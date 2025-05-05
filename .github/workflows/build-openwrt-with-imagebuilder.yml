@@ -305,7 +305,7 @@ jobs:
 
           # Generate sha256sum file
           cd output/
-          sudo for file in *; do [[ ! -d "${file}" ]] && sha256sum "${file}" >"${file}.sha"; done
+          #for file in *; do [[ ! -d "${file}" ]] && sha256sum "${file}" >"${file}.sha"; done
 
           [[ -d "/builder/openwrt" ]] || sudo mkdir -p /builder/openwrt
           sudo ln -sf /builder/openwrt /home/runner/work/_actions/predators46/amlogic-s9xxx-openwrt/main/openwrt
