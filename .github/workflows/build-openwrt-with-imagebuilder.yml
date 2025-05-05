@@ -278,7 +278,8 @@ jobs:
           sudo mkfs.xfs /dev/github/runner
           sudo mkdir -p /builder
           sudo mount /dev/github/runner /builder
-          sudo chown -R runner.runner /builder
+          #sudo chown -R runner.runner /builder
+          sudo chown -R root:root /builder
           df -Th
 
       - name: Build OpenWrt Rootfs [ ${{ inputs.releases_branch }} ]
