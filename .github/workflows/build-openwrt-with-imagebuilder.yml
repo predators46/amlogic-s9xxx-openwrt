@@ -298,17 +298,17 @@ jobs:
         run: |
           cd imagebuilder
           [[ -d "output" ]] || sudo mkdir output
-          cp -f bin/targets/*/*/*rootfs.tar.gz output/
-          cp -f bin/targets/*/*/*img.xz output/
-          cp -f .config output/config
-          rm -rf $(ls . | grep -v "^output$" | xargs) 2>/dev/null
+          sudo cp -f bin/targets/*/*/*rootfs.tar.gz output/
+          sudo cp -f bin/targets/*/*/*img.xz output/
+          sudo cp -f .config output/config
+          sudo rm -rf $(ls . | grep -v "^output$" | xargs) 2>/dev/null
 
           # Generate sha256sum file
           cd output/
           for file in *; do [[ ! -d "${file}" ]] && sha256sum "${file}" >"${file}.sha"; done
 
           [[ -d "/builder/openwrt" ]] || sudo mkdir -p /builder/openwrt
-          ln -sf /builder/openwrt /home/runner/work/_actions/predators46/amlogic-s9xxx-openwrt/main/openwrt
+          sudo ln -sf /builder/openwrt /home/runner/work/_actions/predators46/amlogic-s9xxx-openwrt/main/openwrt
           df -hT ${PWD}
           echo "status=success" >> ${GITHUB_OUTPUT}
 
