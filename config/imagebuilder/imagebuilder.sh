@@ -193,26 +193,26 @@ rebuild_firmware() {
     wget https://github.com/predators46/amlogic-s9xxx-openwrt/releases/download/OpenWrt_imagebuilder__2025.05/openwrt_amlogic_s905x_k6.6.87_2025.05.04.img.gz
     gunzip openwrt_amlogic_s905x_k6.6.87_2025.05.04.img.gz
     mkdir armbian
-    sudo losetup -P -f --show openwrt_amlogic_s905x_k6.6.87_2025.05.04.img
+    sudo -i losetup -P -f --show openwrt_amlogic_s905x_k6.6.87_2025.05.04.img
     ls /dev/loop3*
-    sudo mount /dev/loop3p2 armbian
+    sudo -i mount /dev/loop3p2 armbian
     
-    sudo rm -rf openwrt/lib/firmware
-    sudo rm -rf openwrt/lib/modules
+    sudo -i rm -rf openwrt/lib/firmware
+    sudo -i rm -rf openwrt/lib/modules
     
-    sudo mv armbian/lib/modules openwrt/lib/
-    sudo mv armbian/lib/firmware openwrt/lib/
+    sudo -i mv armbian/lib/modules openwrt/lib/
+    sudo -i mv armbian/lib/firmware openwrt/lib/
 
-    sudo sed -i '/kmodloader/i \\tulimit -n 51200\n' openwrt/etc/init.d/boot
+    sudo -i sed -i '/kmodloader/i \\tulimit -n 51200\n' openwrt/etc/init.d/boot
     
-    sudo rm -rf armbian/*
-    sudo rm -rf armbian/.reserved
-    sudo rm -rf armbian/.snapshots
-    sudo mv openwrt/* armbian/
-    sudo mkdir armbian/boot
-    sudo sync
-    sudo umount armbian
-    sudo losetup -d /dev/loop3
+    sudo -i rm -rf armbian/*
+    sudo -i rm -rf armbian/.reserved
+    sudo -i rm -rf armbian/.snapshots
+    sudo -i mv openwrt/* armbian/
+    sudo -i mkdir armbian/boot
+    sudo -i sync
+    sudo -i umount armbian
+    sudo -i losetup -d /dev/loop3
     
     xz --compress openwrt_amlogic_s905x_k6.6.87_2025.05.04.img
     
