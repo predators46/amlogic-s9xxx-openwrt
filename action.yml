@@ -53,8 +53,8 @@ runs:
         openwrt_outpath="openwrt/out"
         echo -e "Get openwrt file input parameters: [ ${openwrt_filename} ]"
         [[ -z "${openwrt_filename}" ]] && echo -e "The [ openwrt_path ] variable must be specified." && exit 1
-        [[ -d "${openwrt_savepath}" ]] || mkdir -p ${openwrt_savepath}
-        [[ -d "${openwrt_outpath}" ]] || mkdir -p ${openwrt_outpath}
+        [[ -d "${openwrt_savepath}" ]] || sudo mkdir -p ${openwrt_savepath}
+        [[ -d "${openwrt_outpath}" ]] || sudo mkdir -p ${openwrt_outpath}
 
         if [[ "${openwrt_filename}" == http* ]]; then
             echo -e "Download file: [ ${openwrt_filename} ]"
