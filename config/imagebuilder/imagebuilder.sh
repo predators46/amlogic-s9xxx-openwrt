@@ -172,7 +172,7 @@ rebuild_firmware() {
         \
         openssh-sftp-server \
         \
-        zoneinfo-asia zoneinfo-core \
+        zoneinfo-all zoneinfo-core \
         \
         dnsmasq-full \
         \
