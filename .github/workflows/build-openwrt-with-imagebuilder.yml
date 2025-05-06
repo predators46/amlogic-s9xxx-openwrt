@@ -287,7 +287,7 @@ jobs:
         run: |
           RELEASES_BRANCH="${{ inputs.releases_branch }}"
           chmod +x ${IMAGEBUILDER_SH}
-          ${IMAGEBUILDER_SH} ${RELEASES_BRANCH}
+          sudo ${IMAGEBUILDER_SH} ${RELEASES_BRANCH}
           echo "RELEASES_TAG=${RELEASES_BRANCH/:/_}" >> ${GITHUB_ENV}
           echo "build_tag=OpenWrt_imagebuilder_${{ env.RELEASES_TAG }}_$(date +"%Y.%m")" >> ${GITHUB_OUTPUT}
           echo "status=success" >> ${GITHUB_OUTPUT}
@@ -296,6 +296,7 @@ jobs:
         id: clean
         if: ${{ steps.imagebuilder.outputs.status }} == 'success' && !cancelled()
         run: |
+          sudo chown -R runner.runner imagebuilder
           cd imagebuilder
           [[ -d "output" ]] || mkdir output
           cp -f bin/targets/*/*/*rootfs.tar.gz output/
