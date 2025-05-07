@@ -188,6 +188,16 @@ rebuild_firmware() {
         \
         dnsmasq-full \
         \
+        php7 php7-cgi php7-cli php7-fastcgi php7-fpm php7-mod-bcmath php7-mod-calendar php7-mod-ctype php7-mod-curl php7-mod-dom php7-mod-exif php7-mod-fileinfo php7-mod-filter php7-mod-ftp php7-mod-gd php7-mod-gettext php7-mod-gmp php7-mod-iconv php7-mod-imap php7-mod-intl php7-mod-json php7-mod-ldap php7-mod-mbstring php7-mod-mysqli php7-mod-mysqlnd php7-mod-opcache php7-mod-openssl php7-mod-pcntl php7-mod-pdo php7-mod-pdo-mysql php7-mod-pdo-pgsql php7-mod-pdo-sqlite php7-mod-pgsql php7-mod-phar php7-mod-session php7-mod-shmop php7-mod-simplexml php7-mod-snmp php7-mod-soap php7-mod-sockets php7-mod-sqlite3 php7-mod-sysvmsg php7-mod-sysvsem php7-mod-sysvshm php7-mod-tokenizer php7-mod-xml php7-mod-xmlreader php7-mod-xmlwriter php7-mod-zip \
+        \
+        mariadb-client-extra mariadb-server-extra \
+        \
+        icu-full-data \
+        \
+        luci-nginx \
+        \
+        -uhttpd \
+        \
         -dnsmasq \
         \
         ${config_list} \
