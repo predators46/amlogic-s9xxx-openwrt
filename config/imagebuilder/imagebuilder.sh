@@ -176,8 +176,6 @@ rebuild_firmware() {
         \
         kmod-usb-net-rndis kmod-usb-net-cdc-ncm kmod-usb-net-huawei-cdc-ncm kmod-usb-net-cdc-eem kmod-usb-net-cdc-ether kmod-usb-net-cdc-subset kmod-nls-base kmod-usb-core kmod-usb-net kmod-usb-net-cdc-ether kmod-usb2 \
         \
-        luci \
-        \
         kmod-fs-vfat lsblk btrfs-progs uuidgen dosfstools tar fdisk \
         \
         e2fsprogs fstools mkf2fs partx-utils \
