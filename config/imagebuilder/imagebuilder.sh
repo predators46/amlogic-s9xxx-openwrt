@@ -190,7 +190,7 @@ rebuild_firmware() {
         \
         mariadb-client-extra mariadb-server-extra \
         \
-        icu-full-data \
+        icu-full-data icu-data-tools \
         \
         luci-nginx \
         \
