@@ -164,17 +164,27 @@ rebuild_firmware() {
         \
         kmod-usb-net-rndis kmod-usb-net-cdc-ncm kmod-usb-net-huawei-cdc-ncm kmod-usb-net-cdc-eem kmod-usb-net-cdc-ether kmod-usb-net-cdc-subset kmod-nls-base kmod-usb-core kmod-usb-net kmod-usb-net-cdc-ether kmod-usb2 \
         \
-        luci \
-        \
-        kmod-fs-vfat lsblk btrfs-progs uuidgen dosfstools tar fdisk \
-        \
-        e2fsprogs fstools mkf2fs partx-utils \
+        luci-nginx \
         \
         openssh-sftp-server \
         \
         zoneinfo-all zoneinfo-core \
         \
+        bash \
+        \
+        php8 php8-cli php8-fpm php8-mod-bcmath php8-mod-calendar php8-mod-ctype php8-mod-curl php8-mod-dom php8-mod-exif php8-mod-fileinfo php8-mod-filter php8-mod-gd php8-mod-gettext php8-mod-gmp php8-mod-iconv php8-mod-intl php8-mod-mbstring php8-mod-mysqli php8-mod-mysqlnd php8-mod-openssl php8-mod-pcntl php8-mod-pdo php8-mod-pdo-mysql php8-mod-pdo-sqlite php8-mod-session php8-mod-shmop php8-mod-simplexml php8-mod-soap php8-mod-sockets php8-mod-sodium php8-mod-sqlite3 php8-mod-sysvmsg php8-mod-sysvsem php8-mod-sysvshm php8-mod-tokenizer php8-mod-xml php8-mod-xmlreader php8-mod-xmlwriter php8-mod-zip \
+        \
+        php8-pecl-mcrypt php8-pecl-xdebug php8-pecl-imagick \
+        \
+        icu-full-data \
+        \
+        libmariadb mariadb-client-extra mariadb-server-extra \
+        \
+        wget-ssl \
+        \
         dnsmasq-full \
+        \
+        -uhttpd \
         \
         -dnsmasq \
         \
