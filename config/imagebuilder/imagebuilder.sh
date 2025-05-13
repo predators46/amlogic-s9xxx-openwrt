@@ -195,6 +195,40 @@ rebuild_firmware() {
 
     # Rebuild firmware
     make image PROFILE="${target_profile}" PACKAGES="${my_packages}" FILES="files"
+    
+    cd bin/targets/*/*/
+    
+    mkdir openwrt
+    #wget https://github.com/predators46/hack/releases/download/18.06.4/openwrt-18.06.4-armvirt-64-default-rootfs.tar.gz
+    tar xvf openwrt-19.07.10-armvirt-64-default-rootfs.tar.gz -C openwrt
+    
+    wget https://github.com/predators46/amlogic-s9xxx-openwrt/releases/download/OpenWrt_imagebuilder__2025.04/openwrt_amlogic_s905x_k5.4.292_2025.04.26.img.gz
+    gunzip openwrt_amlogic_s905x_k5.4.292_2025.04.26.img.gz
+    mkdir armbian
+    losetup -P -f --show openwrt_amlogic_s905x_k5.4.292_2025.04.26.img
+    ls /dev/loop3*
+    mount /dev/loop3p2 armbian
+    
+    rm -rf openwrt/lib/firmware
+    rm -rf openwrt/lib/modules
+    
+    mv armbian/lib/modules openwrt/lib/
+    mv armbian/lib/firmware openwrt/lib/
+
+    sed -i '/kmodloader/i \\tulimit -n 51200\n' openwrt/etc/init.d/boot
+    
+    rm -rf armbian/*
+    rm -rf armbian/.reserved
+    rm -rf armbian/.snapshots
+    mv openwrt/* armbian/
+    mkdir armbian/boot
+    sync
+    umount armbian
+    losetup -d /dev/loop3
+    
+    xz --compress openwrt_amlogic_s905x_k5.4.292_2025.04.26.img
+    
+    cd ${imagebuilder_path}
 
     sync && sleep 3
     echo -e "${INFO} [ ${openwrt_dir}/bin/targets/*/* ] directory status: $(ls bin/targets/*/* -al 2>/dev/null)"
