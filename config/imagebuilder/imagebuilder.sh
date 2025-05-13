@@ -22,7 +22,7 @@
 #                Use Image Builder to add packages, lib, theme, app and i18n, etc.
 #
 # Command: ./config/imagebuilder/imagebuilder.sh <source:branch>
-#          ./config/imagebuilder/imagebuilder.sh openwrt:24.10.0
+#          ./config/imagebuilder/imagebuilder.sh openwrt:21.02.3
 #
 #======================================== Functions list ========================================
 #
@@ -63,13 +63,24 @@ download_imagebuilder() {
     cd ${make_path}
     echo -e "${STEPS} Start downloading OpenWrt files..."
 
+    # Determine the target system (Imagebuilder files naming has changed since 23.05.0)
+    if [[ "${op_branch:0:2}" -ge "23" && "${op_branch:3:2}" -ge "05" ]]; then
+        target_system="armsr/armv8"
+        target_name="armsr-armv8"
+        target_profile=""
+    else
+        target_system="armvirt/64"
+        target_name="armvirt-64"
+        target_profile="Default"
+    fi
+
     # Downloading imagebuilder files
-    download_file="https://downloads.${op_sourse}.org/releases/${op_branch}/targets/armsr/armv8/${op_sourse}-imagebuilder-${op_branch}-armsr-armv8.Linux-x86_64.tar.zst"
+    download_file="https://downloads.${op_sourse}.org/releases/${op_branch}/targets/${target_system}/${op_sourse}-imagebuilder-${op_branch}-${target_name}.Linux-x86_64.tar.xz"
     curl -fsSOL ${download_file}
     [[ "${?}" -eq "0" ]] || error_msg "Download failed: [ ${download_file} ]"
 
     # Unzip and change the directory name
-    tar -I zstd -xvf *-imagebuilder-*.tar.zst -C . && sync && rm -f *-imagebuilder-*.tar.zst
+    tar -xf *-imagebuilder-* && sync && rm -f *-imagebuilder-*.tar.xz
     mv -f *-imagebuilder-* ${openwrt_dir}
 
     sync && sleep 3
@@ -109,7 +120,8 @@ custom_packages() {
     echo -e "${STEPS} Start adding custom packages..."
 
     # Clone [ packages ] directory
-    #rm -rf packages && git clone "https://github.com/esaaprillia/packages"
+    rm -rf packages && git clone -b 21 "https://github.com/esaaprillia/packages"
+    #git clone "https://github.com/esaaprillia/package" && cp -r package/* packages/ && rm -rf package
     [[ "${?}" -eq "0" ]] || error_msg "[ packages ] clone failed!"
     echo -e "${INFO} The [ packages ] is clone successfully."
 
@@ -182,41 +194,7 @@ rebuild_firmware() {
         "
 
     # Rebuild firmware
-    make image PROFILE="" PACKAGES="${my_packages}" FILES="files"
-    
-    cd bin/targets/*/*/
-    
-    mkdir openwrt
-    #wget https://github.com/predators46/hack/releases/download/18.06.4/openwrt-18.06.4-armvirt-64-default-rootfs.tar.gz
-    tar xvf openwrt-24.10.1-armsr-armv8-generic-rootfs.tar.gz -C openwrt
-    
-    wget https://github.com/predators46/amlogic-s9xxx-openwrt/releases/download/OpenWrt_imagebuilder__2025.05/openwrt_amlogic_s905x_k6.6.87_2025.05.04.img.gz
-    gunzip openwrt_amlogic_s905x_k6.6.87_2025.05.04.img.gz
-    mkdir armbian
-    losetup -P -f --show openwrt_amlogic_s905x_k6.6.87_2025.05.04.img
-    ls /dev/loop3*
-    mount /dev/loop3p2 armbian
-    
-    rm -rf openwrt/lib/firmware
-    rm -rf openwrt/lib/modules
-    
-    mv armbian/lib/modules openwrt/lib/
-    mv armbian/lib/firmware openwrt/lib/
-
-    sed -i '/kmodloader/i \\tulimit -n 51200\n' openwrt/etc/init.d/boot
-    
-    rm -rf armbian/*
-    rm -rf armbian/.reserved
-    rm -rf armbian/.snapshots
-    mv openwrt/* armbian/
-    mkdir armbian/boot
-    sync
-    umount armbian
-    losetup -d /dev/loop3
-    
-    xz --compress openwrt_amlogic_s905x_k6.6.87_2025.05.04.img
-    
-    cd ${imagebuilder_path}
+    make image PROFILE="${target_profile}" PACKAGES="${my_packages}" FILES="files"
 
     sync && sleep 3
     echo -e "${INFO} [ ${openwrt_dir}/bin/targets/*/* ] directory status: $(ls bin/targets/*/* -al 2>/dev/null)"
