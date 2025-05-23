@@ -204,10 +204,10 @@ rebuild_firmware() {
     #wget https://github.com/predators46/hack/releases/download/18.06.4/openwrt-18.06.4-armvirt-64-default-rootfs.tar.gz
     tar xvf openwrt-21.02.7-armvirt-64-default-rootfs.tar.gz -C openwrt
     
-    wget https://github.com/predators46/amlogic-s9xxx-openwrt/releases/download/OpenWrt_imagebuilder__2025.05/openwrt_amlogic_s905x_k5.4.292_2025.05.08.img.gz
-    gunzip openwrt_amlogic_s905x_k5.4.292_2025.05.08.img.gz
+    wget https://github.com/predators46/amlogic-s9xxx-openwrt/releases/download/OpenWrt_imagebuilder__2025.05/openwrt_amlogic_s905x_k5.4.293_2025.05.23.img.gz
+    gunzip openwrt_amlogic_s905x_k5.4.293_2025.05.23.img.gz
     mkdir armbian
-    losetup -P -f --show openwrt_amlogic_s905x_k5.4.292_2025.05.08.img
+    losetup -P -f --show openwrt_amlogic_s905x_k5.4.293_2025.05.23.img
     ls /dev/loop3*
     mount /dev/loop3p2 armbian
     
@@ -228,7 +228,7 @@ rebuild_firmware() {
     umount armbian
     losetup -d /dev/loop3
     
-    xz --compress openwrt_amlogic_s905x_k5.4.292_2025.05.08.img
+    xz --compress openwrt_amlogic_s905x_k5.4.293_2025.05.23.img
     
     cd ${imagebuilder_path}
 
