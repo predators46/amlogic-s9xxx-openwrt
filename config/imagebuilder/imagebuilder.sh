@@ -109,7 +109,7 @@ custom_packages() {
     echo -e "${STEPS} Start adding custom packages..."
 
     # Clone [ packages ] directory
-    rm -rf packages && clone -b 24 "https://github.com/esaaprillia/packages"
+    rm -rf packages && git clone -b 24 "https://github.com/esaaprillia/packages"
     [[ "${?}" -eq "0" ]] || error_msg "[ packages ] clone failed!"
     echo -e "${INFO} The [ packages ] is clone successfully."
 
