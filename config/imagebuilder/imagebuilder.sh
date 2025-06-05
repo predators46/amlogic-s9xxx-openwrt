@@ -172,7 +172,7 @@ rebuild_firmware() {
         \
         dnsmasq-full \
         \
-        -uhttpd \
+        luci \
         \
         -dnsmasq \
         \
