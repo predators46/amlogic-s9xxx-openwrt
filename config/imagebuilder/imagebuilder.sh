@@ -109,7 +109,7 @@ custom_packages() {
     echo -e "${STEPS} Start adding custom packages..."
 
     # Clone [ packages ] directory
-    rm -rf packages && git clone "https://github.com/esaaprillia/packages"
+    rm -rf packages && clone -b 24 "https://github.com/esaaprillia/packages"
     [[ "${?}" -eq "0" ]] || error_msg "[ packages ] clone failed!"
     echo -e "${INFO} The [ packages ] is clone successfully."
 
@@ -164,23 +164,11 @@ rebuild_firmware() {
         \
         kmod-usb-net-rndis kmod-usb-net-cdc-ncm kmod-usb-net-huawei-cdc-ncm kmod-usb-net-cdc-eem kmod-usb-net-cdc-ether kmod-usb-net-cdc-subset kmod-nls-base kmod-usb-core kmod-usb-net kmod-usb-net-cdc-ether kmod-usb2 \
         \
-        luci-nginx \
-        \
         openssh-sftp-server \
         \
         zoneinfo-all zoneinfo-core \
         \
-        bash \
-        \
-        php8 php8-cli php8-fpm php8-mod-bcmath php8-mod-calendar php8-mod-ctype php8-mod-curl php8-mod-dom php8-mod-exif php8-mod-fileinfo php8-mod-filter php8-mod-gd php8-mod-gettext php8-mod-gmp php8-mod-iconv php8-mod-intl php8-mod-mbstring php8-mod-mysqli php8-mod-mysqlnd php8-mod-openssl php8-mod-pcntl php8-mod-pdo php8-mod-pdo-mysql php8-mod-pdo-sqlite php8-mod-session php8-mod-shmop php8-mod-simplexml php8-mod-soap php8-mod-sockets php8-mod-sodium php8-mod-sqlite3 php8-mod-sysvmsg php8-mod-sysvsem php8-mod-sysvshm php8-mod-tokenizer php8-mod-xml php8-mod-xmlreader php8-mod-xmlwriter php8-mod-zip \
-        \
-        php8-pecl-mcrypt php8-pecl-xdebug php8-pecl-imagick \
-        \
-        icu-full-data \
-        \
-        libmariadb mariadb-client-extra mariadb-server-extra \
-        \
-        wget-ssl \
+        luci-app-passwall2 dnsmasq-full nftables kmod-nft-socket kmod-nft-tproxy kmod-nft-nat \
         \
         dnsmasq-full \
         \
@@ -200,10 +188,10 @@ rebuild_firmware() {
     #wget https://github.com/predators46/hack/releases/download/18.06.4/openwrt-18.06.4-armvirt-64-default-rootfs.tar.gz
     tar xvf openwrt-24.10.1-armsr-armv8-generic-rootfs.tar.gz -C openwrt
     
-    wget https://github.com/predators46/amlogic-s9xxx-openwrt/releases/download/OpenWrt_imagebuilder__2025.05/openwrt_amlogic_s905x_k6.6.87_2025.05.04.img.gz
-    gunzip openwrt_amlogic_s905x_k6.6.87_2025.05.04.img.gz
+    wget https://github.com/predators46/amlogic-s9xxx-openwrt/releases/download/OpenWrt_imagebuilder__2025.06/openwrt_amlogic_s905x_k6.6.92_2025.06.05.img.gz
+    gunzip openwrt_amlogic_s905x_k6.6.92_2025.06.05.img.gz
     mkdir armbian
-    losetup -P -f --show openwrt_amlogic_s905x_k6.6.87_2025.05.04.img
+    losetup -P -f --show openwrt_amlogic_s905x_k6.6.92_2025.06.05.img
     ls /dev/loop3*
     mount /dev/loop3p2 armbian
     
@@ -224,7 +212,7 @@ rebuild_firmware() {
     umount armbian
     losetup -d /dev/loop3
     
-    xz --compress openwrt_amlogic_s905x_k6.6.87_2025.05.04.img
+    xz --compress openwrt_amlogic_s905x_k6.6.92_2025.06.05.img
     
     cd ${imagebuilder_path}
 
