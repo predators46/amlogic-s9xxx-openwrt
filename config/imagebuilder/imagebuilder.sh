@@ -168,11 +168,15 @@ rebuild_firmware() {
         \
         zoneinfo-all zoneinfo-core \
         \
-        luci-app-passwall2 dnsmasq-full nftables kmod-nft-socket kmod-nft-tproxy kmod-nft-nat \
+        luci \
+        \
+        luci-app-passwall2 \
         \
         dnsmasq-full \
         \
-        luci \
+        dnsmasq-full nftables kmod-nft-socket kmod-nft-tproxy kmod-nft-nat \
+        \
+        dnsmasq-full ipset iptables iptables-nft iptables-zz-legacy iptables-mod-conntrack-extra iptables-mod-iprange iptables-mod-socket iptables-mod-tproxy kmod-ipt-nat \
         \
         -dnsmasq \
         \
