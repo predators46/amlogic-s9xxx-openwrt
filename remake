@@ -929,8 +929,8 @@ refactor_rootfs() {
     process_msg "(5/6) Refactor rootfs files."
     cd ${tag_rootfs}
 
-    # Add directory
-    mkdir -p .reserved boot run
+#    # Add directory
+#    mkdir -p .reserved boot run
 
     # Edit fstab
     [[ -f "etc/fstab" && -f "etc/config/fstab" ]] || error_msg "The [ fstab ] files does not exist."
@@ -1134,9 +1134,9 @@ EOF
     install_menu=$(echo "${model_txt}" | awk -F'/' '{print $(NF-1)"/"$NF}')
     grep -E ":${FAMILY}:" ${install_menu} | cut -d':' -f1-8 >temp.txt && mv -f temp.txt ${install_menu}
 
-    # Create snapshot
-    mkdir -p .snapshots
-    btrfs subvolume snapshot -r etc .snapshots/etc-000 >/dev/null 2>&1
+#    # Create snapshot
+#    mkdir -p .snapshots
+#    btrfs subvolume snapshot -r etc .snapshots/etc-000 >/dev/null 2>&1
 
     sync && sleep 3
 }
