@@ -180,6 +180,8 @@ rebuild_firmware() {
         \
         -dnsmasq \
         \
+        kmod-fs-vfat lsblk btrfs-progs uuidgen dosfstools tar fdisk \
+        \
         ${config_list} \
         "
 
