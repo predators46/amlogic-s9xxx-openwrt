@@ -194,7 +194,7 @@ rebuild_firmware() {
     git checkout v24.10.2
     ./scripts/feeds update -a && ./scripts/feeds install -a
     wget -O package/libs/toolchain/Makefile https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/24.10.2/Makefile
-    wget -O .config https://downloads.openwrt.org/releases/24.10.2/targets/armsr/armv8/config.buildinfo
+    wget -O .config https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/24.10.2/config.buildinfo
     make defconfig
     make -j$(nproc)
 
