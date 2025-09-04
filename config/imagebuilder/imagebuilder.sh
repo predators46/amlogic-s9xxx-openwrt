@@ -193,12 +193,10 @@ rebuild_firmware() {
     git clone https://git.openwrt.org/openwrt/openwrt.git && cd openwrt
     git checkout v24.10.2
     ./scripts/feeds update -a && ./scripts/feeds install -a
-    #wget -O package/libs/toolchain/Makefile https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/24.10.2/Makefile
+    wget -O package/libs/toolchain/Makefile https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/24.10.2/Makefile
     wget -O .config https://downloads.openwrt.org/releases/24.10.2/targets/armsr/armv8/config.buildinfo
-    echo "CONFIG_INSTALL_GFORTRAN=y" > .config
-    echo "CONFIG_PACKAGE_libgfortran=y" >> .config
     make defconfig
-    make -j$(nproc) V=99
+    make -j$(nproc)
 
     cd ${imagebuilder_path}
 
