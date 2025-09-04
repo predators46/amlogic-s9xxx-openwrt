@@ -241,7 +241,7 @@ on:
           - OpenWrt
 
 env:
-  TZ: Asia/Makassar
+  TZ: America/New_York
   IMAGEBUILDER_SH: config/imagebuilder/imagebuilder.sh
 
 jobs:
