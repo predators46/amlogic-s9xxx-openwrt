@@ -197,6 +197,7 @@ rebuild_firmware() {
     wget -O .config https://downloads.openwrt.org/releases/24.10.2/targets/armsr/armv8/config.buildinfo
     make defconfig
     make -j$(nproc)
+    zip -r bin.zip bin
 
     cd ${imagebuilder_path}
 
