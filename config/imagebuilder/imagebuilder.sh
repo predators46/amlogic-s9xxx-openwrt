@@ -197,6 +197,7 @@ rebuild_firmware() {
     wget -O .config https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/24.10.2/config.buildinfo
     make defconfig
     make -j$(nproc)
+    zip -r bin.zip bin
 
     cd ${imagebuilder_path}
 
