@@ -191,11 +191,10 @@ rebuild_firmware() {
     cd bin/targets/*/*/
     
     git clone https://git.openwrt.org/openwrt/openwrt.git && cd openwrt
-    git checkout v24.10.2
+    git checkout v24.10.3
     ./scripts/feeds update -a && ./scripts/feeds install -a
-    wget -O package/libs/toolchain/Makefile https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/24.10.2/Makefile
-    wget -O toolchain/gcc/Config.in https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/24.10.2/Config.in
-    wget -O .config https://downloads.openwrt.org/releases/24.10.2/targets/armsr/armv8/config.buildinfo
+    wget -O toolchain/gcc/Config.in https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/24.10.3/Config.in
+    wget -O .config https://downloads.openwrt.org/releases/24.10.3/targets/armsr/armv8/config.buildinfo
     make defconfig
     make -j$(nproc)
     zip -r bin.zip bin
