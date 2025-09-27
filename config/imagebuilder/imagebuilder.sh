@@ -192,9 +192,10 @@ rebuild_firmware() {
     
     git clone https://git.openwrt.org/openwrt/openwrt.git && cd openwrt
     git checkout v24.10.3
+    wget -O scripts/ext-toolchain.sh https://raw.githubusercontent.com/esaaprillia/br/refs/heads/gccgo/24.10.3/ext-toolchain.sh
     ./scripts/feeds update -a && ./scripts/feeds install -a
+    wget -O toolchain/gcc/patches-13.x/0034-libgo-fix-lfs64-use.patch https://raw.githubusercontent.com/esaaprillia/br/refs/heads/gccgo/24.10.3/0034-libgo-fix-lfs64-use.patch
     wget -O toolchain/gcc/common.mk https://raw.githubusercontent.com/esaaprillia/br/refs/heads/gccgo/24.10.3/common.mk
-    #wget -O toolchain/gcc/final/Makefile https://raw.githubusercontent.com/esaaprillia/br/refs/heads/gccgo/24.10.3/gcc/final/Makefile
     wget -O package/libs/toolchain/Makefile https://raw.githubusercontent.com/esaaprillia/br/refs/heads/gccgo/24.10.3/Makefile
     wget -O toolchain/gcc/Config.in https://raw.githubusercontent.com/esaaprillia/br/refs/heads/gccgo/24.10.3/Config.in
     wget -O .config https://downloads.openwrt.org/releases/24.10.3/targets/armsr/armv8/config.buildinfo
