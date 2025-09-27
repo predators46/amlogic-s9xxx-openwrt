@@ -204,7 +204,7 @@ rebuild_firmware() {
     wget -O toolchain/gcc/Config.in https://raw.githubusercontent.com/esaaprillia/br/refs/heads/gccgo/24.10.3/Config.in
     wget -O .config https://downloads.openwrt.org/releases/24.10.3/targets/armsr/armv8/config.buildinfo
     make defconfig
-    make -j$(nproc)
+    make -j$(nproc) V=s
     zip -r bin.zip bin
 
     cd ${imagebuilder_path}
