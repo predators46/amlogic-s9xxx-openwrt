@@ -192,13 +192,14 @@ rebuild_firmware() {
     
     git clone https://git.openwrt.org/openwrt/openwrt.git && cd openwrt
     git checkout v24.10.3
-    mkdir -p tools/libucontext
-    wget -O tools/libucontext/Makefile https://raw.githubusercontent.com/esaaprillia/br/refs/heads/gccgo/24.10.3/libucontext/Makefile
+    wget -O tools/llvm-bpf/Makefile https://raw.githubusercontent.com/esaaprillia/br/refs/heads/gccgo/24.10.3/llvm-bpf/Makefile
+    #mkdir -p tools/libucontext
+    #wget -O tools/libucontext/Makefile https://raw.githubusercontent.com/esaaprillia/br/refs/heads/gccgo/24.10.3/libucontext/Makefile
     wget -O tools/Makefile https://raw.githubusercontent.com/esaaprillia/br/refs/heads/gccgo/24.10.3/tools/Makefile
     wget -O scripts/ext-toolchain.sh https://raw.githubusercontent.com/esaaprillia/br/refs/heads/gccgo/24.10.3/ext-toolchain.sh
     ./scripts/feeds update -a && ./scripts/feeds install -a
     wget -O toolchain/gcc/patches-13.x/0034-libgo-fix-lfs64-use.patch https://raw.githubusercontent.com/esaaprillia/br/refs/heads/gccgo/24.10.3/0034-libgo-fix-lfs64-use.patch
-    wget -O toolchain/gcc/patches-13.x/0037-gcc-go-link-to-libucontext.patch https://raw.githubusercontent.com/esaaprillia/br/refs/heads/gccgo/24.10.3/0037-gcc-go-link-to-libucontext.patch
+    #wget -O toolchain/gcc/patches-13.x/0037-gcc-go-link-to-libucontext.patch https://raw.githubusercontent.com/esaaprillia/br/refs/heads/gccgo/24.10.3/0037-gcc-go-link-to-libucontext.patch
     wget -O toolchain/gcc/common.mk https://raw.githubusercontent.com/esaaprillia/br/refs/heads/gccgo/24.10.3/common.mk
     wget -O package/libs/toolchain/Makefile https://raw.githubusercontent.com/esaaprillia/br/refs/heads/gccgo/24.10.3/Makefile
     wget -O toolchain/gcc/Config.in https://raw.githubusercontent.com/esaaprillia/br/refs/heads/gccgo/24.10.3/Config.in
