@@ -220,6 +220,7 @@ on:
         type: choice
         options:
           - ophub/kernel
+          - predators46/kernel
       kernel_usage:
         description: "Set the tags of the stable kernel."
         required: false
