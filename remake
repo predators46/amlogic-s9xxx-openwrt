@@ -826,7 +826,7 @@ extract_openwrt() {
     mount_try btrfs ${loop_new}p2 ${tag_rootfs}
 
     # Create snapshot directory
-    btrfs subvolume create ${tag_rootfs}/etc >/dev/null 2>&1
+#    btrfs subvolume create ${tag_rootfs}/etc >/dev/null 2>&1
 
     # Unzip the OpenWrt rootfs file
     tar -mxzf ${openwrt_path}/${openwrt_default_file} -C ${tag_rootfs}
@@ -964,7 +964,7 @@ refactor_rootfs() {
     cd ${tag_rootfs}
 
     # Add directory
-    mkdir -p .reserved boot run
+#    mkdir -p .reserved boot run
 
     # Edit fstab
     [[ -f "etc/fstab" && -f "etc/config/fstab" ]] || error_msg "The [ fstab ] files does not exist."
@@ -1169,8 +1169,8 @@ EOF
     grep -E ":${FAMILY}:" ${install_menu} | cut -d':' -f1-8 >temp.txt && mv -f temp.txt ${install_menu}
 
     # Create snapshot
-    mkdir -p .snapshots
-    btrfs subvolume snapshot -r etc .snapshots/etc-000 >/dev/null 2>&1
+#    mkdir -p .snapshots
+#    btrfs subvolume snapshot -r etc .snapshots/etc-000 >/dev/null 2>&1
 
     sync && sleep 3
 }
