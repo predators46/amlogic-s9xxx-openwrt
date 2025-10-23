@@ -243,4 +243,4 @@ rebuild_firmware
 # Show server end information
 echo -e "Server space usage after compilation: \n$(df -hT ${make_path}) \n"
 # All process completed
-wait.
+wait
