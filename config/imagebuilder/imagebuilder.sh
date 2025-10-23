@@ -192,8 +192,8 @@ rebuild_firmware() {
     sudo gunzip openwrt_amlogic_s905x_k6.6.112_2025.10.18.img.gz
     sudo mkdir armbian
     sudo losetup -P -f --show openwrt_amlogic_s905x_k6.6.112_2025.10.18.img
-    sudo ls /dev/loop3*
-    sudo mount /dev/loop3p2 armbian
+    sudo ls /dev/loop0*
+    sudo mount /dev/loop0p2 armbian
     
     sudo rm -rf openwrt/lib/firmware
     sudo rm -rf openwrt/lib/modules
@@ -210,7 +210,7 @@ rebuild_firmware() {
     sudo mkdir armbian/boot
     sudo sync
     sudo umount armbian
-    sudo losetup -d /dev/loop3
+    sudo losetup -d /dev/loop0
     
     sudo xz --compress openwrt_amlogic_s905x_k6.6.112_2025.10.18.img
     
@@ -243,4 +243,4 @@ rebuild_firmware
 # Show server end information
 echo -e "Server space usage after compilation: \n$(df -hT ${make_path}) \n"
 # All process completed
-wait
+wait.
