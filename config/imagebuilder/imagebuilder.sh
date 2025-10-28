@@ -120,7 +120,7 @@ custom_packages() {
     echo -e "${STEPS} Start adding custom packages..."
 
     # Clone [ packages ] directory
-    rm -rf packages && git clone -b passwall-21 "https://github.com/esaaprillia/packages"
+    #rm -rf packages && git clone -b passwall-21 "https://github.com/esaaprillia/packages"
     #git clone "https://github.com/esaaprillia/package" && cp -r package/* packages/ && rm -rf package
     [[ "${?}" -eq "0" ]] || error_msg "[ packages ] clone failed!"
     echo -e "${INFO} The [ packages ] is clone successfully."
@@ -176,21 +176,19 @@ rebuild_firmware() {
         \
         kmod-usb-net-rndis kmod-usb-net-cdc-ncm kmod-usb-net-huawei-cdc-ncm kmod-usb-net-cdc-eem kmod-usb-net-cdc-ether kmod-usb-net-cdc-subset kmod-nls-base kmod-usb-core kmod-usb-net kmod-usb-net-cdc-ether kmod-usb2 \
         \
-        openssh-sftp-server \
-        \
-        zoneinfo-all zoneinfo-core \
-        \
         luci \
         \
-        luci-app-passwall2 \
+        kmod-fs-vfat lsblk btrfs-progs uuidgen dosfstools tar fdisk \
+        \
+        e2fsprogs fstools mkf2fs partx-utils \
+        \
+        openssh-sftp-server \
+        \
+        zoneinfo-asia zoneinfo-core \
         \
         dnsmasq-full \
         \
-        dnsmasq-full ipset iptables iptables-mod-conntrack-extra iptables-mod-iprange iptables-mod-tproxy kmod-ipt-nat \
-        \
         -dnsmasq \
-        \
-        kmod-fs-vfat lsblk btrfs-progs uuidgen dosfstools tar fdisk \
         \
         ${config_list} \
         "
@@ -199,35 +197,35 @@ rebuild_firmware() {
     make image PROFILE="" PACKAGES="${my_packages}" FILES="files"
 
     cd bin/targets/*/*/
-    
+
+    sudo wget https://github.com/predators46/amlogic-s9xxx-openwrt/releases/download/OpenWrt_imagebuilder__2025.10/pulpstone-openwrt-18.06.2-amlogic-s905x-kernel_3.14_REV1.img.xz
+    sudo gunzip pulpstone-openwrt-18.06.2-amlogic-s905x-kernel_3.14_REV1.img.xz
+    sudo mkdir armbian
+    sudo losetup -P -f --show pulpstone-openwrt-18.06.2-amlogic-s905x-kernel_3.14_REV1.img
+    sudo mount /dev/loop0p2 armbian
+
     sudo mkdir openwrt
-    #wget https://github.com/predators46/hack/releases/download/18.06.4/openwrt-18.06.4-armvirt-64-default-rootfs.tar.gz
-    sudo tar xvf openwrt-21.02.7-armvirt-64-default-rootfs.tar.gz -C openwrt
-    
+
+    sudo mv armbian/* openwrt/
+
     sudo wget https://github.com/predators46/amlogic-s9xxx-openwrt/releases/download/OpenWrt_imagebuilder__2025.09/openwrt_amlogic_s905x_k5.4.299_2025.09.29.img.gz
     sudo gunzip openwrt_amlogic_s905x_k5.4.299_2025.09.29.img.gz
-    sudo mkdir armbian
     sudo losetup -P -f --show openwrt_amlogic_s905x_k5.4.299_2025.09.29.img
-    sudo ls /dev/loop0*
     sudo mount /dev/loop0p2 armbian
-    
+
     sudo rm -rf openwrt/lib/firmware
     sudo rm -rf openwrt/lib/modules
-    
+
     sudo mv armbian/lib/modules openwrt/lib/
     sudo mv armbian/lib/firmware openwrt/lib/
 
-    sudo sed -i '/kmodloader/i \\tulimit -n 51200\n' openwrt/etc/init.d/boot
-    
     sudo rm -rf armbian/*
-    sudo rm -rf armbian/.reserved
-    sudo rm -rf armbian/.snapshots
     sudo mv openwrt/* armbian/
     sudo mkdir armbian/boot
     sudo sync
     sudo umount armbian
     sudo losetup -d /dev/loop0
-    
+
     sudo xz --compress openwrt_amlogic_s905x_k5.4.299_2025.09.29.img
     
     cd ${imagebuilder_path}
