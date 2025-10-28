@@ -199,7 +199,7 @@ rebuild_firmware() {
     cd bin/targets/*/*/
 
     sudo wget https://github.com/predators46/amlogic-s9xxx-openwrt/releases/download/OpenWrt_imagebuilder__2025.10/pulpstone-openwrt-18.06.2-amlogic-s905x-kernel_3.14_REV1.img.xz
-    sudo gunzip pulpstone-openwrt-18.06.2-amlogic-s905x-kernel_3.14_REV1.img.xz
+    sudo unxz pulpstone-openwrt-18.06.2-amlogic-s905x-kernel_3.14_REV1.img.xz
     sudo mkdir armbian
     sudo losetup -P -f --show pulpstone-openwrt-18.06.2-amlogic-s905x-kernel_3.14_REV1.img
     sudo mount /dev/loop0p2 armbian
