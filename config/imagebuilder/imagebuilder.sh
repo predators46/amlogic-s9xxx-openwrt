@@ -174,7 +174,7 @@ rebuild_firmware() {
         \
         -dnsmasq \
         \
-        kmod-fs-vfat lsblk btrfs-progs uuidgen dosfstools tar fdisk \
+        kmod-fs-vfat lsblk btrfs-progs uuidgen dosfstools tar fdisk wpad-basic-mbedtls \
         \
         ${config_list} \
         "
