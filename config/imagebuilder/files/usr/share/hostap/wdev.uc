@@ -1,6 +1,6 @@
 #!/usr/bin/env ucode
 'use strict';
-import { vlist_new, is_equal, wdev_set_mesh_params, wdev_remove, wdev_set_up, phy_open } from "/usr/share/hostap/common.uc";
+import { vlist_new, is_equal, wdev_set_mesh_params, wdev_set_up, phy_open } from "/usr/share/hostap/common.uc";
 import { readfile, writefile, basename, readlink, glob } from "fs";
 let libubus = require("ubus");
 
@@ -14,7 +14,6 @@ function iface_stop(wdev)
 	if (keep_devices[wdev.ifname])
 		return;
 
-	wdev_remove(wdev.ifname);
 }
 
 function iface_start(wdev)
@@ -22,8 +21,7 @@ function iface_start(wdev)
 	let ifname = wdev.ifname;
 
 	if (readfile(`/sys/class/net/${ifname}/ifindex`)) {
-		wdev_set_up(ifname, false);
-		wdev_remove(ifname);
+		wdev_set_up(ifname);
 	}
 	let wdev_config = {};
 	for (let key in wdev)
