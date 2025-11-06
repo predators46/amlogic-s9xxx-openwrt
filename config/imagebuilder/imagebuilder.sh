@@ -172,7 +172,7 @@ rebuild_firmware() {
         \
         dnsmasq-full \
         \
-        -dnsmasq \
+        -dnsmasq -procd-ujail \
         \
         kmod-fs-vfat lsblk btrfs-progs uuidgen dosfstools tar fdisk wpad-basic-mbedtls wifi-scripts iw iwinfo \
         \
