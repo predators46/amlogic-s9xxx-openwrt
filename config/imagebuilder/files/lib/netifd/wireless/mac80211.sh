@@ -974,7 +974,7 @@ wpa_supplicant_set_config() {
 		ubus wait_for wpa_supplicant
 	}
 
-	local supplicant_res="$(ubus_call wpa_supplicant config_set "$data")"
+	local supplicant_res="$(ubus call wpa_supplicant config_set "$data")"
 	ret="$?"
 	[ "$ret" != 0 -o -z "$supplicant_res" ] && wireless_setup_vif_failed WPA_SUPPLICANT_FAILED
 
@@ -987,12 +987,12 @@ hostapd_set_config() {
 	local radio="$2"
 
 	[ -n "$hostapd_ctrl" ] || {
-		ubus_call hostapd config_set '{ "phy": "'"$phy"'", "radio": '"$radio"', "config": "", "prev_config": "'"${hostapd_conf_file}.prev"'" }' > /dev/null
+		ubus call hostapd config_set '{ "phy": "'"$phy"'", "radio": '"$radio"', "config": "", "prev_config": "'"${hostapd_conf_file}.prev"'" }' > /dev/null
 		return 0;
 	}
 
 	ubus wait_for hostapd
-	local hostapd_res="$(ubus_call hostapd config_set "{ \"phy\": \"$phy\", \"radio\": $radio, \"config\":\"${hostapd_conf_file}\", \"prev_config\": \"${hostapd_conf_file}.prev\"}")"
+	local hostapd_res="$(ubus call hostapd config_set "{ \"phy\": \"$phy\", \"radio\": $radio, \"config\":\"${hostapd_conf_file}\", \"prev_config\": \"${hostapd_conf_file}.prev\"}")"
 	ret="$?"
 	[ "$ret" != 0 -o -z "$hostapd_res" ] && {
 		wireless_setup_failed HOSTAPD_START_FAILED
@@ -1008,7 +1008,7 @@ wpa_supplicant_start() {
 
 	[ -n "$wpa_supp_init" ] || return 0
 
-	ubus_call wpa_supplicant config_set '{ "phy": "'"$phy"'", "radio": '"$radio"', "num_global_macaddr": '"$num_global_macaddr"', "macaddr_base": "'"$macaddr_base"'" }' > /dev/null
+	ubus call wpa_supplicant config_set '{ "phy": "'"$phy"'", "radio": '"$radio"', "num_global_macaddr": '"$num_global_macaddr"', "macaddr_base": "'"$macaddr_base"'" }' > /dev/null
 }
 
 mac80211_setup_supplicant() {
@@ -1114,8 +1114,8 @@ drv_mac80211_cleanup() {
 
 mac80211_reset_config() {
 	hostapd_conf_file="/var/run/hostapd-$phy$vif_phy_suffix.conf"
-	ubus_call hostapd config_set '{ "phy": "'"$phy"'", "radio": '"$radio"', "config": "", "prev_config": "'"$hostapd_conf_file"'" }' > /dev/null
-	ubus_call wpa_supplicant config_set '{ "phy": "'"$phy"'", "radio": '"$radio"', "config": [] }' > /dev/null
+	ubus call hostapd config_set '{ "phy": "'"$phy"'", "radio": '"$radio"', "config": "", "prev_config": "'"$hostapd_conf_file"'" }' > /dev/null
+	ubus call wpa_supplicant config_set '{ "phy": "'"$phy"'", "radio": '"$radio"', "config": [] }' > /dev/null
 	wdev_tool "$phy$phy_suffix" set_config '{}'
 }
 
