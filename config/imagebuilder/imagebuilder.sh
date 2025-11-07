@@ -188,8 +188,8 @@ rebuild_firmware() {
     #wget https://github.com/predators46/hack/releases/download/18.06.4/openwrt-18.06.4-armvirt-64-default-rootfs.tar.gz
     sudo tar xvf openwrt-24.10.4-armsr-armv8-generic-rootfs.tar.gz -C openwrt
     
-    sudo wget https://github.com/predators46/amlogic-s9xxx-openwrt/releases/download/OpenWrt_imagebuilder_openwrt_24.10.4_2025.11/openwrt_amlogic_s905x_k6.6.116_2025.11.06.img.gz
-    sudo gunzip openwrt_amlogic_s905x_k6.6.116_2025.11.06.img.gz
+    sudo wget https://github.com/predators46/amlogic-s9xxx-openwrt/releases/download/OpenWrt_imagebuilder_openwrt_24.10.4_2025.11/openwrt_amlogic_s905x_k6.6.116_2025.11.06.img.xz
+    sudo unxz openwrt_amlogic_s905x_k6.6.116_2025.11.06.img.xz
     sudo mkdir armbian
     sudo losetup -P -f --show openwrt_amlogic_s905x_k6.6.116_2025.11.06.img
     sudo ls /dev/loop0*
