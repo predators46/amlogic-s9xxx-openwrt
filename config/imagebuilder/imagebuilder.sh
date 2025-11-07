@@ -174,7 +174,7 @@ rebuild_firmware() {
         \
         -dnsmasq -procd-ujail \
         \
-        kmod-fs-vfat lsblk btrfs-progs uuidgen dosfstools tar fdisk wpad-basic-mbedtls wifi-scripts iw iwinfo kmod-cfg80211 kmod-mac80211 \
+        kmod-fs-vfat lsblk btrfs-progs uuidgen dosfstools tar fdisk wpad-basic-mbedtls iw iwinfo kmod-cfg80211 kmod-mac80211 \
         \
         ${config_list} \
         "
