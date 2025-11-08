@@ -210,7 +210,7 @@ mac80211_hostapd_setup_base() {
 				dsss_cck_40:1
 
 			ht_cap_mask=0
-			for cap in $(iw phy "$phy" info | grep -E '^\s*Capabilities:' | cut -d: -f2); do
+			for cap in $(ifconfig phy "$phy" info | grep -E '^\s*Capabilities:' | cut -d: -f2); do
 				ht_cap_mask="$(($ht_cap_mask | $cap))"
 			done
 
@@ -342,7 +342,7 @@ mac80211_hostapd_setup_base() {
 		set_default tx_burst 2.0
 		append base_cfg "ieee80211ac=1" "$N"
 		vht_cap=0
-		for cap in $(iw phy "$phy" info | awk -F "[()]" '/VHT Capabilities/ { print $2 }'); do
+		for cap in $(ifconfig phy "$phy" info | awk -F "[()]" '/VHT Capabilities/ { print $2 }'); do
 			vht_cap="$(($vht_cap | $cap))"
 		done
 
@@ -456,9 +456,9 @@ mac80211_hostapd_setup_base() {
 			he_bss_color:128 \
 			he_bss_color_enabled:1
 
-		he_phy_cap=$(iw phy "$phy" info | sed -n '/HE Iftypes: .*AP/,$p' | awk -F "[()]" '/HE PHY Capabilities/ { print $2 }' | head -1)
+		he_phy_cap=$(ifconfig phy "$phy" info | sed -n '/HE Iftypes: .*AP/,$p' | awk -F "[()]" '/HE PHY Capabilities/ { print $2 }' | head -1)
 		he_phy_cap=${he_phy_cap:2}
-		he_mac_cap=$(iw phy "$phy" info | sed -n '/HE Iftypes: .*AP/,$p' | awk -F "[()]" '/HE MAC Capabilities/ { print $2 }' | head -1)
+		he_mac_cap=$(ifconfig phy "$phy" info | sed -n '/HE Iftypes: .*AP/,$p' | awk -F "[()]" '/HE MAC Capabilities/ { print $2 }' | head -1)
 		he_mac_cap=${he_mac_cap:2}
 
 		append base_cfg "ieee80211ax=1" "$N"
@@ -614,7 +614,7 @@ rename_board_phy_by_path() {
 	local new_phy="$(get_board_phy_name "$path")"
 	[ -z "$new_phy" -o "$new_phy" = "$phy" ] && return
 
-	iw "$phy" set name "$new_phy" && phy="$new_phy"
+	ifconfig "$phy" set name "$new_phy" && phy="$new_phy"
 }
 
 rename_board_phy_by_name() (
@@ -632,7 +632,7 @@ rename_board_phy_by_name() (
 
 	[ "$prev_phy" = "$phy" ] && return 0
 
-	iw "$prev_phy" set name "$phy"
+	ifconfig "$prev_phy" set name "$phy"
 )
 
 find_phy() {
@@ -910,9 +910,9 @@ mac80211_set_vif_txpower() {
 
 	set_default vif_txpower "$txpower"
 	if [ -n "$vif_txpower" ]; then
-		iw dev "$ifname" set txpower fixed "${vif_txpower%%.*}00"
+		ifconfig dev "$ifname" set txpower fixed "${vif_txpower%%.*}00"
 	else
-		iw dev "$ifname" set txpower auto
+		ifconfig dev "$ifname" set txpower auto
 	fi
 }
 
@@ -1084,7 +1084,7 @@ get_freq() {
 		6g) band="4:";;
 	esac
 
-	iw "$phy" info | awk -v band="$band" -v channel="[$channel]" '
+	ifconfig "$phy" info | awk -v band="$band" -v channel="[$channel]" '
 
 $1 ~ /Band/ {
 	band_match = band == $2
@@ -1100,7 +1100,7 @@ band_match && $3 == "MHz" && $4 == channel {
 chan_is_dfs() {
 	local phy="$1"
 	local chan="$2"
-	iw "$phy" info | grep -E -m1 "(\* ${chan:-....} MHz${chan:+|\\[$chan\\]})" | grep -q "MHz.*radar detection"
+	ifconfig "$phy" info | grep -E -m1 "(\* ${chan:-....} MHz${chan:+|\\[$chan\\]})" | grep -q "MHz.*radar detection"
 	return $!
 }
 
@@ -1164,8 +1164,8 @@ drv_mac80211_setup() {
 	[ "$auto_channel" -gt 0 ] || freq="$(get_freq "$phy" "$channel" "$band")"
 
 	[ -n "$country" ] && {
-		iw reg get | grep -q "^country $country:" || {
-			iw reg set "$country"
+		ifconfig reg get | grep -q "^country $country:" || {
+			ifconfig reg set "$country"
 			sleep 1
 		}
 	}
@@ -1191,11 +1191,11 @@ drv_mac80211_setup() {
 	[ "$rxantenna" = "$prev_rxantenna" -a "$txantenna" = "$prev_txantenna" ] || mac80211_reset_config "$phy"
 	wireless_set_data phy="$phy" radio="$radio" txantenna="$txantenna" rxantenna="$rxantenna"
 
-	iw phy "$phy" set antenna $txantenna $rxantenna >/dev/null 2>&1
-	iw phy "$phy" set distance "$distance" >/dev/null 2>&1
+	ifconfig phy "$phy" set antenna $txantenna $rxantenna >/dev/null 2>&1
+	ifconfig phy "$phy" set distance "$distance" >/dev/null 2>&1
 
-	[ -n "$frag" ] && iw phy "$phy" set frag "${frag%%.*}"
-	[ -n "$rts" ] && iw phy "$phy" set rts "${rts%%.*}"
+	[ -n "$frag" ] && ifconfig phy "$phy" set frag "${frag%%.*}"
+	[ -n "$rts" ] && ifconfig phy "$phy" set rts "${rts%%.*}"
 
 	has_ap=
 	hostapd_ctrl=
@@ -1232,9 +1232,9 @@ drv_mac80211_setup() {
 
 	[ -z "$phy_suffix" ] && {
 		if [ -n "$txpower" ]; then
-			iw phy "$phy" set txpower fixed "${txpower%%.*}00"
+			ifconfig phy "$phy" set txpower fixed "${txpower%%.*}00"
 		else
-			iw phy "$phy" set txpower auto
+			ifconfig phy "$phy" set txpower auto
 		fi
 	}
 
