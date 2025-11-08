@@ -1000,7 +1000,7 @@ mac80211_vap_cleanup() {
 	for wdev in $vaps; do
 		[ "$service" != "none" ] && ubus call ${service} config_remove "{\"iface\":\"$wdev\"}"
 		ip link set dev "$wdev" down 2>/dev/null
-		iw dev "$wdev" del
+		#iw dev "$wdev" del
 	done
 }
 
@@ -1061,7 +1061,7 @@ drv_mac80211_setup() {
 		done
 		if [ "$found" = "0" ]; then
 			ip link set dev "$wdev" down
-			iw dev "$wdev" del
+			#iw dev "$wdev" del
 		fi
 	done
 
