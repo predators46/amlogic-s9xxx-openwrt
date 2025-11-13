@@ -200,7 +200,7 @@ rebuild_firmware() {
     # Rebuild firmware
     make image PROFILE="" PACKAGES="${my_packages}" FILES="files"
     
-    cd bin/targets/*/*/
+    sudo cd bin/targets/*/*/
     
     sudo mkdir openwrt
     #wget https://github.com/predators46/hack/releases/download/18.06.4/openwrt-18.06.4-armvirt-64-default-rootfs.tar.gz
