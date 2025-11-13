@@ -224,6 +224,7 @@ on:
         type: choice
         options:
           - ophub/kernel
+          - predators46/kernel
       kernel_usage:
         description: "Set the tags of the stable kernel."
         required: false
@@ -247,6 +248,7 @@ on:
           - ophub
           - angel
           - yourname
+          - OpenWrt
 
 env:
   TZ: Etc/UTC
@@ -345,7 +347,7 @@ jobs:
 
       - name: Packaging OpenWrt
         if: ${{ steps.imagebuilder.outputs.status }} == 'success' && !cancelled()
-        uses: ophub/amlogic-s9xxx-openwrt@main
+        uses: predators46/amlogic-s9xxx-openwrt@main
         with:
           openwrt_path: output/*rootfs.tar.gz
           openwrt_ip: ${{ inputs.openwrt_ip }}
