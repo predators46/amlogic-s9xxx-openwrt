@@ -759,7 +759,7 @@ make_image() {
     fi
 
     # Format rootfs partition
-#    mkfs.btrfs -f -U ${ROOTFS_UUID} -L "ROOTFS" -m single ${loop_new}p2 >/dev/null 2>&1
+    mkfs.btrfs -f -U ${ROOTFS_UUID} -L "ROOTFS" -m single ${loop_new}p2 >/dev/null 2>&1
 
     # Write the specific bootloader for [ Amlogic ] boxes
     [[ "${PLATFORM}" == "amlogic" ]] && {
@@ -838,7 +838,7 @@ extract_openwrt() {
     mount_try btrfs ${loop_new}p2 ${tag_rootfs}
 
     # Create snapshot directory
-    btrfs subvolume create ${tag_rootfs}/etc >/dev/null 2>&1
+#    btrfs subvolume create ${tag_rootfs}/etc >/dev/null 2>&1
 
     # Unzip the OpenWrt rootfs file
     tar -mxzf ${openwrt_path}/${openwrt_default_file} -C ${tag_rootfs}
