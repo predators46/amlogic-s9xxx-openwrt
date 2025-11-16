@@ -178,29 +178,59 @@ rebuild_firmware() {
 
     # Selecting default packages, lib, theme, app and i18n, etc.
     my_packages="\
-        acpid attr base-files bash bc blkid block-mount blockd bsdtar btrfs-progs busybox bzip2 \
-        cgi-io chattr comgt comgt-ncm containerd coremark coreutils coreutils-base64 coreutils-nohup \
-        coreutils-truncate curl docker docker-compose dockerd dosfstools dumpe2fs e2freefrag e2fsprogs \
-        exfat-mkfs f2fs-tools f2fsck fdisk gawk getopt git gzip hostapd-common iconv iw iwinfo jq \
-        jshn kmod-brcmfmac kmod-brcmutil kmod-cfg80211 kmod-mac80211 libjson-script liblucihttp \
-        liblucihttp-lua losetup lsattr lsblk lscpu mkf2fs mount-utils openssl-util parted \
-        perl-http-date perlbase-file perlbase-getopt perlbase-time perlbase-unicode perlbase-utf8 \
-        pigz ppp ppp-mod-pppoe pv rename resize2fs runc tar tini ttyd tune2fs \
-        uclient-fetch uhttpd uhttpd-mod-ubus unzip uqmi usb-modeswitch uuidgen wget-ssl whereis \
-        which wpad-basic wwan xfs-fsck xfs-mkfs xz xz-utils ziptool zoneinfo-asia zoneinfo-core zstd \
+        kmod-usb-core kmod-usb2 usb-modeswitch libusb-1.0 kmod-usb-net-cdc-ether \
         \
-        luci luci-base luci-compat luci-i18n-base-zh-cn luci-lib-base luci-lib-docker \
-        luci-lib-ip luci-lib-ipkg luci-lib-jsonc luci-lib-nixio luci-mod-admin-full luci-mod-network \
-        luci-mod-status luci-mod-system luci-proto-3g luci-proto-ipip luci-proto-ipv6 \
-        luci-proto-ncm luci-proto-openconnect luci-proto-ppp luci-proto-qmi luci-proto-relay \
+        kmod-usb-net-rndis kmod-usb-net-cdc-ncm kmod-usb-net-huawei-cdc-ncm kmod-usb-net-cdc-eem kmod-usb-net-cdc-ether kmod-usb-net-cdc-subset kmod-nls-base kmod-usb-core kmod-usb-net kmod-usb-net-cdc-ether kmod-usb2 \
         \
-        luci-app-amlogic luci-i18n-amlogic-zh-cn \
+        openssh-sftp-server \
+        \
+        zoneinfo-all zoneinfo-core \
+        \
+        luci \
+        \
+        dnsmasq-full \
+        \
+        -dnsmasq \
+        \
+        kmod-fs-vfat lsblk btrfs-progs uuidgen dosfstools tar fdisk \
         \
         ${config_list} \
         "
 
     # Rebuild firmware
     make image PROFILE="" PACKAGES="${my_packages}" FILES="files"
+    
+    cd bin/targets/*/*/
+    
+    sudo mkdir openwrt
+    #wget https://github.com/predators46/hack/releases/download/18.06.4/openwrt-18.06.4-armvirt-64-default-rootfs.tar.gz
+    sudo tar xvf openwrt-24.10.4-armsr-armv8-generic-rootfs.tar.gz -C openwrt
+    
+    sudo wget https://github.com/predators46/amlogic-s9xxx-openwrt/releases/download/OpenWrt_imagebuilder_openwrt_24.10.4_2025.11/openwrt_official_amlogic_s905x_k6.6.116_2025.11.13.img.gz
+    sudo gunzip openwrt_official_amlogic_s905x_k6.6.116_2025.11.13.img.gz
+    sudo mkdir armbian
+    sudo losetup -P -f --show openwrt_official_amlogic_s905x_k6.6.116_2025.11.13.img
+    sudo ls /dev/loop0*
+    sudo mount /dev/loop0p2 armbian
+    
+    sudo rm -rf openwrt/lib/firmware
+    sudo rm -rf openwrt/lib/modules
+    
+    sudo mv armbian/lib/modules openwrt/lib/
+    sudo mv armbian/lib/firmware openwrt/lib/
+
+    sudo sed -i '/kmodloader/i \\tulimit -n 51200\n' openwrt/etc/init.d/boot
+    
+    sudo rm -rf armbian/*
+    sudo rm -rf armbian/.reserved
+    sudo rm -rf armbian/.snapshots
+    sudo mv openwrt/* armbian/
+    sudo mkdir armbian/boot
+    sudo sync
+    sudo umount armbian
+    sudo losetup -d /dev/loop0
+    
+    sudo xz --compress openwrt_official_amlogic_s905x_k6.6.116_2025.11.13.img
 
     sync && sleep 3
     echo -e "${INFO} [ ${openwrt_dir}/bin/targets/*/*/ ] directory status: \n$(ls -lh bin/targets/*/*/ 2>/dev/null)"
@@ -256,6 +286,7 @@ custom_settings() {
         mv -f "${tmp_path}/${original_filename}" "${output_path}/"
         # Copy the config file to the output directory
         cp -f .config "${output_path}/config" || true
+        cp -f bin/targets/*/*/*img.xz "${output_path}" || true
     fi
 
     sync && sleep 3
