@@ -115,7 +115,7 @@ custom_packages() {
     # Download [ packages ] directory
     #rm -rf packages && git clone -b 24 "https://github.com/esaaprillia/packages"
     rm -rf packages && wget https://github.com/firmwarecostum/mosdns/releases/download/909-1/mosdns_ipk_ARMSR.zip
-    unzip mosdns_ipk_ARMSR.zip && cp -r bin/packages/aarch64_generic/python/* packages/
+    unzip mosdns_ipk_ARMSR.zip && cp -r bin/packages/aarch64_generic/python/* packages/ && rm -rf bin
     [[ "${?}" -eq "0" ]] || error_msg "[ packages ] download failed!"
     echo -e "${INFO} The [ packages ] is download successfully."
 
