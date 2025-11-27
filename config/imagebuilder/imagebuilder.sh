@@ -115,7 +115,7 @@ custom_packages() {
     # Download [ packages ] directory
     #rm -rf packages && git clone -b 24 "https://github.com/esaaprillia/packages"
     mkdir -p packages && wget https://github.com/firmwarecostum/mosdns/releases/download/909-1/mosdns_ipk_ARMSR.zip
-    unzip mosdns_ipk_ARMSR.zip && cp -r bin/packages/aarch64_generic/python/* packages/ && rm -rf bin
+    unzip mosdns_ipk_ARMSR.zip && cp -r bin/packages/aarch64_generic/python/* packages/ && rm -rf bin && rm -rf packages/libxml2*
     wget https://github.com/esaaprillia/packages/raw/refs/heads/ha/libgfortran_13.3.0-r4_aarch64_generic.ipk && cp -r libgfortran_13.3.0-r4_aarch64_generic.ipk packages/
     [[ "${?}" -eq "0" ]] || error_msg "[ packages ] download failed!"
     echo -e "${INFO} The [ packages ] is download successfully."
