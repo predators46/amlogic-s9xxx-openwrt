@@ -177,7 +177,7 @@ rebuild_firmware() {
         \
         luci \
         \
-        dnsmasq-full libpcap \
+        dnsmasq-full libpcap libiconv-full libintl-full \
         \
         python3-asyncio python3-codecs python3-ctypes python3-dbm python3-decimal python3-email python3-logging python3-lzma python3-multiprocessing python3-ncurses python3-openssl python3-pydoc python3-readline python3-sqlite3 python3-unittest python3-urllib python3-uuid python3-venv python3-webbrowser python3-xml \
         \
