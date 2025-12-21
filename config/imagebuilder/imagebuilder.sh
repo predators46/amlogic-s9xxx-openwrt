@@ -203,15 +203,12 @@ rebuild_firmware() {
     cd bin/targets/*/*/
     
     git clone https://git.openwrt.org/openwrt/openwrt.git && cd openwrt
-    git checkout v24.10.4
-    ./scripts/feeds update -a
-    wget -O feeds/telephony/libs/dahdi-linux/Makefile https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/24.10.4/dahdi-linux/Makefile
-    wget -O feeds/telephony/libs/dahdi-linux/patches/011-rename-max-definition.patch https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/24.10.4/dahdi-linux/patches/011-rename-max-definition.patch
-    ./scripts/feeds install -a
-    wget -O toolchain/gcc/Config.in https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/24.10.4/Config.in
-    wget -O toolchain/gcc/common.mk https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/24.10.4/common.mk
-    wget -O package/libs/toolchain/Makefile https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/24.10.4/Makefile
-    wget -O .config https://downloads.openwrt.org/releases/24.10.4/targets/armsr/armv8/config.buildinfo
+    git checkout v24.10.5
+    ./scripts/feeds update -a && ./scripts/feeds install -a
+    wget -O toolchain/gcc/Config.in https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/24.10.5/Config.in
+    wget -O toolchain/gcc/common.mk https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/24.10.5/common.mk
+    wget -O package/libs/toolchain/Makefile https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/24.10.5/Makefile
+    wget -O .config https://downloads.openwrt.org/releases/24.10.5/targets/armsr/armv8/config.buildinfo
     make defconfig
     make -j$(nproc)
     zip -r bin.zip bin
