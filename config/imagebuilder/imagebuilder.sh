@@ -117,24 +117,15 @@ custom_packages() {
     cd ${imagebuilder_path}
     echo -e "${STEPS} Start adding custom packages..."
 
-    # Create a [ packages ] directory
-    [[ -d "packages" ]] || mkdir packages
-    cd packages
-
-    # Download luci-app-amlogic
-    amlogic_api="https://api.github.com/repos/ophub/luci-app-amlogic/releases"
-    #
-    amlogic_plugin="luci-app-amlogic"
-    amlogic_plugin_down="$(curl -s ${amlogic_api} | grep "browser_download_url" | grep -oE "https.*${amlogic_plugin}.*.ipk" | head -n 1)"
-    curl -fsSOJL ${amlogic_plugin_down}
-    [[ "${?}" -eq "0" ]] || error_msg "[ ${amlogic_plugin} ] download failed!"
-    echo -e "${INFO} The [ ${amlogic_plugin} ] is downloaded successfully."
-    #
-    amlogic_i18n="luci-i18n-amlogic"
-    amlogic_i18n_down="$(curl -s ${amlogic_api} | grep "browser_download_url" | grep -oE "https.*${amlogic_i18n}.*.ipk" | head -n 1)"
-    curl -fsSOJL ${amlogic_i18n_down}
-    [[ "${?}" -eq "0" ]] || error_msg "[ ${amlogic_i18n} ] download failed!"
-    echo -e "${INFO} The [ ${amlogic_i18n} ] is downloaded successfully."
+    # Download [ packages ] directory
+    #rm -rf packages && git clone -b 24 "https://github.com/esaaprillia/packages"
+    mkdir -p packages && wget https://github.com/firmwarecostum/mosdns/releases/download/hm/mosdns_ipk_ARMSR.zip
+    unzip mosdns_ipk_ARMSR.zip && cp -r bin/packages/aarch64_generic/python/* packages/ && cp -r bin/packages/aarch64_generic/packages/* packages/ && cp -r bin/packages/aarch64_generic/base/* packages/
+    wget https://github.com/esaaprillia/packages/raw/refs/heads/ha/libgfortran_13.3.0-r4_aarch64_generic.ipk && cp -r libgfortran_13.3.0-r4_aarch64_generic.ipk packages/
+    wget https://github.com/esaaprillia/packages/raw/refs/heads/ha/libgomp_13.3.0-r4_aarch64_generic.ipk && cp -r libgomp_13.3.0-r4_aarch64_generic.ipk packages/
+    wget https://github.com/esaaprillia/packages/raw/refs/heads/ha/base-files_1668~d9c5716d1d_aarch64_generic.ipk && cp -r base-files_1668~d9c5716d1d_aarch64_generic.ipk packages/
+    [[ "${?}" -eq "0" ]] || error_msg "[ packages ] download failed!"
+    echo -e "${INFO} The [ packages ] is download successfully."
 
     # Download other luci-app-xxx
     # ......
@@ -187,11 +178,15 @@ rebuild_firmware() {
         \
         kmod-usb-net-rndis kmod-usb-net-cdc-ncm kmod-usb-net-huawei-cdc-ncm kmod-usb-net-cdc-eem kmod-usb-net-cdc-ether kmod-usb-net-cdc-subset kmod-nls-base kmod-usb-core kmod-usb-net kmod-usb-net-cdc-ether kmod-usb2 \
         \
-        openssh-sftp-server \
+        openssh-sftp-server unzip \
         \
         zoneinfo-all zoneinfo-core \
         \
         luci \
+        \
+        dnsmasq-full nftables kmod-nft-socket kmod-nft-tproxy kmod-nft-nat \
+        \
+        dnsmasq-full ipset iptables iptables-nft iptables-zz-legacy iptables-mod-conntrack-extra iptables-mod-iprange iptables-mod-socket iptables-mod-tproxy kmod-ipt-nat \
         \
         dnsmasq-full \
         \
@@ -211,10 +206,10 @@ rebuild_firmware() {
     #wget https://github.com/predators46/hack/releases/download/18.06.4/openwrt-18.06.4-armvirt-64-default-rootfs.tar.gz
     sudo tar xvf openwrt-24.10.5-armsr-armv8-generic-rootfs.tar.gz -C openwrt
     
-    sudo wget https://github.com/predators46/amlogic-s9xxx-openwrt/releases/download/OpenWrt_imagebuilder_openwrt_24.10.4_2025.11/openwrt_official_amlogic_s905x_k6.6.117_2025.11.26.img.gz
-    sudo gunzip openwrt_official_amlogic_s905x_k6.6.117_2025.11.26.img.gz
+    sudo wget https://github.com/predators46/amlogic-s9xxx-openwrt/releases/download/OpenWrt_imagebuilder_openwrt_24.10.5_2025.12/openwrt_official_amlogic_s905x_k6.6.119_2025.12.23.img.gz
+    sudo gunzip openwrt_official_amlogic_s905x_k6.6.119_2025.12.23.img.gz
     sudo mkdir armbian
-    sudo losetup -P -f --show openwrt_official_amlogic_s905x_k6.6.117_2025.11.26.img
+    sudo losetup -P -f --show openwrt_official_amlogic_s905x_k6.6.119_2025.12.23.img
     sudo ls /dev/loop0*
     sudo mount /dev/loop0p2 armbian
     
@@ -235,7 +230,7 @@ rebuild_firmware() {
     sudo umount armbian
     sudo losetup -d /dev/loop0
     
-    sudo xz --compress openwrt_official_amlogic_s905x_k6.6.117_2025.11.26.img
+    sudo xz --compress openwrt_official_amlogic_s905x_k6.6.119_2025.12.23.img
 
     sync && sleep 3
     echo -e "${INFO} [ ${openwrt_dir}/bin/targets/*/*/ ] directory status: \n$(ls -lh bin/targets/*/*/ 2>/dev/null)"
