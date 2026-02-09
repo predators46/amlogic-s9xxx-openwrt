@@ -123,6 +123,7 @@ custom_packages() {
     unzip mosdns_ipk_ARMSR.zip && cp -r bin/packages/aarch64_generic/python/* packages/ && cp -r bin/packages/aarch64_generic/packages/* packages/ && cp -r bin/packages/aarch64_generic/base/* packages/
     wget https://github.com/esaaprillia/packages/raw/refs/heads/ha/libgfortran_13.3.0-r4_aarch64_generic.ipk && cp -r libgfortran_13.3.0-r4_aarch64_generic.ipk packages/
     wget https://github.com/esaaprillia/packages/raw/refs/heads/ha/libgomp_13.3.0-r4_aarch64_generic.ipk && cp -r libgomp_13.3.0-r4_aarch64_generic.ipk packages/
+    wget https://github.com/esaaprillia/packages/raw/refs/heads/ha/base-files_1668~d9c5716d1d_aarch64_generic.ipk && cp -r base-files_1668~d9c5716d1d_aarch64_generic.ipk packages/
     [[ "${?}" -eq "0" ]] || error_msg "[ packages ] download failed!"
     echo -e "${INFO} The [ packages ] is download successfully."
 
