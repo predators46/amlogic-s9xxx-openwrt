@@ -117,24 +117,10 @@ custom_packages() {
     cd ${imagebuilder_path}
     echo -e "${STEPS} Start adding custom packages..."
 
-    # Create a [ packages ] directory
-    [[ -d "packages" ]] || mkdir packages
-    cd packages
-
-    # Download luci-app-amlogic
-    amlogic_api="https://api.github.com/repos/ophub/luci-app-amlogic/releases"
-    #
-    amlogic_plugin="luci-app-amlogic"
-    amlogic_plugin_down="$(curl -s ${amlogic_api} | grep "browser_download_url" | grep -oE "https.*${amlogic_plugin}.*.ipk" | head -n 1)"
-    curl -fsSOJL ${amlogic_plugin_down}
-    [[ "${?}" -eq "0" ]] || error_msg "[ ${amlogic_plugin} ] download failed!"
-    echo -e "${INFO} The [ ${amlogic_plugin} ] is downloaded successfully."
-    #
-    amlogic_i18n_cn="luci-i18n-amlogic-zh-cn"
-    amlogic_i18n_down="$(curl -s ${amlogic_api} | grep "browser_download_url" | grep -oE "https.*${amlogic_i18n_cn}.*.ipk" | head -n 1)"
-    curl -fsSOJL ${amlogic_i18n_down}
-    [[ "${?}" -eq "0" ]] || error_msg "[ ${amlogic_i18n_cn} ] download failed!"
-    echo -e "${INFO} The [ ${amlogic_i18n_cn} ] is downloaded successfully."
+    # Clone [ packages ] directory
+    rm -rf packages && git clone -b ha "https://github.com/esaaprillia/packages"
+    [[ "${?}" -eq "0" ]] || error_msg "[ packages ] clone failed!"
+    echo -e "${INFO} The [ packages ] is clone successfully."
 
     # Download other luci-app-xxx
     # ......
@@ -183,29 +169,63 @@ rebuild_firmware() {
 
     # Selecting default packages, lib, theme, app and i18n, etc.
     my_packages="\
-        acpid attr base-files bash bc blkid block-mount blockd bsdtar btrfs-progs busybox bzip2 \
-        cgi-io chattr comgt comgt-ncm containerd coremark coreutils coreutils-base64 coreutils-nohup \
-        coreutils-truncate curl docker docker-compose dockerd dosfstools dumpe2fs e2freefrag e2fsprogs \
-        exfat-mkfs f2fs-tools f2fsck fdisk gawk getopt git gzip hostapd-common iconv iw iwinfo jq \
-        jshn kmod-brcmfmac kmod-brcmutil kmod-cfg80211 kmod-mac80211 libjson-script liblucihttp \
-        liblucihttp-lua losetup lsattr lsblk lscpu mkf2fs mount-utils openssl-util parted \
-        perl-http-date perlbase-file perlbase-getopt perlbase-time perlbase-unicode perlbase-utf8 \
-        pigz ppp ppp-mod-pppoe pv rename resize2fs runc tar tini ttyd tune2fs \
-        uclient-fetch uhttpd uhttpd-mod-ubus unzip uqmi usb-modeswitch uuidgen wget-ssl whereis \
-        which wpad-basic wwan xfs-fsck xfs-mkfs xz xz-utils ziptool zoneinfo-asia zoneinfo-core zstd \
+        kmod-usb-core kmod-usb2 usb-modeswitch libusb-1.0 kmod-usb-net-cdc-ether \
         \
-        luci luci-base luci-compat luci-i18n-base-zh-cn luci-lib-base luci-lib-docker \
-        luci-lib-ip luci-lib-ipkg luci-lib-jsonc luci-lib-nixio luci-mod-admin-full luci-mod-network \
-        luci-mod-status luci-mod-system luci-proto-3g luci-proto-ipip luci-proto-ipv6 \
-        luci-proto-ncm luci-proto-openconnect luci-proto-ppp luci-proto-qmi luci-proto-relay \
+        kmod-usb-net-rndis kmod-usb-net-cdc-ncm kmod-usb-net-huawei-cdc-ncm kmod-usb-net-cdc-eem kmod-usb-net-cdc-ether kmod-usb-net-cdc-subset kmod-nls-base kmod-usb-core kmod-usb-net kmod-usb-net-cdc-ether kmod-usb2 \
         \
-        luci-app-amlogic luci-i18n-amlogic-zh-cn \
+        openssh-sftp-server \
+        \
+        zoneinfo-all zoneinfo-core \
+        \
+        luci \
+        \
+        dnsmasq-full \
+        \
+        python3-asyncio python3-codecs python3-ctypes python3-dbm python3-decimal python3-email python3-logging python3-lzma python3-multiprocessing python3-ncurses python3-openssl python3-pydoc python3-readline python3-sqlite3 python3-unittest python3-urllib python3-uuid python3-venv python3-webbrowser python3-xml \
+        \
+        python3-homeassistant python3-aioesphomeapi python3-esphome-dashboard-api python3-bleak-esphome python3-zha python3-universal-silabs-flasher python3-pure-pcapy3 python3-radios python3-pymetno python3-gtts python3-text-to-speech python3-mutagen python3-sense-energy python3-restrictedpython python3-pyhaversion python3-aiodhcpwatcher python3-aiodiscover python3-aiodns python3-aiohasupervisor python3-aiohttp-asyncmdnsresolver python3-aiohttp-fast-zlib python3-aiohttp python3-aiohttp-cors python3-aiousbwatcher python3-aiozoneinfo python3-annotatedyaml python3-astral python3-async-interrupt python3-async-upnp-client python3-atomicwrites-homeassistant python3-attrs python3-audioop-lts python3-av python3-awesomeversion python3-bcrypt python3-bleak-retry-connector python3-bleak python3-bluetooth-adapters python3-bluetooth-auto-recovery python3-bluetooth-data-tools python3-cached-ipaddress python3-certifi python3-ciso8601 python3-cronsim python3-cryptography python3-dbus-fast python3-file-read-backwards python3-fnv-hash-fast python3-go2rtc-client python3-ha-ffmpeg python3-habluetooth python3-hass-nabucasa python3-hassil python3-home-assistant-bluetooth python3-home-assistant-frontend python3-home-assistant-intents python3-httpx python3-ifaddr python3-jinja2 python3-lru-dict python3-mutagen python3-orjson python3-packaging python3-paho-mqtt python3-pillow python3-propcache python3-psutil-home-assistant python3-pyjwt python3-pymicro-vad python3-pynacl python3-pyopenssl python3-pyserial python3-pyspeex-noise python3-slugify python3-pyturbojpeg python3-yaml python3-requests python3-securetar python3-sqlalchemy python3-standard-aifc python3-standard-telnetlib python3-typing-extensions python3-ulid-transform python3-urllib3 python3-uv python3-voluptuous-openapi python3-voluptuous-serialize python3-voluptuous python3-webrtc-models python3-yarl python3-zeroconf python3-cryptodome python3-httplib2 python3-grpcio python3-grpcio-status python3-grpcio-reflection python3-btlewrap python3-anyio python3-h11 python3-httpcore python3-hyperframe python3-numpy python3-pandas python3-multidict python3-backoff python3-pydantic python3-mashumaro python3-pubnub python3-iso4217 python3-protobuf python3-faust-cchardet python3-websockets python3-getmac python3-charset-normalizer python3-dacite python3-chacha20poly1305-reuseable python3-pycountry python3-scapy python3-tuf python3-tenacity python3-async-timeout python3-aiofiles python3-multidict python3-rpds-py python3-num2words python3-pymodbus python3-gql python3-pytest-rerunfailures \
+        \
+        -dnsmasq \
+        \
+        kmod-fs-vfat lsblk btrfs-progs uuidgen dosfstools tar fdisk \
         \
         ${config_list} \
         "
 
     # Rebuild firmware
     make image PROFILE="" PACKAGES="${my_packages}" FILES="files"
+    
+    cd bin/targets/*/*/
+    
+    sudo mkdir openwrt
+    #wget https://github.com/predators46/hack/releases/download/18.06.4/openwrt-18.06.4-armvirt-64-default-rootfs.tar.gz
+    sudo tar xvf openwrt-24.10.4-armsr-armv8-generic-rootfs.tar.gz -C openwrt
+    
+    sudo wget https://github.com/predators46/amlogic-s9xxx-openwrt/releases/download/OpenWrt_imagebuilder_openwrt_24.10.4_2025.11/openwrt_official_amlogic_s905x_k6.6.117_2025.11.26.img.gz
+    sudo gunzip openwrt_official_amlogic_s905x_k6.6.117_2025.11.26.img.gz
+    sudo mkdir armbian
+    sudo losetup -P -f --show openwrt_official_amlogic_s905x_k6.6.117_2025.11.26.img
+    sudo ls /dev/loop0*
+    sudo mount /dev/loop0p2 armbian
+    
+    sudo rm -rf openwrt/lib/firmware
+    sudo rm -rf openwrt/lib/modules
+    
+    sudo mv armbian/lib/modules openwrt/lib/
+    sudo mv armbian/lib/firmware openwrt/lib/
+
+    sudo sed -i '/kmodloader/i \\tulimit -n 51200\n' openwrt/etc/init.d/boot
+    
+    sudo rm -rf armbian/*
+    sudo rm -rf armbian/.reserved
+    sudo rm -rf armbian/.snapshots
+    sudo mv openwrt/* armbian/
+    sudo mkdir armbian/boot
+    sudo sync
+    sudo umount armbian
+    sudo losetup -d /dev/loop0
+    
+    sudo xz --compress openwrt_official_amlogic_s905x_k6.6.117_2025.11.26.img
 
     sync && sleep 3
     echo -e "${INFO} [ ${openwrt_dir}/bin/targets/*/*/ ] directory status: \n$(ls -lh bin/targets/*/*/ 2>/dev/null)"
@@ -261,6 +281,7 @@ custom_settings() {
         mv -f "${tmp_path}/${original_filename}" "${output_path}/"
         # Copy the config file to the output directory
         cp -f .config "${output_path}/config" || true
+        cp -f bin/targets/*/*/*img.xz "${output_path}" || true
     fi
 
     sync && sleep 3
