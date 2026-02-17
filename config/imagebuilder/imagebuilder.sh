@@ -117,24 +117,15 @@ custom_packages() {
     cd ${imagebuilder_path}
     echo -e "${STEPS} Start adding custom packages..."
 
-    # Create a [ packages ] directory
-    [[ -d "packages" ]] || mkdir packages
-    cd packages
-
-    # Download luci-app-amlogic
-    amlogic_api="https://api.github.com/repos/ophub/luci-app-amlogic/releases"
-    #
-    amlogic_plugin="luci-app-amlogic"
-    amlogic_plugin_down="$(curl -s ${amlogic_api} | grep "browser_download_url" | grep -oE "https.*${amlogic_plugin}.*.ipk" | head -n 1)"
-    curl -fsSOJL ${amlogic_plugin_down}
-    [[ "${?}" -eq "0" ]] || error_msg "[ ${amlogic_plugin} ] download failed!"
-    echo -e "${INFO} The [ ${amlogic_plugin} ] is downloaded successfully."
-    #
-    amlogic_i18n_cn="luci-i18n-amlogic-zh-cn"
-    amlogic_i18n_down="$(curl -s ${amlogic_api} | grep "browser_download_url" | grep -oE "https.*${amlogic_i18n_cn}.*.ipk" | head -n 1)"
-    curl -fsSOJL ${amlogic_i18n_down}
-    [[ "${?}" -eq "0" ]] || error_msg "[ ${amlogic_i18n_cn} ] download failed!"
-    echo -e "${INFO} The [ ${amlogic_i18n_cn} ] is downloaded successfully."
+    # Download [ packages ] directory
+    #rm -rf packages && git clone -b 24 "https://github.com/esaaprillia/packages"
+    mkdir -p packages && wget https://github.com/firmwarecostum/mosdns/releases/download/ori/mosdns_ipk_ARMSR.zip
+    unzip mosdns_ipk_ARMSR.zip && cp -r bin/packages/aarch64_generic/python/* packages/ && cp -r bin/packages/aarch64_generic/packages/* packages/ && cp -r bin/packages/aarch64_generic/base/* packages/ && cp -r bin/targets/armsr/armv8/packages/* packages/
+    #wget https://github.com/esaaprillia/packages/raw/refs/heads/ha/libgfortran_13.3.0-r4_aarch64_generic.ipk && cp -r libgfortran_13.3.0-r4_aarch64_generic.ipk packages/
+    #wget https://github.com/esaaprillia/packages/raw/refs/heads/ha/libgomp_13.3.0-r4_aarch64_generic.ipk && cp -r libgomp_13.3.0-r4_aarch64_generic.ipk packages/
+    wget https://github.com/esaaprillia/packages/raw/refs/heads/ha/base-files_1668~d9c5716d1d_aarch64_generic.ipk && cp -r base-files_1668~d9c5716d1d_aarch64_generic.ipk packages/
+    [[ "${?}" -eq "0" ]] || error_msg "[ packages ] download failed!"
+    echo -e "${INFO} The [ packages ] is download successfully."
 
     # Download other luci-app-xxx
     # ......
@@ -183,29 +174,67 @@ rebuild_firmware() {
 
     # Selecting default packages, lib, theme, app and i18n, etc.
     my_packages="\
-        acpid attr base-files bash bc blkid block-mount blockd bsdtar btrfs-progs busybox bzip2 \
-        cgi-io chattr comgt comgt-ncm containerd coremark coreutils coreutils-base64 coreutils-nohup \
-        coreutils-truncate curl docker docker-compose dockerd dosfstools dumpe2fs e2freefrag e2fsprogs \
-        exfat-mkfs f2fs-tools f2fsck fdisk gawk getopt git gzip hostapd-common iconv iw iwinfo jq \
-        jshn kmod-brcmfmac kmod-brcmutil kmod-cfg80211 kmod-mac80211 libjson-script liblucihttp \
-        liblucihttp-lua losetup lsattr lsblk lscpu mkf2fs mount-utils openssl-util parted \
-        perl-http-date perlbase-file perlbase-getopt perlbase-time perlbase-unicode perlbase-utf8 \
-        pigz ppp ppp-mod-pppoe pv rename resize2fs runc tar tini ttyd tune2fs \
-        uclient-fetch uhttpd uhttpd-mod-ubus unzip uqmi usb-modeswitch uuidgen wget-ssl whereis \
-        which wpad-basic wwan xfs-fsck xfs-mkfs xz xz-utils ziptool zoneinfo-asia zoneinfo-core zstd \
+        kmod-usb-core kmod-usb2 usb-modeswitch libusb-1.0 kmod-usb-net-cdc-ether \
         \
-        luci luci-base luci-compat luci-i18n-base-zh-cn luci-lib-base luci-lib-docker \
-        luci-lib-ip luci-lib-ipkg luci-lib-jsonc luci-lib-nixio luci-mod-admin-full luci-mod-network \
-        luci-mod-status luci-mod-system luci-proto-3g luci-proto-ipip luci-proto-ipv6 \
-        luci-proto-ncm luci-proto-openconnect luci-proto-ppp luci-proto-qmi luci-proto-relay \
+        kmod-usb-net-rndis kmod-usb-net-cdc-ncm kmod-usb-net-huawei-cdc-ncm kmod-usb-net-cdc-eem kmod-usb-net-cdc-ether kmod-usb-net-cdc-subset kmod-nls-base kmod-usb-core kmod-usb-net kmod-usb-net-cdc-ether kmod-usb2 \
         \
-        luci-app-amlogic luci-i18n-amlogic-zh-cn \
+        openssh-sftp-server unzip \
+        \
+        zoneinfo-all zoneinfo-core \
+        \
+        luci \
+        \
+        dnsmasq-full nftables kmod-nft-socket kmod-nft-tproxy kmod-nft-nat \
+        \
+        dnsmasq-full ipset iptables iptables-nft iptables-zz-legacy iptables-mod-conntrack-extra iptables-mod-iprange iptables-mod-socket iptables-mod-tproxy kmod-ipt-nat \
+        \
+        dnsmasq-full \
+        \
+        perl perlbase-anydbm-file perlbase-app perlbase-archive perlbase-attribute perlbase-attributes perlbase-autodie perlbase-autoloader perlbase-autosplit perlbase-autouse perlbase-b perlbase-base perlbase-benchmark perlbase-bigint perlbase-bignum perlbase-blib perlbase-bytes perlbase-charnames perlbase-class perlbase-compress perlbase-config perlbase-cpan perlbase-cwd perlbase-data perlbase-db perlbase-db-file perlbase-dbm-filter perlbase-devel perlbase-diagnostics perlbase-digest perlbase-dirhandle perlbase-dumpvalue perlbase-dumpvar perlbase-dynaloader perlbase-encode perlbase-encoding perlbase-english perlbase-env perlbase-errno perlbase-essential perlbase-experimental perlbase-extutils perlbase-fatal perlbase-fcntl perlbase-feature perlbase-fields perlbase-file perlbase-filecache perlbase-filehandle perlbase-filetest perlbase-filter perlbase-findbin perlbase-gdbm-file perlbase-getopt perlbase-hash perlbase-http-tiny perlbase-i18n perlbase-if perlbase-integer perlbase-io perlbase-ipc perlbase-json-pp perlbase-less perlbase-list perlbase-locale perlbase-math perlbase-memoize perlbase-meta-notation perlbase-mime perlbase-module perlbase-mro perlbase-net perlbase-next perlbase-o perlbase-opcode perlbase-open perlbase-ops perlbase-ostype perlbase-params perlbase-perl5db perlbase-perlio perlbase-pod perlbase-posix perlbase-re perlbase-safe perlbase-scalar perlbase-sdbm-file perlbase-search perlbase-selectsaver perlbase-selfloader perlbase-sigtrap perlbase-socket perlbase-sort perlbase-storable perlbase-symbol perlbase-sys perlbase-tap perlbase-term perlbase-test perlbase-text perlbase-thread perlbase-threads perlbase-tie perlbase-time perlbase-unicode perlbase-unicore perlbase-universal perlbase-user perlbase-utf8 perlbase-version perlbase-xsloader \
+        \
+        zoneminder \
+        \
+        -dnsmasq \
+        \
+        kmod-fs-vfat lsblk btrfs-progs uuidgen dosfstools tar fdisk \
         \
         ${config_list} \
         "
 
     # Rebuild firmware
     make image PROFILE="" PACKAGES="${my_packages}" FILES="files"
+    
+    cd bin/targets/*/*/
+    
+    sudo mkdir openwrt
+    #wget https://github.com/predators46/hack/releases/download/18.06.4/openwrt-18.06.4-armvirt-64-default-rootfs.tar.gz
+    sudo tar xvf openwrt-24.10.5-armsr-armv8-generic-rootfs.tar.gz -C openwrt
+    
+    sudo wget https://github.com/predators46/amlogic-s9xxx-openwrt/releases/download/OpenWrt_imagebuilder_openwrt_24.10.5_2025.12/openwrt_official_amlogic_s905x_k6.6.119_2025.12.23.img.gz
+    sudo gunzip openwrt_official_amlogic_s905x_k6.6.119_2025.12.23.img.gz
+    sudo mkdir armbian
+    sudo losetup -P -f --show openwrt_official_amlogic_s905x_k6.6.119_2025.12.23.img
+    sudo ls /dev/loop0*
+    sudo mount /dev/loop0p2 armbian
+    
+    sudo rm -rf openwrt/lib/firmware
+    sudo rm -rf openwrt/lib/modules
+    
+    sudo mv armbian/lib/modules openwrt/lib/
+    sudo mv armbian/lib/firmware openwrt/lib/
+
+    sudo sed -i '/kmodloader/i \\tulimit -n 51200\n' openwrt/etc/init.d/boot
+    
+    sudo rm -rf armbian/*
+    sudo rm -rf armbian/.reserved
+    sudo rm -rf armbian/.snapshots
+    sudo mv openwrt/* armbian/
+    sudo mkdir armbian/boot
+    sudo sync
+    sudo umount armbian
+    sudo losetup -d /dev/loop0
+    
+    sudo xz --compress openwrt_official_amlogic_s905x_k6.6.119_2025.12.23.img
 
     sync && sleep 3
     echo -e "${INFO} [ ${openwrt_dir}/bin/targets/*/*/ ] directory status: \n$(ls -lh bin/targets/*/*/ 2>/dev/null)"
@@ -261,6 +290,7 @@ custom_settings() {
         mv -f "${tmp_path}/${original_filename}" "${output_path}/"
         # Copy the config file to the output directory
         cp -f .config "${output_path}/config" || true
+        cp -f bin/targets/*/*/*img.xz "${output_path}" || true
     fi
 
     sync && sleep 3
