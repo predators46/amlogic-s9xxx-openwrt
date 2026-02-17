@@ -130,11 +130,11 @@ custom_packages() {
     [[ "${?}" -eq "0" ]] || error_msg "[ ${amlogic_plugin} ] download failed!"
     echo -e "${INFO} The [ ${amlogic_plugin} ] is downloaded successfully."
     #
-    amlogic_i18n="luci-i18n-amlogic"
-    amlogic_i18n_down="$(curl -s ${amlogic_api} | grep "browser_download_url" | grep -oE "https.*${amlogic_i18n}.*.ipk" | head -n 1)"
+    amlogic_i18n_cn="luci-i18n-amlogic-zh-cn"
+    amlogic_i18n_down="$(curl -s ${amlogic_api} | grep "browser_download_url" | grep -oE "https.*${amlogic_i18n_cn}.*.ipk" | head -n 1)"
     curl -fsSOJL ${amlogic_i18n_down}
-    [[ "${?}" -eq "0" ]] || error_msg "[ ${amlogic_i18n} ] download failed!"
-    echo -e "${INFO} The [ ${amlogic_i18n} ] is downloaded successfully."
+    [[ "${?}" -eq "0" ]] || error_msg "[ ${amlogic_i18n_cn} ] download failed!"
+    echo -e "${INFO} The [ ${amlogic_i18n_cn} ] is downloaded successfully."
 
     # Download other luci-app-xxx
     # ......
@@ -183,41 +183,29 @@ rebuild_firmware() {
 
     # Selecting default packages, lib, theme, app and i18n, etc.
     my_packages="\
-        kmod-usb-core kmod-usb2 usb-modeswitch libusb-1.0 kmod-usb-net-cdc-ether \
+        acpid attr base-files bash bc blkid block-mount blockd bsdtar btrfs-progs busybox bzip2 \
+        cgi-io chattr comgt comgt-ncm containerd coremark coreutils coreutils-base64 coreutils-nohup \
+        coreutils-truncate curl docker docker-compose dockerd dosfstools dumpe2fs e2freefrag e2fsprogs \
+        exfat-mkfs f2fs-tools f2fsck fdisk gawk getopt git gzip hostapd-common iconv iw iwinfo jq \
+        jshn kmod-brcmfmac kmod-brcmutil kmod-cfg80211 kmod-mac80211 libjson-script liblucihttp \
+        liblucihttp-lua losetup lsattr lsblk lscpu mkf2fs mount-utils openssl-util parted \
+        perl-http-date perlbase-file perlbase-getopt perlbase-time perlbase-unicode perlbase-utf8 \
+        pigz ppp ppp-mod-pppoe pv rename resize2fs runc tar tini ttyd tune2fs \
+        uclient-fetch uhttpd uhttpd-mod-ubus unzip uqmi usb-modeswitch uuidgen wget-ssl whereis \
+        which wpad-basic wwan xfs-fsck xfs-mkfs xz xz-utils ziptool zoneinfo-asia zoneinfo-core zstd \
         \
-        kmod-usb-net-rndis kmod-usb-net-cdc-ncm kmod-usb-net-huawei-cdc-ncm kmod-usb-net-cdc-eem kmod-usb-net-cdc-ether kmod-usb-net-cdc-subset kmod-nls-base kmod-usb-core kmod-usb-net kmod-usb-net-cdc-ether kmod-usb2 \
+        luci luci-base luci-compat luci-i18n-base-zh-cn luci-lib-base luci-lib-docker \
+        luci-lib-ip luci-lib-ipkg luci-lib-jsonc luci-lib-nixio luci-mod-admin-full luci-mod-network \
+        luci-mod-status luci-mod-system luci-proto-3g luci-proto-ipip luci-proto-ipv6 \
+        luci-proto-ncm luci-proto-openconnect luci-proto-ppp luci-proto-qmi luci-proto-relay \
         \
-        openssh-sftp-server \
-        \
-        zoneinfo-all zoneinfo-core \
-        \
-        luci \
-        \
-        dnsmasq-full \
-        \
-        -dnsmasq \
-        \
-        kmod-fs-vfat lsblk btrfs-progs uuidgen dosfstools tar fdisk \
+        luci-app-amlogic luci-i18n-amlogic-zh-cn \
         \
         ${config_list} \
         "
 
     # Rebuild firmware
     make image PROFILE="" PACKAGES="${my_packages}" FILES="files"
-    
-    cd bin/targets/*/*/
-    
-    git clone https://git.openwrt.org/openwrt/openwrt.git && cd openwrt
-    git checkout v24.10.5
-    ./scripts/feeds update -a && ./scripts/feeds install -a
-    wget -O config/Config-images.in https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/24.10.5/Config-images.in
-    wget -O toolchain/gcc/Config.in https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/24.10.5/Config.in
-    wget -O toolchain/gcc/common.mk https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/24.10.5/common.mk
-    wget -O package/libs/toolchain/Makefile https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/24.10.5/Makefile
-    wget -O .config https://downloads.openwrt.org/releases/24.10.5/targets/armsr/armv8/config.buildinfo
-    make defconfig
-    make -j$(nproc)
-    zip -r bin.zip bin
 
     sync && sleep 3
     echo -e "${INFO} [ ${openwrt_dir}/bin/targets/*/*/ ] directory status: \n$(ls -lh bin/targets/*/*/ 2>/dev/null)"
@@ -273,7 +261,6 @@ custom_settings() {
         mv -f "${tmp_path}/${original_filename}" "${output_path}/"
         # Copy the config file to the output directory
         cp -f .config "${output_path}/config" || true
-        cp -f bin/targets/*/*/openwrt/*.zip "${output_path}" || true
     fi
 
     sync && sleep 3
