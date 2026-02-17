@@ -184,10 +184,6 @@ rebuild_firmware() {
         \
         luci \
         \
-        dnsmasq-full nftables kmod-nft-socket kmod-nft-tproxy kmod-nft-nat \
-        \
-        dnsmasq-full ipset iptables iptables-nft iptables-zz-legacy iptables-mod-conntrack-extra iptables-mod-iprange iptables-mod-socket iptables-mod-tproxy kmod-ipt-nat \
-        \
         dnsmasq-full \
         \
         perl perlbase-anydbm-file perlbase-app perlbase-archive perlbase-attribute perlbase-attributes perlbase-autodie perlbase-autoloader perlbase-autosplit perlbase-autouse perlbase-b perlbase-base perlbase-benchmark perlbase-bigint perlbase-bignum perlbase-blib perlbase-bytes perlbase-charnames perlbase-class perlbase-compress perlbase-config perlbase-cpan perlbase-cwd perlbase-data perlbase-db perlbase-db-file perlbase-dbm-filter perlbase-devel perlbase-diagnostics perlbase-digest perlbase-dirhandle perlbase-dumpvalue perlbase-dumpvar perlbase-dynaloader perlbase-encode perlbase-encoding perlbase-english perlbase-env perlbase-errno perlbase-essential perlbase-experimental perlbase-extutils perlbase-fatal perlbase-fcntl perlbase-feature perlbase-fields perlbase-file perlbase-filecache perlbase-filehandle perlbase-filetest perlbase-filter perlbase-findbin perlbase-gdbm-file perlbase-getopt perlbase-hash perlbase-http-tiny perlbase-i18n perlbase-if perlbase-integer perlbase-io perlbase-ipc perlbase-json-pp perlbase-less perlbase-list perlbase-locale perlbase-math perlbase-memoize perlbase-meta-notation perlbase-mime perlbase-module perlbase-mro perlbase-net perlbase-next perlbase-o perlbase-opcode perlbase-open perlbase-ops perlbase-ostype perlbase-params perlbase-perl5db perlbase-perlio perlbase-pod perlbase-posix perlbase-re perlbase-safe perlbase-scalar perlbase-sdbm-file perlbase-search perlbase-selectsaver perlbase-selfloader perlbase-sigtrap perlbase-socket perlbase-sort perlbase-storable perlbase-symbol perlbase-sys perlbase-tap perlbase-term perlbase-test perlbase-text perlbase-thread perlbase-threads perlbase-tie perlbase-time perlbase-unicode perlbase-unicore perlbase-universal perlbase-user perlbase-utf8 perlbase-version perlbase-xsloader \
