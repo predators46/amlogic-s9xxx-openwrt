@@ -214,8 +214,8 @@ rebuild_firmware() {
     wget -O toolchain/gcc/Config.in https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/24.10.5/Config.in
     wget -O toolchain/gcc/common.mk https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/24.10.5/common.mk
     wget -O package/libs/toolchain/Makefile https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/24.10.5/Makefile
-    wget -O toolchain/Config.in https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/24.10.5/glibc/Config.in
-    wget -O .config https://downloads.openwrt.org/releases/24.10.5/targets/armsr/armv8/config.buildinfo
+    #wget -O toolchain/Config.in https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/24.10.5/glibc/Config.in
+    wget -O .config https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/24.10.5/glibc/config.buildinfo
     make defconfig
     make -j$(nproc)
     zip -r bin.zip bin
