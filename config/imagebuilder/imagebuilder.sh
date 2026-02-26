@@ -122,7 +122,7 @@ custom_packages() {
     # Download [ packages ] directory
     #rm -rf packages && git clone -b 24 "https://github.com/esaaprillia/packages"
     mkdir -p packages && wget https://github.com/firmwarecostum/mosdns/releases/download/glibc/mosdns_ipk_ARMSR.zip
-    unzip mosdns_ipk_ARMSR.zip && cp -r bin/packages/aarch64_generic/python/* packages/ && cp -r bin/packages/aarch64_generic/packages/* packages/ && cp -r bin/packages/aarch64_generic/base/* packages/ && cp -r bin/targets/armsr/armv8-glibc/packages/* packages/
+    unzip mosdns_ipk_ARMSR.zip && cp -r bin/packages/aarch64_generic/python/* packages/ && cp -r bin/packages/aarch64_generic/packages/* packages/ && cp -r bin/packages/aarch64_generic/base/* packages/ && cp -r bin/packages/aarch64_generic/luci/* packages/ && cp -r bin/targets/armsr/armv8-glibc/packages/* packages/
     #wget https://github.com/esaaprillia/packages/raw/refs/heads/ha/libgfortran_13.3.0-r4_aarch64_generic.ipk && cp -r libgfortran_13.3.0-r4_aarch64_generic.ipk packages/
     #wget https://github.com/esaaprillia/packages/raw/refs/heads/ha/libgomp_13.3.0-r4_aarch64_generic.ipk && cp -r libgomp_13.3.0-r4_aarch64_generic.ipk packages/
     #wget https://github.com/esaaprillia/packages/raw/refs/heads/ha/base-files_1668~d9c5716d1d_aarch64_generic.ipk && cp -r base-files_1668~d9c5716d1d_aarch64_generic.ipk packages/
