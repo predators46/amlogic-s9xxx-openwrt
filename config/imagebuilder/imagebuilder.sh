@@ -188,7 +188,7 @@ rebuild_firmware() {
         \
         python3-asyncio python3-codecs python3-ctypes python3-dbm python3-decimal python3-email python3-logging python3-lzma python3-multiprocessing python3-ncurses python3-openssl python3-pydoc python3-readline python3-sqlite3 python3-unittest python3-urllib python3-uuid python3-venv python3-webbrowser python3-xml \
         \
-        python3-homeassistant python3-cryptodome python3-httplib2 python3-grpcio python3-grpcio-tools python3-grpcio-status python3-grpcio-reflection python3-btlewrap python3-anyio python3-h11 python3-httpcore python3-hyperframe python3-numpy python3-pandas python3-multidict python3-backoff python3-brotli python3-pydantic python3-mashumaro python3-pubnub python3-iso4217 python3-protobuf python3-faust-cchardet python3-websockets python3-getmac python3-charset-normalizer python3-dacite python3-chacha20poly1305-reuseable python3-pycountry python3-scapy python3-tuf python3-tenacity python3-async-timeout python3-aiofiles python3-multidict python3-num2words python3-pymodbus python3-pytest-rerunfailures python3-aiomqtt python3-auth0 python3-setuptools \
+        python3-homeassistant \
         \
         -dnsmasq \
         \
