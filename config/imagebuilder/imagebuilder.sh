@@ -78,6 +78,8 @@ download_imagebuilder() {
     [[ "${?}" -eq "0" ]] || error_msg "Failed to download: [ ${download_file} ]"
 
     # Unzip and change the directory name
+    rm *-imagebuilder-*.tar.zst
+    wget https://github.com/predators46/amlogic-s9xxx-openwrt/releases/download/OpenWrt_imagebuilder_openwrt_24.10.5_2026.03/openwrt-imagebuilder-25.12.0-armsr-armv8.Linux-x86_64.tar.zst
     tar -I zstd -xvf *-imagebuilder-*.tar.zst -C . && sync && rm -f *-imagebuilder-*.tar.zst
     mv -f *-imagebuilder-* ${openwrt_dir}
 
