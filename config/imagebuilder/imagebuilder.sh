@@ -123,6 +123,7 @@ custom_packages() {
 #    [[ -d "packages" ]] || mkdir packages
     cd packages
 
+    rm base-files-1693~f919e7899d.apk
     wget https://github.com/esaaprillia/packages/raw/refs/heads/25/base-files-1693~f919e7899d.apk
     wget https://github.com/esaaprillia/packages/raw/refs/heads/25/libgfortran-14.3.0-r5.apk
     wget https://github.com/esaaprillia/packages/raw/refs/heads/25/libgomp-14.3.0-r5.apk
