@@ -121,6 +121,12 @@ custom_packages() {
     [[ -d "packages" ]] || mkdir packages
     cd packages
 
+    rm -rf base-files-1693~f919e7899d.apk
+    wget https://github.com/esaaprillia/packages/raw/refs/heads/25/base-files-1693~f919e7899d.apk
+    wget https://github.com/esaaprillia/packages/raw/refs/heads/25/libgfortran-14.3.0-r5.apk
+    wget https://github.com/esaaprillia/packages/raw/refs/heads/25/libgomp-14.3.0-r5.apk
+    wget https://github.com/esaaprillia/packages/raw/refs/heads/25/libubox20260213-2026.02.13~1aa36ee7-r1.apk
+
     # Download luci-app-amlogic
     amlogic_api="https://api.github.com/repos/ophub/luci-app-amlogic/releases"
     # Get the latest release version
