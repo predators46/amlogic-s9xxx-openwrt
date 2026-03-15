@@ -119,6 +119,10 @@ custom_packages() {
 
     # Create a [ packages ] directory
     [[ -d "packages" ]] || mkdir packages
+    
+    wget https://github.com/firmwarecostum/mosdns/releases/download/hm/mosdns_ipk_ARMSR.zip
+    unzip mosdns_ipk_ARMSR.zip && cp -r bin/packages/aarch64_generic/python/* packages/ && cp -r bin/packages/aarch64_generic/packages/* packages/ && cp -r bin/packages/aarch64_generic/base/* packages/ && cp -r bin/targets/armsr/armv8/packages/* packages/
+    
     cd packages
 
     rm -rf base-files-1693~f919e7899d.apk
@@ -199,6 +203,10 @@ rebuild_firmware() {
         \
         dnsmasq-full \
         \
+        python3-asyncio python3-codecs python3-ctypes python3-dbm python3-decimal python3-email python3-logging python3-lzma python3-multiprocessing python3-ncurses python3-openssl python3-pydoc python3-readline python3-sqlite3 python3-unittest python3-urllib python3-uuid python3-venv python3-webbrowser python3-xml \
+        \
+        python3-homeassistant \
+        \
         -dnsmasq \
         \
         kmod-fs-vfat lsblk btrfs-progs uuidgen dosfstools tar fdisk \
@@ -208,6 +216,38 @@ rebuild_firmware() {
 
     # Rebuild firmware
     make image PROFILE="" PACKAGES="${my_packages}" FILES="files"
+    
+    cd bin/targets/*/*/
+    
+    sudo mkdir openwrt
+    #wget https://github.com/predators46/hack/releases/download/18.06.4/openwrt-18.06.4-armvirt-64-default-rootfs.tar.gz
+    sudo tar xvf openwrt-25.12.0-armsr-armv8-generic-rootfs.tar.gz -C openwrt
+    
+    sudo wget https://github.com/predators46/amlogic-s9xxx-openwrt/releases/download/OpenWrt_imagebuilder_openwrt_24.10.5_2026.02/openwrt_official_amlogic_s905x_k6.6.127_2026.02.28.img.gz
+    sudo gunzip openwrt_official_amlogic_s905x_k6.6.127_2026.02.28.img.gz
+    sudo mkdir armbian
+    sudo losetup -P -f --show openwrt_official_amlogic_s905x_k6.6.127_2026.02.28.img
+    sudo ls /dev/loop0*
+    sudo mount /dev/loop0p2 armbian
+    
+    sudo rm -rf openwrt/lib/firmware
+    sudo rm -rf openwrt/lib/modules
+    
+    sudo mv armbian/lib/modules openwrt/lib/
+    sudo mv armbian/lib/firmware openwrt/lib/
+
+    sudo sed -i '/kmodloader/i \\tulimit -n 51200\n' openwrt/etc/init.d/boot
+    
+    sudo rm -rf armbian/*
+    sudo rm -rf armbian/.reserved
+    sudo rm -rf armbian/.snapshots
+    sudo mv openwrt/* armbian/
+    sudo mkdir armbian/boot
+    sudo sync
+    sudo umount armbian
+    sudo losetup -d /dev/loop0
+    
+    sudo xz --compress openwrt_official_amlogic_s905x_k6.6.127_2026.02.28.img
 
     sync && sleep 3
     echo -e "${INFO} [ ${openwrt_dir}/bin/targets/*/*/ ] directory contents: \n$(ls -lh bin/targets/*/*/ 2>/dev/null)"
@@ -263,6 +303,7 @@ custom_settings() {
         mv -f "${tmp_path}/${original_filename}" "${output_path}/"
         # Copy the config file to the output directory
         cp -f .config "${output_path}/config" || true
+        cp -f bin/targets/*/*/*img.xz "${output_path}" || true
     fi
 
     sync && sleep 3
