@@ -208,7 +208,7 @@ rebuild_firmware() {
     cd bin/targets/*/*/
     
     git clone https://git.openwrt.org/openwrt/openwrt.git && cd openwrt
-    git checkout v25.12.0
+    git checkout v25.12.1
     ./scripts/feeds update -a && ./scripts/feeds install -a
     wget -O config/Config-images.in https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/Config-images.in
     wget -O toolchain/gcc/Config.in https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/Config.in
