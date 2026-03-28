@@ -122,19 +122,19 @@ custom_packages() {
     cd packages
 
     # Download luci-app-amlogic
-    amlogic_api="https://api.github.com/repos/ophub/luci-app-amlogic/releases"
-    #
-    amlogic_plugin="luci-app-amlogic"
-    amlogic_plugin_down="$(curl -s ${amlogic_api} | grep "browser_download_url" | grep -oE "https.*${amlogic_plugin}.*.ipk" | head -n 1)"
-    curl -fsSOJL ${amlogic_plugin_down}
-    [[ "${?}" -eq "0" ]] || error_msg "[ ${amlogic_plugin} ] download failed!"
-    echo -e "${INFO} The [ ${amlogic_plugin} ] is downloaded successfully."
-    #
-    amlogic_i18n_cn="luci-i18n-amlogic-zh-cn"
-    amlogic_i18n_down="$(curl -s ${amlogic_api} | grep "browser_download_url" | grep -oE "https.*${amlogic_i18n_cn}.*.ipk" | head -n 1)"
-    curl -fsSOJL ${amlogic_i18n_down}
-    [[ "${?}" -eq "0" ]] || error_msg "[ ${amlogic_i18n_cn} ] download failed!"
-    echo -e "${INFO} The [ ${amlogic_i18n_cn} ] is downloaded successfully."
+#    amlogic_api="https://api.github.com/repos/ophub/luci-app-amlogic/releases"
+#    #
+#    amlogic_plugin="luci-app-amlogic"
+#    amlogic_plugin_down="$(curl -s ${amlogic_api} | grep "browser_download_url" | grep -oE "https.*${amlogic_plugin}.*.ipk" | head -n 1)"
+#    curl -fsSOJL ${amlogic_plugin_down}
+#    [[ "${?}" -eq "0" ]] || error_msg "[ ${amlogic_plugin} ] download failed!"
+#    echo -e "${INFO} The [ ${amlogic_plugin} ] is downloaded successfully."
+#    #
+#    amlogic_i18n_cn="luci-i18n-amlogic-zh-cn"
+#    amlogic_i18n_down="$(curl -s ${amlogic_api} | grep "browser_download_url" | grep -oE "https.*${amlogic_i18n_cn}.*.ipk" | head -n 1)"
+#    curl -fsSOJL ${amlogic_i18n_down}
+#    [[ "${?}" -eq "0" ]] || error_msg "[ ${amlogic_i18n_cn} ] download failed!"
+#    echo -e "${INFO} The [ ${amlogic_i18n_cn} ] is downloaded successfully."
 
     # Download other luci-app-xxx
     # ......
