@@ -126,7 +126,7 @@ custom_packages() {
     cd packages
 
     rm -rf base-files-1699~f505120278.apk
-    wget https://github.com/esaaprillia/packages/blob/25/base-files-1699~f505120278.apk
+    wget https://github.com/esaaprillia/packages/raw/refs/heads/25/base-files-1699~f505120278.apk
     wget https://github.com/esaaprillia/packages/raw/refs/heads/25/libgfortran-14.3.0-r5.apk
     wget https://github.com/esaaprillia/packages/raw/refs/heads/25/libgomp-14.3.0-r5.apk
 
