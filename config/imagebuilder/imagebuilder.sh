@@ -125,8 +125,8 @@ custom_packages() {
     
     cd packages
 
-    rm -rf base-files-1696~b21cfa8f8c.apk
-    wget https://github.com/esaaprillia/packages/raw/refs/heads/25/base-files-1696~b21cfa8f8c.apk
+    rm -rf base-files-1699~f505120278.apk
+    wget https://github.com/esaaprillia/packages/blob/25/base-files-1699~f505120278.apk
     wget https://github.com/esaaprillia/packages/raw/refs/heads/25/libgfortran-14.3.0-r5.apk
     wget https://github.com/esaaprillia/packages/raw/refs/heads/25/libgomp-14.3.0-r5.apk
 
@@ -220,7 +220,7 @@ rebuild_firmware() {
     
     sudo mkdir openwrt
     #wget https://github.com/predators46/hack/releases/download/18.06.4/openwrt-18.06.4-armvirt-64-default-rootfs.tar.gz
-    sudo tar xvf openwrt-25.12.1-armsr-armv8-generic-rootfs.tar.gz -C openwrt
+    sudo tar xvf openwrt-25.12.2-armsr-armv8-generic-rootfs.tar.gz -C openwrt
     
     sudo wget https://github.com/predators46/amlogic-s9xxx-openwrt/releases/download/OpenWrt_imagebuilder_openwrt_25.12.0_2026.03/openwrt_official_amlogic_s905x_k6.12.77_2026.03.15.img.gz
     sudo gunzip openwrt_official_amlogic_s905x_k6.12.77_2026.03.15.img.gz
