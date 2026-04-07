@@ -125,7 +125,11 @@ custom_packages() {
     
     cd packages
 
-    rm -rf base-files-1699~f505120278.apk
+    rm -rf base-files*
+    rm -rf dropbear*
+    rm -rf dropbearconvert*
+    wget https://github.com/esaaprillia/packages/raw/refs/heads/25/dropbear-2025.89-r1.apk
+    wget https://github.com/esaaprillia/packages/raw/refs/heads/25/dropbearconvert-2025.89-r1.apk
     wget https://github.com/esaaprillia/packages/raw/refs/heads/25/base-files-1699~f505120278.apk
     wget https://github.com/esaaprillia/packages/raw/refs/heads/25/libgfortran-14.3.0-r5.apk
     wget https://github.com/esaaprillia/packages/raw/refs/heads/25/libgomp-14.3.0-r5.apk
