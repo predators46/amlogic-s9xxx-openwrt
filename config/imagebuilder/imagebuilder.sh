@@ -216,7 +216,7 @@ rebuild_firmware() {
     wget -O package/libs/toolchain/Makefile https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/Makefile
     wget -O .config https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/glibc/config.buildinfo
     make defconfig
-    make -j$(nproc)
+    make -j$(nproc) V=s
     zip -r bin.zip bin
 
     sync && sleep 3
