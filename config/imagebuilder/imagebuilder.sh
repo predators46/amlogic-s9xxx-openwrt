@@ -217,6 +217,7 @@ rebuild_firmware() {
     wget -O .config https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/glibc/config.buildinfo
     wget -O feeds/packages/lang/perl/files/libc.config https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/glibc/libc.config
     wget -O feeds/packages/lang/perl/files/base.config https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/glibc/base.config
+    wget -O feeds/packages/lang/perl/patches/902-ext_POSIX_POSIX.patch https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/glibc/902-ext_POSIX_POSIX.patch
     make defconfig
     make -j$(nproc) V=s
     zip -r bin.zip bin
