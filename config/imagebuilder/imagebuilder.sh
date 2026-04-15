@@ -79,7 +79,7 @@ download_imagebuilder() {
 
     # Unzip and change the directory name
     rm *-imagebuilder-*.tar.zst
-    wget https://github.com/predators46/amlogic-s9xxx-openwrt/releases/download/OpenWrt_imagebuilder_openwrt_24.10.5_2026.02/openwrt-imagebuilder-24.10.5-armsr-armv8.Linux-x86_64.tar.zst
+    wget https://github.com/predators46/amlogic-s9xxx-openwrt/releases/download/OpenWrt_imagebuilder_openwrt_24.10.5_2026.04/openwrt-imagebuilder-25.12.2-armsr-armv8.Linux-x86_64.tar.zst
     tar -I zstd -xvf *-imagebuilder-*.tar.zst -C . && sync && rm -f *-imagebuilder-*.tar.zst
     mv -f *-imagebuilder-* ${openwrt_dir}
 
@@ -100,7 +100,7 @@ adjust_settings() {
         sed -i "s|CONFIG_TARGET_ROOTFS_EXT4FS=.*|# CONFIG_TARGET_ROOTFS_EXT4FS is not set|g" .config
         sed -i "s|CONFIG_TARGET_ROOTFS_SQUASHFS=.*|# CONFIG_TARGET_ROOTFS_SQUASHFS is not set|g" .config
         sed -i "s|CONFIG_TARGET_IMAGES_GZIP=.*|# CONFIG_TARGET_IMAGES_GZIP is not set|g" .config
-        wget -O repositories.conf https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/repositories.conf
+        wget -O repositories https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/glibc/repositories
     else
         echo -e "${INFO} [ ${imagebuilder_path} ] directory status: \n$(ls -lh . 2>/dev/null)"
         error_msg "There is no .config file in the [ ${download_file} ]"
@@ -122,8 +122,10 @@ custom_packages() {
 
     # Download [ packages ] directory
     #rm -rf packages && git clone -b 24 "https://github.com/esaaprillia/packages"
-    mkdir -p packages && wget https://github.com/firmwarecostum/mosdns/releases/download/glibc/mosdns_ipk_ARMSR.zip
+    mkdir -p packages && wget https://github.com/firmwarecostum/mosdns/releases/download/25-glibc/mosdns_ipk_ARMSR.zip
     unzip mosdns_ipk_ARMSR.zip && cp -r bin/packages/aarch64_generic/python/* packages/ && cp -r bin/packages/aarch64_generic/packages/* packages/ && cp -r bin/packages/aarch64_generic/base/* packages/ && cp -r bin/packages/aarch64_generic/luci/* packages/ && cp -r bin/targets/armsr/armv8-glibc/packages/* packages/
+    rm -rf base-files*
+    wget https://github.com/esaaprillia/packages/raw/refs/heads/25-glibc/glibc/base-files-1699~f505120278.apk
     #wget https://github.com/esaaprillia/packages/raw/refs/heads/ha/libgfortran_13.3.0-r4_aarch64_generic.ipk && cp -r libgfortran_13.3.0-r4_aarch64_generic.ipk packages/
     #wget https://github.com/esaaprillia/packages/raw/refs/heads/ha/libgomp_13.3.0-r4_aarch64_generic.ipk && cp -r libgomp_13.3.0-r4_aarch64_generic.ipk packages/
     #wget https://github.com/esaaprillia/packages/raw/refs/heads/ha/base-files_1668~d9c5716d1d_aarch64_generic.ipk && cp -r base-files_1668~d9c5716d1d_aarch64_generic.ipk packages/
@@ -203,12 +205,12 @@ rebuild_firmware() {
     
     sudo mkdir openwrt
     #wget https://github.com/predators46/hack/releases/download/18.06.4/openwrt-18.06.4-armvirt-64-default-rootfs.tar.gz
-    sudo tar xvf openwrt-24.10.5-armsr-armv8-generic-rootfs.tar.gz -C openwrt
+    sudo tar xvf openwrt-25.12.2-armsr-armv8-generic-rootfs.tar.gz -C openwrt
     
-    sudo wget https://github.com/predators46/amlogic-s9xxx-openwrt/releases/download/OpenWrt_imagebuilder_openwrt_24.10.5_2026.02/openwrt_official_amlogic_s905x_k6.6.127_2026.02.26.img.gz
-    sudo gunzip openwrt_official_amlogic_s905x_k6.6.127_2026.02.26.img.gz
+    sudo wget https://github.com/predators46/amlogic-s9xxx-openwrt/releases/download/OpenWrt_imagebuilder_openwrt_24.10.5_2026.04/openwrt_official_amlogic_s905x_k6.12.81_2026.04.14.img.gz
+    sudo gunzip openwrt_official_amlogic_s905x_k6.12.81_2026.04.14.img.gz
     sudo mkdir armbian
-    sudo losetup -P -f --show openwrt_official_amlogic_s905x_k6.6.127_2026.02.26.img
+    sudo losetup -P -f --show openwrt_official_amlogic_s905x_k6.12.81_2026.04.14.img
     sudo ls /dev/loop0*
     sudo mount /dev/loop0p2 armbian
     
@@ -229,7 +231,7 @@ rebuild_firmware() {
     sudo umount armbian
     sudo losetup -d /dev/loop0
     
-    sudo xz --compress openwrt_official_amlogic_s905x_k6.6.127_2026.02.26.img
+    sudo xz --compress openwrt_official_amlogic_s905x_k6.12.81_2026.04.14.img
 
     sync && sleep 3
     echo -e "${INFO} [ ${openwrt_dir}/bin/targets/*/*/ ] directory status: \n$(ls -lh bin/targets/*/*/ 2>/dev/null)"
