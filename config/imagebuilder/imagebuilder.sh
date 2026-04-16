@@ -195,7 +195,7 @@ rebuild_firmware() {
         \
         -dnsmasq \
         \
-        sudo bash wget-ssl coreutils-whoami coreutils-fold coreutils-hostname libstdcpp \
+        sudo bash wget-ssl coreutils-whoami coreutils-fold libstdcpp \
         \
         kmod-fs-vfat lsblk btrfs-progs uuidgen dosfstools tar fdisk \
         \
