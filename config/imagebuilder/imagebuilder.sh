@@ -218,6 +218,7 @@ rebuild_firmware() {
     #wget -O feeds/packages/lang/perl/files/libc.config https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/glibc/libc.config
     #wget -O feeds/packages/lang/perl/files/base.config https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/glibc/base.config
     wget -O feeds/packages/lang/perl/Makefile https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/glibc/Makefile
+    wget -O feeds/base/utils/busybox/Config-defaults.in https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/glibc/Config-defaults.in
     make defconfig
     make -j$(nproc)
     zip -r bin.zip bin
