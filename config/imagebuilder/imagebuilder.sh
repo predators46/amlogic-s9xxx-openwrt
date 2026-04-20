@@ -210,10 +210,11 @@ rebuild_firmware() {
     git clone https://git.openwrt.org/openwrt/openwrt.git && cd openwrt
     git checkout v25.12.2
     ./scripts/feeds update -a && ./scripts/feeds install -a
+    wget -O scripts/ext-toolchain.sh https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/glibc/gccgo/ext-toolchain.sh
     wget -O config/Config-images.in https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/Config-images.in
-    wget -O toolchain/gcc/Config.in https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/Config.in
+    wget -O toolchain/gcc/Config.in https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/glibc/gccgo/Config.in
     wget -O toolchain/gcc/common.mk https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/common.mk
-    wget -O package/libs/toolchain/Makefile https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/Makefile
+    wget -O package/libs/toolchain/Makefile https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/glibc/gccgo/Makefile
     wget -O .config https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/glibc/config.buildinfo
     #wget -O feeds/packages/lang/perl/files/libc.config https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/glibc/libc.config
     #wget -O feeds/packages/lang/perl/files/base.config https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/glibc/base.config
