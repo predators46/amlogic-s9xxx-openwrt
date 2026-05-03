@@ -126,11 +126,13 @@ custom_packages() {
     cd packages
 
     rm -rf base-files*
-    rm -rf dropbear*
-    rm -rf dropbearconvert*
-    wget https://github.com/esaaprillia/packages/raw/refs/heads/25/dropbear-2025.89-r1.apk
-    wget https://github.com/esaaprillia/packages/raw/refs/heads/25/dropbearconvert-2025.89-r1.apk
+    #rm -rf dropbear*
+    #rm -rf dropbearconvert*
+    rm -rf busybox*
+    #wget https://github.com/esaaprillia/packages/raw/refs/heads/25/dropbear-2025.89-r1.apk
+    #wget https://github.com/esaaprillia/packages/raw/refs/heads/25/dropbearconvert-2025.89-r1.apk
     wget https://github.com/esaaprillia/packages/raw/refs/heads/25/base-files-1699~f505120278.apk
+    wget https://github.com/esaaprillia/packages/raw/refs/heads/25/busybox-1.37.0-r6.apk
     wget https://github.com/esaaprillia/packages/raw/refs/heads/25/libgfortran-14.3.0-r5.apk
     wget https://github.com/esaaprillia/packages/raw/refs/heads/25/libgomp-14.3.0-r5.apk
 
@@ -205,10 +207,6 @@ rebuild_firmware() {
         luci \
         \
         dnsmasq-full \
-        \
-        python3-asyncio python3-codecs python3-ctypes python3-dbm python3-decimal python3-email python3-logging python3-lzma python3-multiprocessing python3-ncurses python3-openssl python3-pydoc python3-readline python3-sqlite3 python3-unittest python3-urllib python3-uuid python3-venv python3-webbrowser python3-xml \
-        \
-        python3-homeassistant python3-aiohasupervisor python3-infrared-protocols python3-pandas python3-serialx \
         \
         -dnsmasq \
         \
