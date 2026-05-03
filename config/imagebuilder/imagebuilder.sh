@@ -120,8 +120,8 @@ custom_packages() {
     # Create a [ packages ] directory
     [[ -d "packages" ]] || mkdir packages
     
-    wget https://github.com/firmwarecostum/mosdns/releases/download/hm/mosdns_ipk_ARMSR.zip
-    unzip mosdns_ipk_ARMSR.zip && cp -r bin/packages/aarch64_generic/python/* packages/ && cp -r bin/packages/aarch64_generic/packages/* packages/ && cp -r bin/packages/aarch64_generic/base/* packages/ && cp -r bin/targets/armsr/armv8/packages/* packages/
+    #wget https://github.com/firmwarecostum/mosdns/releases/download/hm/mosdns_ipk_ARMSR.zip
+    #unzip mosdns_ipk_ARMSR.zip && cp -r bin/packages/aarch64_generic/python/* packages/ && cp -r bin/packages/aarch64_generic/packages/* packages/ && cp -r bin/packages/aarch64_generic/base/* packages/ && cp -r bin/targets/armsr/armv8/packages/* packages/
     
     cd packages
 
