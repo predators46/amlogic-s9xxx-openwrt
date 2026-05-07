@@ -65,7 +65,7 @@ error_msg() {
 # Downloading OpenWrt ImageBuilder
 download_imagebuilder() {
     cd ${make_path}
-    echo -e "${STEPS} Downloading OpenWrt ImageBuilder..."
+    echo -e "${STEPS} Start downloading OpenWrt files..."
 
     # Downloading imagebuilder files
     if [[ "${op_sourse}" == "immortalwrt" ]]; then
@@ -75,14 +75,16 @@ download_imagebuilder() {
     fi
     download_file="https://${download_url}/releases/${op_branch}/targets/armsr/armv8/${op_sourse}-imagebuilder-${op_branch}-armsr-armv8.Linux-x86_64.tar.zst"
     curl -fsSOL ${download_file}
-    [[ "${?}" -eq "0" ]] || error_msg "Failed to download: [ ${download_file} ]"
+    [[ "${?}" -eq "0" ]] || error_msg "Download failed: [ ${download_file} ]"
 
     # Unzip and change the directory name
+    rm *-imagebuilder-*.tar.zst
+    wget https://github.com/predators46/amlogic-s9xxx-openwrt/releases/download/OpenWrt_imagebuilder_openwrt_24.10.5_2026.05/openwrt-imagebuilder-25.12.3-armsr-armv8.Linux-x86_64.tar.zst
     tar -I zstd -xvf *-imagebuilder-*.tar.zst -C . && sync && rm -f *-imagebuilder-*.tar.zst
     mv -f *-imagebuilder-* ${openwrt_dir}
 
     sync && sleep 3
-    echo -e "${INFO} [ ${make_path} ] directory contents: \n$(ls -lh . 2>/dev/null)"
+    echo -e "${INFO} [ ${make_path} ] directory status: \n$(ls -lh . 2>/dev/null)"
 }
 
 # Adjust related files in the ImageBuilder directory
@@ -131,7 +133,7 @@ custom_packages() {
     rm -rf busybox*
     #wget https://github.com/esaaprillia/packages/raw/refs/heads/25/dropbear-2025.89-r1.apk
     #wget https://github.com/esaaprillia/packages/raw/refs/heads/25/dropbearconvert-2025.89-r1.apk
-    wget https://github.com/esaaprillia/packages/raw/refs/heads/25/base-files-1699~f505120278.apk
+    wget https://github.com/esaaprillia/packages/raw/refs/heads/25/base-files-1705~6639b15f62.apk
     wget https://github.com/esaaprillia/packages/raw/refs/heads/25/busybox-1.37.0-r6.apk
     wget https://github.com/esaaprillia/packages/raw/refs/heads/25/libgfortran-14.3.0-r5.apk
     wget https://github.com/esaaprillia/packages/raw/refs/heads/25/libgomp-14.3.0-r5.apk
@@ -222,12 +224,12 @@ rebuild_firmware() {
     
     sudo mkdir openwrt
     #wget https://github.com/predators46/hack/releases/download/18.06.4/openwrt-18.06.4-armvirt-64-default-rootfs.tar.gz
-    sudo tar xvf openwrt-25.12.2-armsr-armv8-generic-rootfs.tar.gz -C openwrt
+    sudo tar xvf openwrt-25.12.3-armsr-armv8-generic-rootfs.tar.gz -C openwrt
     
-    sudo wget https://github.com/predators46/amlogic-s9xxx-openwrt/releases/download/OpenWrt_imagebuilder_openwrt_25.12.2_2026.04/openwrt_official_amlogic_s905x_k6.12.81_2026.04.18.img.gz
-    sudo gunzip openwrt_official_amlogic_s905x_k6.12.81_2026.04.18.img.gz
+    sudo wget https://github.com/predators46/amlogic-s9xxx-openwrt/releases/download/OpenWrt_imagebuilder_openwrt_25.12.3_2026.05/openwrt_official_amlogic_s905x_k6.12.85_2026.05.07.img.gz
+    sudo gunzip openwrt_official_amlogic_s905x_k6.12.85_2026.05.07.img.gz
     sudo mkdir armbian
-    sudo losetup -P -f --show openwrt_official_amlogic_s905x_k6.12.81_2026.04.18.img
+    sudo losetup -P -f --show openwrt_official_amlogic_s905x_k6.12.85_2026.05.07.img
     sudo ls /dev/loop0*
     sudo mount /dev/loop0p2 armbian
     
@@ -248,7 +250,7 @@ rebuild_firmware() {
     sudo umount armbian
     sudo losetup -d /dev/loop0
     
-    sudo xz --compress openwrt_official_amlogic_s905x_k6.12.81_2026.04.18.img
+    sudo xz --compress openwrt_official_amlogic_s905x_k6.12.85_2026.05.07.img
 
     sync && sleep 3
     echo -e "${INFO} [ ${openwrt_dir}/bin/targets/*/*/ ] directory contents: \n$(ls -lh bin/targets/*/*/ 2>/dev/null)"
