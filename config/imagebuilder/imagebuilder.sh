@@ -65,7 +65,7 @@ error_msg() {
 # Downloading OpenWrt ImageBuilder
 download_imagebuilder() {
     cd ${make_path}
-    echo -e "${STEPS} Start downloading OpenWrt files..."
+    echo -e "${STEPS} Downloading OpenWrt ImageBuilder..."
 
     # Downloading imagebuilder files
     if [[ "${op_sourse}" == "immortalwrt" ]]; then
@@ -75,7 +75,7 @@ download_imagebuilder() {
     fi
     download_file="https://${download_url}/releases/${op_branch}/targets/armsr/armv8/${op_sourse}-imagebuilder-${op_branch}-armsr-armv8.Linux-x86_64.tar.zst"
     curl -fsSOL ${download_file}
-    [[ "${?}" -eq "0" ]] || error_msg "Download failed: [ ${download_file} ]"
+    [[ "${?}" -eq "0" ]] || error_msg "Failed to download: [ ${download_file} ]"
 
     # Unzip and change the directory name
     rm *-imagebuilder-*.tar.zst
@@ -84,7 +84,7 @@ download_imagebuilder() {
     mv -f *-imagebuilder-* ${openwrt_dir}
 
     sync && sleep 3
-    echo -e "${INFO} [ ${make_path} ] directory status: \n$(ls -lh . 2>/dev/null)"
+    echo -e "${INFO} [ ${make_path} ] directory contents: \n$(ls -lh . 2>/dev/null)"
 }
 
 # Adjust related files in the ImageBuilder directory
