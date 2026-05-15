@@ -133,7 +133,7 @@ custom_packages() {
     rm -rf busybox*
     #wget https://github.com/esaaprillia/packages/raw/refs/heads/25/dropbear-2025.89-r1.apk
     #wget https://github.com/esaaprillia/packages/raw/refs/heads/25/dropbearconvert-2025.89-r1.apk
-    wget https://github.com/esaaprillia/packages/raw/refs/heads/25/base-files-1705~6639b15f62.apk
+    wget https://github.com/esaaprillia/packages/raw/refs/heads/25/base-files-1707~4ccb782af7.apk
     wget https://github.com/esaaprillia/packages/raw/refs/heads/25/busybox-1.37.0-r6.apk
     wget https://github.com/esaaprillia/packages/raw/refs/heads/25/libgfortran-14.3.0-r5.apk
     wget https://github.com/esaaprillia/packages/raw/refs/heads/25/libgomp-14.3.0-r5.apk
