@@ -43,6 +43,9 @@ else
     echo "# CONFIG_CCACHE is not set" >>.config
     echo 'CONFIG_CCACHE_DIR=""' >>.config
 fi
+
+# Fix vlmcsd build error
+sed -i 's|-C $(PKG_BUILD_DIR)$|CC="$(TARGET_CC_NOCACHE)"|' package/feeds/packages/vlmcsd/Makefile
 #
 # ------------------------------- Main source ends -------------------------------
 
@@ -50,7 +53,7 @@ fi
 #
 # Add luci-app-amlogic
 rm -rf package/luci-app-amlogic
-git clone https://github.com/ophub/luci-app-amlogic.git package/luci-app-amlogic
+git clone -b main https://github.com/ophub/luci-app-amlogic.git package/luci-app-amlogic
 #
 # Apply patch
 # git apply ../config/patches/{0001*,0002*}.patch --directory=feeds/luci
