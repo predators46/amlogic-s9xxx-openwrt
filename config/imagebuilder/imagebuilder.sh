@@ -79,7 +79,7 @@ download_imagebuilder() {
 
     # Unzip and change the directory name
     rm *-imagebuilder-*.tar.zst
-    wget https://github.com/predators46/amlogic-s9xxx-openwrt/releases/download/OpenWrt_imagebuilder_openwrt_24.10.5_2026.05/openwrt-imagebuilder-25.12.4-armsr-armv8.Linux-x86_64.tar.zst
+    wget https://github.com/esaaprillia/packages/releases/download/musl/openwrt-imagebuilder-25.12.4-armsr-armv8.Linux-x86_64.tar.zst
     tar -I zstd -xvf *-imagebuilder-*.tar.zst -C . && sync && rm -f *-imagebuilder-*.tar.zst
     mv -f *-imagebuilder-* ${openwrt_dir}
 
@@ -122,8 +122,8 @@ custom_packages() {
     # Create a [ packages ] directory
     [[ -d "packages" ]] || mkdir packages
     
-    #wget https://github.com/firmwarecostum/mosdns/releases/download/hm/mosdns_ipk_ARMSR.zip
-    #unzip mosdns_ipk_ARMSR.zip && cp -r bin/packages/aarch64_generic/python/* packages/ && cp -r bin/packages/aarch64_generic/packages/* packages/ && cp -r bin/packages/aarch64_generic/base/* packages/ && cp -r bin/targets/armsr/armv8/packages/* packages/
+    wget https://github.com/firmwarecostum/mosdns/releases/download/25-musl/mosdns_ipk_ARMSR.zip
+    unzip mosdns_ipk_ARMSR.zip && cp -r bin/packages/aarch64_generic/python/* packages/ && cp -r bin/packages/aarch64_generic/packages/* packages/ && cp -r bin/packages/aarch64_generic/base/* packages/ && cp -r bin/targets/armsr/armv8/packages/* packages/
     
     cd packages
 
@@ -133,10 +133,10 @@ custom_packages() {
     rm -rf busybox*
     #wget https://github.com/esaaprillia/packages/raw/refs/heads/25/dropbear-2025.89-r1.apk
     #wget https://github.com/esaaprillia/packages/raw/refs/heads/25/dropbearconvert-2025.89-r1.apk
-    wget https://github.com/esaaprillia/packages/raw/refs/heads/25/base-files-1707~4ccb782af7.apk
-    wget https://github.com/esaaprillia/packages/raw/refs/heads/25/busybox-1.37.0-r6.apk
-    wget https://github.com/esaaprillia/packages/raw/refs/heads/25/libgfortran-14.3.0-r5.apk
-    wget https://github.com/esaaprillia/packages/raw/refs/heads/25/libgomp-14.3.0-r5.apk
+    wget https://github.com/esaaprillia/packages/raw/refs/heads/25-musl/musl/base-files-1707~4ccb782af7.apk
+    wget https://github.com/esaaprillia/packages/raw/refs/heads/25-musl/musl/busybox-1.37.0-r6.apk
+    #wget https://github.com/esaaprillia/packages/raw/refs/heads/25/libgfortran-14.3.0-r5.apk
+    #wget https://github.com/esaaprillia/packages/raw/refs/heads/25/libgomp-14.3.0-r5.apk
 
     # Download luci-app-amlogic
     amlogic_api="https://api.github.com/repos/ophub/luci-app-amlogic/releases"
