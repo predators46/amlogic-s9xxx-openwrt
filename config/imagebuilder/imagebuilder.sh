@@ -79,7 +79,7 @@ download_imagebuilder() {
 
     # Unzip and change the directory name
     rm *-imagebuilder-*.tar.zst
-    wget https://github.com/predators46/amlogic-s9xxx-openwrt/releases/download/OpenWrt_imagebuilder_openwrt_24.10.5_2026.04/openwrt-imagebuilder-25.12.2-armsr-armv8.Linux-x86_64.tar.zst
+    wget https://github.com/esaaprillia/packages/releases/download/glibc/openwrt-imagebuilder-25.12.4-armsr-armv8.Linux-x86_64.tar.zst
     tar -I zstd -xvf *-imagebuilder-*.tar.zst -C . && sync && rm -f *-imagebuilder-*.tar.zst
     mv -f *-imagebuilder-* ${openwrt_dir}
 
@@ -209,7 +209,7 @@ rebuild_firmware() {
     
     sudo mkdir openwrt
     #wget https://github.com/predators46/hack/releases/download/18.06.4/openwrt-18.06.4-armvirt-64-default-rootfs.tar.gz
-    sudo tar xvf openwrt-25.12.2-armsr-armv8-generic-rootfs.tar.gz -C openwrt
+    sudo tar xvf openwrt-25.12.4-armsr-armv8-generic-rootfs.tar.gz -C openwrt
     
     sudo wget https://github.com/predators46/amlogic-s9xxx-openwrt/releases/download/OpenWrt_imagebuilder_openwrt_25.12.2_2026.04/openwrt_official_amlogic_s905x_k6.12.81_2026.04.18.img.gz
     sudo gunzip openwrt_official_amlogic_s905x_k6.12.81_2026.04.18.img.gz
