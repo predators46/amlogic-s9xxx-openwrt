@@ -126,7 +126,7 @@ custom_packages() {
     unzip mosdns_ipk_ARMSR.zip && cp -r bin/packages/aarch64_generic/python/* packages/ && cp -r bin/packages/aarch64_generic/packages/* packages/ && cp -r bin/packages/aarch64_generic/base/* packages/ && cp -r bin/packages/aarch64_generic/luci/* packages/ && cp -r bin/targets/armsr/armv8-glibc/packages/* packages/
     rm -rf base-files*
     rm -rf busybox*
-    wget https://github.com/esaaprillia/packages/raw/refs/heads/25-glibc/glibc/base-files-1699~f505120278.apk
+    wget https://github.com/esaaprillia/packages/raw/refs/heads/25-glibc/glibc/base-files-1707~4ccb782af7.apk
     wget https://github.com/esaaprillia/packages/raw/refs/heads/25-glibc/glibc/busybox-1.37.0-r6.apk
     #wget https://github.com/esaaprillia/packages/raw/refs/heads/ha/libgfortran_13.3.0-r4_aarch64_generic.ipk && cp -r libgfortran_13.3.0-r4_aarch64_generic.ipk packages/
     #wget https://github.com/esaaprillia/packages/raw/refs/heads/ha/libgomp_13.3.0-r4_aarch64_generic.ipk && cp -r libgomp_13.3.0-r4_aarch64_generic.ipk packages/
