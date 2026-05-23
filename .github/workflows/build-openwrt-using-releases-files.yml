@@ -12,9 +12,10 @@ on:
       source_branch:
         description: "Select the source branch"
         required: false
-        default: "openwrt_main"
+        default: "all"
         type: choice
         options:
+          - all
           - openwrt_main
           - lede_master
           - immortalwrt_master
@@ -63,6 +64,8 @@ on:
           - e20c
           - e25
           - eaidk-610
+          - easepi-a2
+          - easepi-r2
           - emb3531
           - fine3399
           - firefly-itx-3588j
@@ -110,6 +113,7 @@ on:
           - nsy-g68-plus
           - orangepi-3b
           - orangepi-5-plus
+          - orangepi-5-pro
           - orangepi-5b
           - orangepi-zero3
           - painet-p3
@@ -120,6 +124,8 @@ on:
           - renegade-rk3328
           - rk3318-box
           - rock-5-itx
+          - rock-3b
+          - rock-3c
           - rock5b
           - rock5c
           - ruisen-box
@@ -211,6 +217,7 @@ on:
           - s922x-reva
           - s922x-ugoos-am6
           - seewo-sv21
+          - seewo-sv50
           - smart-am40
           - smart-am60
           - station-m1
@@ -303,9 +310,31 @@ env:
   TZ: Etc/UTC
 
 jobs:
+  setup:
+    runs-on: ubuntu-24.04
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Set build matrix based on source_branch input
+        id: set-matrix
+        run: |
+          if [[ "${{ inputs.source_branch }}" == "all" ]]; then
+            MATRIX='{"include":[{"branch":"openwrt_main"},{"branch":"lede_master"},{"branch":"immortalwrt_master"}]}'
+          else
+            MATRIX='{"include":[{"branch":"${{ inputs.source_branch }}"}]}'
+          fi
+          echo "matrix=${MATRIX}" >> "${GITHUB_OUTPUT}"
+
   build:
+    needs: setup
     runs-on: ubuntu-24.04
     if: ${{ github.event.repository.owner.id == github.event.sender.id }}
+
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.setup.outputs.matrix) }}
+
+    name: build-${{ matrix.branch }}
 
     steps:
       - name: Checkout
@@ -356,23 +385,23 @@ jobs:
           df -Th
           echo "status=success" >> ${GITHUB_OUTPUT}
 
-      - name: Download OpenWrt [ ${{ inputs.source_branch }} ]
+      - name: Download OpenWrt [ ${{ matrix.branch }} ]
         id: down
         working-directory: /builder
         if: ${{ steps.init.outputs.status == 'success' && !cancelled() }}
         run: |
           # Determine the OpenWrt source code repository
-          if [[ "${{ inputs.source_branch }}" =~ ^openwrt ]]; then
+          if [[ "${{ matrix.branch }}" =~ ^openwrt ]]; then
               REPO_URL="https://github.com/openwrt/openwrt"
-          elif [[ "${{ inputs.source_branch }}" =~ ^lede ]]; then
+          elif [[ "${{ matrix.branch }}" =~ ^lede ]]; then
               REPO_URL="https://github.com/coolsnowwolf/lede"
-          elif [[ "${{ inputs.source_branch }}" =~ ^immortalwrt ]]; then
+          elif [[ "${{ matrix.branch }}" =~ ^immortalwrt ]]; then
               REPO_URL="https://github.com/immortalwrt/immortalwrt"
           else
               echo "Error: Unknown source code repository."
               exit 1
           fi
-          source_branch_input="${{ inputs.source_branch }}"
+          source_branch_input="${{ matrix.branch }}"
           REPO_NAME="${source_branch_input%_*}"
           REPO_BRANCH="${source_branch_input##*_}"
 
@@ -386,7 +415,7 @@ jobs:
               -H "Accept: application/vnd.github+json" \
               -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
               https://api.github.com/repos/${{ github.repository }}/releases?per_page=20 | \
-              jq -r --arg RTK "OpenWrt_${{ inputs.source_branch }}_" \
+              jq -r --arg RTK "OpenWrt_${{ matrix.branch }}_" \
               --arg BOARD "-rootfs.tar.gz" \
               '[.[] | select(.tag_name | contains($RTK))] |
               map(.assets[] | select(.name | endswith($BOARD))) |
@@ -413,7 +442,7 @@ jobs:
                -o "${armsr_tarfile_path}/${openwrt_filename}"
           [[ "${?}" -ne "0" ]] && echo "Error: Download failed." && exit 1
 
-          echo "build_tag=OpenWrt_${{ inputs.source_branch }}_${{ inputs.openwrt_storage }}_$(date +"%Y.%m")" >> ${GITHUB_ENV}
+          echo "build_tag=OpenWrt_${{ matrix.branch }}_${{ inputs.openwrt_storage }}_$(date +"%Y.%m")" >> ${GITHUB_ENV}
           df -hT ${PWD}
           echo "REPO_URL=${REPO_URL}" >> ${GITHUB_ENV}
           echo "REPO_NAME=${REPO_NAME}" >> ${GITHUB_ENV}
@@ -434,7 +463,7 @@ jobs:
           builder_name: ${{ inputs.builder_name }}
 
       - name: Upload packaged OpenWrt to Release
-        uses: ophub/upload-to-release@main
+        uses: ophub/upload-to-releases@main
         if: ${{ env.PACKAGED_STATUS == 'success' && !cancelled() }}
         with:
           tag: ${{ env.build_tag }}

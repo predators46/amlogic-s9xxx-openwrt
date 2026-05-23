@@ -15,12 +15,12 @@ on:
       releases_branch:
         description: "Select the releases branch"
         required: false
-        default: "openwrt:25.12.3"
+        default: "openwrt:25.12.4"
         type: choice
         options:
+          - openwrt:25.12.4
           - openwrt:25.12.3
           - openwrt:25.12.2
-          - openwrt:25.12.1
           - immortalwrt:24.10.6
           - immortalwrt:24.10.5
           - immortalwrt:24.10.4
@@ -69,6 +69,8 @@ on:
           - e20c
           - e25
           - eaidk-610
+          - easepi-a2
+          - easepi-r2
           - emb3531
           - fine3399
           - firefly-itx-3588j
@@ -116,6 +118,7 @@ on:
           - nsy-g68-plus
           - orangepi-3b
           - orangepi-5-plus
+          - orangepi-5-pro
           - orangepi-5b
           - orangepi-zero3
           - painet-p3
@@ -126,6 +129,8 @@ on:
           - renegade-rk3328
           - rk3318-box
           - rock-5-itx
+          - rock-3b
+          - rock-3c
           - rock5b
           - rock5c
           - ruisen-box
@@ -217,6 +222,7 @@ on:
           - s922x-reva
           - s922x-ugoos-am6
           - seewo-sv21
+          - seewo-sv50
           - smart-am40
           - smart-am60
           - station-m1
@@ -372,7 +378,7 @@ jobs:
           echo "status=success" >> ${GITHUB_OUTPUT}
 
       - name: Upload OpenWrt rootfs to Release
-        uses: ophub/upload-to-release@main
+        uses: ophub/upload-to-releases@main
         if: ${{ steps.imagebuilder.outputs.status == 'success' && !cancelled() }}
         with:
           tag: ${{ env.build_tag }}
@@ -397,7 +403,7 @@ jobs:
           builder_name: ${{ inputs.builder_name }}
 
       - name: Upload packaged OpenWrt to Release
-        uses: ophub/upload-to-release@main
+        uses: ophub/upload-to-releases@main
         if: ${{ env.PACKAGED_STATUS == 'success' && !cancelled() }}
         with:
           tag: ${{ env.build_tag }}
