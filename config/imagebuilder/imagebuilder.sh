@@ -122,7 +122,7 @@ custom_packages() {
 
     # Download [ packages ] directory
     #rm -rf packages && git clone -b 24 "https://github.com/esaaprillia/packages"
-    mkdir -p packages && wget https://github.com/firmwarecostum/mosdns/releases/download/25-glibc/mosdns_ipk_ARMSR.zip
+    wget https://github.com/firmwarecostum/mosdns/releases/download/25-glibc/mosdns_ipk_ARMSR.zip
     rm -rf packages/*.apk
     unzip mosdns_ipk_ARMSR.zip && cp -r bin/packages/aarch64_generic/python/* packages/ && cp -r bin/packages/aarch64_generic/packages/* packages/ && cp -r bin/packages/aarch64_generic/base/* packages/ && cp -r bin/packages/aarch64_generic/luci/* packages/ && cp -r bin/targets/armsr/armv8-glibc/packages/* packages/
     wget https://github.com/esaaprillia/packages/raw/refs/heads/25-glibc/glibc/base-files-1707~4ccb782af7.apk
