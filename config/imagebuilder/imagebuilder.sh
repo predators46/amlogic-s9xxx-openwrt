@@ -196,7 +196,7 @@ rebuild_firmware() {
         \
         -dnsmasq \
         \
-        sudo srsran ocudu bash wget-ssl coreutils-whoami coreutils-fold libstdcpp curl libopenssl libopenssl-legacy openssl-util \
+        luci-app-openvpn openvpn luci-proto-wireguard luci-app-passwall2 sudo bash wget-ssl coreutils-whoami coreutils-fold libstdcpp curl libopenssl libopenssl-legacy openssl-util \
         \
         kmod-fs-vfat lsblk btrfs-progs uuidgen dosfstools tar fdisk \
         \
