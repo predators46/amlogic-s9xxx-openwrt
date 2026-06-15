@@ -196,7 +196,7 @@ rebuild_firmware() {
         \
         -dnsmasq \
         \
-        luci-app-openvpn openvpn-openssl luci-proto-wireguard luci-proto-sstp sudo bash wget-ssl coreutils-whoami coreutils-fold libstdcpp curl libopenssl libopenssl-legacy openssl-util \
+        luci-app-openvpn openvpn-openssl luci-proto-wireguard libevent2 libopenssl ppp resolveip sudo bash wget-ssl coreutils-whoami coreutils-fold libstdcpp curl libopenssl libopenssl-legacy openssl-util \
         \
         kmod-fs-vfat lsblk btrfs-progs uuidgen dosfstools tar fdisk \
         \
