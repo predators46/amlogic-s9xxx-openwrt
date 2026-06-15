@@ -196,7 +196,7 @@ rebuild_firmware() {
         \
         -dnsmasq \
         \
-        luci-app-passwall2 nftables iptables-nft kmod-nft-socket kmod-nft-tproxy kmod-nft-nat \
+        luci-app-passwall2 nftables kmod-nft-socket kmod-nft-tproxy kmod-nft-nat \
         \
         kmod-fs-vfat lsblk btrfs-progs uuidgen dosfstools tar fdisk \
         \
