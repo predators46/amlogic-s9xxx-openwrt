@@ -123,7 +123,7 @@ custom_packages() {
     # Download [ packages ] directory
     #rm -rf packages && git clone -b 24 "https://github.com/esaaprillia/packages"
     mkdir -p packages && wget https://github.com/firmwarecostum/mosdns/releases/download/25-glibc/mosdns_ipk_ARMSR.zip
-    unzip mosdns_ipk_ARMSR.zip && cp -r bin/packages/aarch64_generic/passwall2/* packages/ && cp -r bin/packages/aarch64_generic/passwall/* packages/ && cp -r bin/packages/aarch64_generic/packages/* packages/ && cp -r bin/packages/aarch64_generic/base/* packages/ && cp -r bin/packages/aarch64_generic/luci/* packages/ && cp -r bin/targets/armsr/armv8-glibc/packages/* packages/
+    unzip mosdns_ipk_ARMSR.zip && cp -r bin/packages/aarch64_generic/python/* packages/ && cp -r bin/packages/aarch64_generic/passwall2/* packages/ && cp -r bin/packages/aarch64_generic/passwall/* packages/ && cp -r bin/packages/aarch64_generic/packages/* packages/ && cp -r bin/packages/aarch64_generic/base/* packages/ && cp -r bin/packages/aarch64_generic/luci/* packages/ && cp -r bin/targets/armsr/armv8-glibc/packages/* packages/
     cd packages
     rm -rf base-files*
     rm -rf busybox*
@@ -196,7 +196,7 @@ rebuild_firmware() {
         \
         -dnsmasq \
         \
-        luci-app-openvpn openvpn-openssl nftables iptables-nft kmod-nft-socket kmod-nft-tproxy kmod-nft-nat \
+        luci-app-passwall2 nftables iptables-nft kmod-nft-socket kmod-nft-tproxy kmod-nft-nat \
         \
         kmod-fs-vfat lsblk btrfs-progs uuidgen dosfstools tar fdisk \
         \
