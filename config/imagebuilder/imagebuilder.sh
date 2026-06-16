@@ -120,7 +120,7 @@ custom_packages() {
     echo -e "${STEPS} Start adding custom packages..."
 
     # Clone [ packages ] directory
-    rm -rf packages && git clone -b passwall-21 "https://github.com/esaaprillia/packages"
+    #rm -rf packages && git clone -b passwall-21 "https://github.com/esaaprillia/packages"
     #git clone "https://github.com/esaaprillia/package" && cp -r package/* packages/ && rm -rf package
     [[ "${?}" -eq "0" ]] || error_msg "[ packages ] clone failed!"
     echo -e "${INFO} The [ packages ] is clone successfully."
@@ -182,11 +182,9 @@ rebuild_firmware() {
         \
         luci \
         \
-        luci-app-passwall2 \
+        luci-app-openvpn openvpn-openssl luci-proto-wireguard luci-proto-sstp \
         \
         dnsmasq-full \
-        \
-        dnsmasq-full ipset iptables iptables-mod-conntrack-extra iptables-mod-iprange iptables-mod-tproxy kmod-ipt-nat \
         \
         -dnsmasq \
         \
