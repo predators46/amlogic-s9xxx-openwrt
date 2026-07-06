@@ -79,7 +79,7 @@ download_imagebuilder() {
 
     # Unzip and change the directory name
     rm *-imagebuilder-*.tar.zst
-    wget https://github.com/esaaprillia/packages/releases/download/glibc/openwrt-imagebuilder-25.12.4-armsr-armv8.Linux-x86_64.tar.zst
+    wget https://github.com/esaaprillia/packages/releases/download/glibc/openwrt-imagebuilder-25.12.5-armsr-armv8.Linux-x86_64.tar.zst
     tar -I zstd -xvf *-imagebuilder-*.tar.zst -C . && sync && rm -f *-imagebuilder-*.tar.zst
     mv -f *-imagebuilder-* ${openwrt_dir}
 
@@ -127,7 +127,7 @@ custom_packages() {
     cd packages
     rm -rf base-files*
     rm -rf busybox*
-    wget https://github.com/esaaprillia/packages/raw/refs/heads/25-glibc/glibc/base-files-1707~4ccb782af7.apk
+    wget https://github.com/esaaprillia/packages/raw/refs/heads/25-glibc/glibc/base-files-1711~f5dae5ece4.apk
     wget https://github.com/esaaprillia/packages/raw/refs/heads/25-glibc/glibc/busybox-1.37.0-r6.apk
     #wget https://github.com/esaaprillia/packages/raw/refs/heads/ha/libgfortran_13.3.0-r4_aarch64_generic.ipk && cp -r libgfortran_13.3.0-r4_aarch64_generic.ipk packages/
     #wget https://github.com/esaaprillia/packages/raw/refs/heads/ha/libgomp_13.3.0-r4_aarch64_generic.ipk && cp -r libgomp_13.3.0-r4_aarch64_generic.ipk packages/
