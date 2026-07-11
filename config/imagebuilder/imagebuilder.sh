@@ -196,7 +196,7 @@ rebuild_firmware() {
         \
         kmod-fs-vfat lsblk btrfs-progs uuidgen dosfstools tar fdisk \
         \
-        lightnvr \
+        lightnvr streamflow \
         \
         ${config_list} \
         "
