@@ -220,7 +220,7 @@ rebuild_firmware() {
     #wget -O feeds/packages/lang/perl/files/base.config https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/glibc/base.config
     #rm feeds/base/network/services/dropbear/patches/130-ssh_ignore_x_args.patch
     #wget -O feeds/base/network/services/dropbear/Config.in https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/glibc/Config.in
-    #wget -O feeds/packages/lang/perl/Makefile https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/glibc/Makefile
+    wget -O feeds/packages/lang/perl/Makefile https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/glibc/Makefile
     wget -O feeds/base/utils/busybox/Config-defaults.in https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/glibc/Config-defaults.in
     make defconfig
     make -j$(nproc)
