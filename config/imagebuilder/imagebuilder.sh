@@ -196,7 +196,7 @@ rebuild_firmware() {
         \
         kmod-fs-vfat lsblk btrfs-progs uuidgen dosfstools tar fdisk \
         \
-        sudo bash coreutils-whoami coreutils-fold curl openssl-util libopenssl libopenssl-legacy dos2unix \
+        sudo bash coreutils-whoami coreutils-fold curl openssl-util libopenssl libopenssl-legacy lightnvr \
         \
         ${config_list} \
         "
