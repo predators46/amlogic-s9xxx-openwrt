@@ -134,12 +134,12 @@ ERROR="[\033[91m ERROR \033[0m]"
 #================================================================================================
 
 error_msg() {
-    echo -e " [ðŸ’”] ${1}"
+    echo -e " [💔] ${1}"
     exit 1
 }
 
 process_msg() {
-    echo -e " [ðŸŒ¿] ${1}"
+    echo -e " [🌿] ${1}"
 }
 
 clean_model_conf() {
@@ -1245,11 +1245,11 @@ EOF
     # Add firmware version information to the terminal banner
     [[ -n "${builder_name}" ]] && builder_display="Builder Name: ${builder_name} | " || builder_display=""
     [[ -f "etc/banner" ]] && {
-        echo " Install OpenWrt: System â†’ Amlogic Service â†’ Install OpenWrt" >>etc/banner
-        echo " Update  OpenWrt: System â†’ Amlogic Service â†’ Online  Update" >>etc/banner
+        echo " Install OpenWrt: System → Amlogic Service → Install OpenWrt" >>etc/banner
+        echo " Update  OpenWrt: System → Amlogic Service → Online  Update" >>etc/banner
         echo " Board: ${board} | OpenWrt Kernel: ${kernel_name}" >>etc/banner
         echo " ${builder_display}Production Date: $(date +%Y-%m-%d)" >>etc/banner
-        echo "â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€" >>etc/banner
+        echo "───────────────────────────────────────────────────────────────────────" >>etc/banner
     }
 
     # Add firmware information
