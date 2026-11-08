@@ -305,7 +305,7 @@ jobs:
           sudo sed -i '/NVM_DIR/d;/skel/d' /root/{.bashrc,.profile}
           sudo rm -rf ~/{.cargo,.dotnet,.rustup}
           sudo timedatectl set-timezone "${TZ:-Etc/UTC}"
-          sudo ntpdate ntp.ubuntu.com 0.pool.ntp.org || true
+          sudo ntpsec-ntpdate ntp.ubuntu.com 0.pool.ntp.org || true
           sudo timedatectl set-ntp true
           date -u
           timedatectl status || true
