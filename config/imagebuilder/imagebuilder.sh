@@ -221,7 +221,7 @@ rebuild_firmware() {
     wget -O toolchain/gcc/common.mk https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/gcc/14.4.0/common.mk
     wget -O package/libs/toolchain/Makefile https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/glibc/gccgo/Makefile
     ./scripts/feeds update -a && ./scripts/feeds install -a
-    wget -O .config https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/glibc/config.buildinfo
+    wget -O .config https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/gcc/14.4.0/config.buildinfo
     #wget -O feeds/packages/lang/perl/files/libc.config https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/glibc/libc.config
     #wget -O feeds/packages/lang/perl/files/base.config https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/glibc/base.config
     #rm feeds/base/network/services/dropbear/patches/130-ssh_ignore_x_args.patch
