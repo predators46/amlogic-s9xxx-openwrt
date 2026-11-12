@@ -210,10 +210,15 @@ rebuild_firmware() {
     git clone https://git.openwrt.org/openwrt/openwrt.git && cd openwrt
     git checkout v25.12.6
     ./scripts/feeds update -a && ./scripts/feeds install -a
+    rm -rf ‎toolchain/gcc/patches-14.x/004-libcody-Make-it-buildable-by-C-11-to-C-26.patch
+    rm -rf ‎toolchain/gcc/patches-14.x/005-include-memory.patch
+    rm -rf toolchain/gcc/patches-14.x/240-libsanitizer-fix-termio-glibc-2.40.patch
+    wget -O toolchain/gcc/patches-14.x/910-mbsd_multi.patch https://raw.githubusercontent.com/openwrt/openwrt/ab40696d6134c842a93112a7a0325a148b3b1a2b/toolchain/gcc/patches-14.x/910-mbsd_multi.patch
     wget -O scripts/ext-toolchain.sh https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/glibc/gccgo/ext-toolchain.sh
     wget -O config/Config-images.in https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/Config-images.in
     wget -O toolchain/gcc/Config.in https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/glibc/gccgo/Config.in
-    wget -O toolchain/gcc/common.mk https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/common.mk
+    wget -O toolchain/gcc/Config.version https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/gcc/14.4.0/Config.version
+    wget -O toolchain/gcc/common.mk https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/gcc/14.4.0/common.mk
     wget -O package/libs/toolchain/Makefile https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/glibc/gccgo/Makefile
     wget -O .config https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/glibc/config.buildinfo
     #wget -O feeds/packages/lang/perl/files/libc.config https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/glibc/libc.config
