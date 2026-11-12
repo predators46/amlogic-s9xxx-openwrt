@@ -209,7 +209,7 @@ rebuild_firmware() {
     
     git clone https://git.openwrt.org/openwrt/openwrt.git && cd openwrt
     git checkout v25.12.6
-    ./scripts/feeds update -a && ./scripts/feeds install -a
+    #./scripts/feeds update -a && ./scripts/feeds install -a
     rm -rf ‎toolchain/gcc/patches-14.x/004-libcody-Make-it-buildable-by-C-11-to-C-26.patch
     rm -rf ‎toolchain/gcc/patches-14.x/005-include-memory.patch
     rm -rf toolchain/gcc/patches-14.x/240-libsanitizer-fix-termio-glibc-2.40.patch
@@ -220,6 +220,7 @@ rebuild_firmware() {
     wget -O toolchain/gcc/Config.version https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/gcc/14.4.0/Config.version
     wget -O toolchain/gcc/common.mk https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/gcc/14.4.0/common.mk
     wget -O package/libs/toolchain/Makefile https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/glibc/gccgo/Makefile
+    ./scripts/feeds update -a && ./scripts/feeds install -a
     wget -O .config https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/glibc/config.buildinfo
     #wget -O feeds/packages/lang/perl/files/libc.config https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/glibc/libc.config
     #wget -O feeds/packages/lang/perl/files/base.config https://raw.githubusercontent.com/esaaprillia/br/refs/heads/main/25.12.0/glibc/base.config
